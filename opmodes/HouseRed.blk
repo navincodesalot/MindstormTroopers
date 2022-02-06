@@ -104,7 +104,7 @@
 </block>
 </statement>
 </block>
-<block type="procedures_defnoreturn" id="WtpyD@tEu+EoY=P9iY,D" deletable="false" editable="false" x="-118" y="-25">
+<block type="procedures_defnoreturn" id="WtpyD@tEu+EoY=P9iY,D" deletable="false" editable="false" x="-89" y="-31">
 <field name="NAME">runOpMode</field>
 <comment pinned="false" h="32" w="532">This function is executed when this Op Mode is selected from the Driver Station.</comment>
 <statement name="STACK">
@@ -187,8 +187,8 @@
 </shadow>
 </value>
 <next>
-<block type="procedures_callnoreturn" id="F%{_KMjoGm!;|AkcM9M#">
-<mutation name="RotateLeftIMU"/>
+<block type="procedures_callnoreturn" id="y%xH)=2u8|R!WE!|Mmdn">
+<mutation name="RotateRightIMU"/>
 <next>
 <block type="variables_set" id="*(ZFnvK*NCPU~X%=$_AM">
 <field name="VAR" id="!M~cDIWh{`@gXN7iv|en">Power</field>
@@ -577,7 +577,7 @@
 </block>
 </statement>
 </block>
-<block type="procedures_defnoreturn" id="M}7oMtHYj+VQR,iE`G=9" x="517" y="93">
+<block type="procedures_defnoreturn" id="M}7oMtHYj+VQR,iE`G=9" x="510" y="90">
 <field name="NAME">ForwardEncoder</field>
 <comment pinned="false" h="80" w="160">Describe this function...</comment>
 <statement name="STACK">
@@ -1252,7 +1252,7 @@
 </block>
 </statement>
 </block>
-<block type="procedures_defnoreturn" id="7pSj(Ukw])Ql.Iz.LP]%" collapsed="true" x="1132" y="293">
+<block type="procedures_defnoreturn" id="7pSj(Ukw])Ql.Iz.LP]%" collapsed="true" x="1120" y="301">
 <field name="NAME">RotateRightIMU</field>
 <comment pinned="false" h="80" w="160">Describe this function...</comment>
 <statement name="STACK">
@@ -1292,7 +1292,7 @@
 <field name="OP">OR</field>
 <value name="A">
 <block type="logic_compare" id="~:EtXH+rxyX5X4+w6jR/">
-<field name="OP">GT</field>
+<field name="OP">LT</field>
 <value name="A">
 <block type="variables_get" id="3s=dG)J;=A.w!iw=+$rR">
 <field name="VAR" id="mCQ,7}(n^_:i^A8O_B.f">Yaw</field>
@@ -1300,7 +1300,7 @@
 </value>
 <value name="B">
 <block type="math_number" id="XBuL9{Yu5Tm`N#2;.lce">
-<field name="NUM">80</field>
+<field name="NUM">-80</field>
 </block>
 </value>
 </block>
