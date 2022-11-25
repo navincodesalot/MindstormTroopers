@@ -3,7 +3,7 @@
 *.aar
 *.ap_
 *.aab
-
+MeepMeepTesting/
 !libs/*.aar
 
 # Files for the ART/Dalvik VM
