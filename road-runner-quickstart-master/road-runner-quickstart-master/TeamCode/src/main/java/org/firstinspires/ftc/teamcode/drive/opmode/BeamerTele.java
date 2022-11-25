@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 
 
@@ -60,7 +61,13 @@ public class BeamerTele extends LinearOpMode {
      * Describe this function...
      */
     private void Telemetry() {
-        /* Sorry, FTC Blocks-to-Java has a bug! Unable to generate code for telemetry_addNumericData_Number. */}
+        telemetry.addData("BackRightPos", back_right.getCurrentPosition());
+        telemetry.addData("BackLeftPos", back_left.getCurrentPosition());
+        telemetry.addData("Arm Target", ArmMotor.getTargetPosition());
+        telemetry.addData("Arm Current", ArmMotor.getCurrentPosition());
+        telemetry.addData("Yaw", IMU.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.YZX, AngleUnit.DEGREES).thirdAngle);
+        telemetry.update();
+    }
 
     /**
      * This function is executed when this Op Mode is selected from the Driver Station.
@@ -83,7 +90,12 @@ public class BeamerTele extends LinearOpMode {
         ArmMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         Fast = 1;
         waitForStart();
-        ArmMotor.setTargetPosition(15);
+        ArmMotor.setTargetPosition(250);
+        ArmMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        ((DcMotorEx) ArmMotor).setVelocity(-750);
+        while (opModeIsActive() && ArmMotor.isBusy()) {
+            idle();
+        }
         while (opModeIsActive()) {
             Telemetry();
             Movement();
@@ -98,15 +110,13 @@ public class BeamerTele extends LinearOpMode {
      */
     private void Arm() {
         if (gamepad2.dpad_up) {
-            ArmMotor.setTargetPosition(625);
+            ArmMotor.setTargetPosition(675);
         } else if (gamepad2.dpad_right) {
-            ArmMotor.setTargetPosition(350);
+            ArmMotor.setTargetPosition(580);
         } else if (gamepad2.dpad_left) {
-            ArmMotor.setTargetPosition(200);
+            ArmMotor.setTargetPosition(370);
         } else if (gamepad2.dpad_down) {
-            ArmMotor.setTargetPosition(15);
-        } else if (gamepad2.left_bumper) {
-            ArmMotor.setTargetPosition(655);
+            ArmMotor.setTargetPosition(150);
         }
         if (ArmMotor.getCurrentPosition() < ArmMotor.getTargetPosition() - 16) {
             ArmMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -114,7 +124,7 @@ public class BeamerTele extends LinearOpMode {
         } else if (ArmMotor.getCurrentPosition() > ArmMotor.getTargetPosition() + 16) {
             ArmMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             ((DcMotorEx) ArmMotor).setVelocity(400);
-        } else if (ArmMotor.getTargetPosition() == 15) {
+        } else if (ArmMotor.getTargetPosition() == 250) {
             ((DcMotorEx) ArmMotor).setVelocity(0);
             ArmMotor.setPower(0);
         }
@@ -139,9 +149,9 @@ public class BeamerTele extends LinearOpMode {
     }
 
     private void RotateLeftIMU() {
-        Yaw = IMU.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XZY, AngleUnit.DEGREES).thirdAngle;
+        Yaw = IMU.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.YZX, AngleUnit.DEGREES).thirdAngle;
         while (!(Yaw > Angle || isStopRequested())) {
-            Yaw = IMU.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XZY, AngleUnit.DEGREES).thirdAngle;
+            Yaw = IMU.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.YZX, AngleUnit.DEGREES).thirdAngle;
             IMUTurnLeft();
             telemetry.addData("Yaw", Yaw);
             telemetry.update();
@@ -152,9 +162,9 @@ public class BeamerTele extends LinearOpMode {
     private void turnLeft180() {
         Angle = 180;
         if (gamepad1.right_bumper) {
-            Yaw = IMU.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).thirdAngle;
+            Yaw = IMU.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.YZX, AngleUnit.DEGREES).thirdAngle;
             while ((Yaw > Angle || isStopRequested())) {
-                Yaw = IMU.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).thirdAngle;
+                Yaw = IMU.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.YZX, AngleUnit.DEGREES).thirdAngle;
                 IMUTurnLeft();
                 telemetry.addData("Yaw", Yaw);
                 telemetry.update();
