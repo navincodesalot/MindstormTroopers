@@ -7,8 +7,13 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import java.util.List;
 import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
+
 
 @TeleOp(name = "BeamerTele (Blocks to Java)")
 public class BeamerTele extends LinearOpMode {
@@ -22,6 +27,15 @@ public class BeamerTele extends LinearOpMode {
     private DcMotor StringMotor;
 
     int Fast;
+
+    float Yaw;
+
+    int Angle;
+    List<Recognition> recognitions;
+    int Time;
+    int DetLocat;
+    int Power;
+
 
     /**
      * Describe this function...
@@ -60,14 +74,12 @@ public class BeamerTele extends LinearOpMode {
         back_left = hardwareMap.get(DcMotor.class, "back_left");
         ArmMotor = hardwareMap.get(DcMotor.class, "ArmMotor");
         StringMotor = hardwareMap.get(DcMotor.class, "StringMotor");
-
         InitIMU();
         front_right.setDirection(DcMotorSimple.Direction.FORWARD);
         back_right.setDirection(DcMotorSimple.Direction.REVERSE);
         front_left.setDirection(DcMotorSimple.Direction.REVERSE);
         back_left.setDirection(DcMotorSimple.Direction.FORWARD);
         ArmMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        back_left.setDirection(DcMotorSimple.Direction.FORWARD);
         ArmMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         Fast = 1;
         waitForStart();
@@ -75,7 +87,9 @@ public class BeamerTele extends LinearOpMode {
         while (opModeIsActive()) {
             Telemetry();
             Movement();
+            turnLeft180();
             Arm();
+            bigArm();
         }
     }
 
@@ -104,6 +118,62 @@ public class BeamerTele extends LinearOpMode {
             ((DcMotorEx) ArmMotor).setVelocity(0);
             ArmMotor.setPower(0);
         }
+    }
+
+    private void IMUTurnLeft() {
+        front_right.setDirection(DcMotorSimple.Direction.REVERSE);
+        back_right.setDirection(DcMotorSimple.Direction.REVERSE);
+        front_left.setDirection(DcMotorSimple.Direction.REVERSE);
+        back_left.setDirection(DcMotorSimple.Direction.REVERSE);
+        front_left.setPower(0.55);
+        back_left.setPower(0.55);
+        front_right.setPower(0.55);
+        back_right.setPower(0.55);
+    }
+
+    private void StopRobot() {
+        front_left.setPower(0);
+        back_left.setPower(0);
+        front_right.setPower(0);
+        back_right.setPower(0);
+    }
+
+    private void RotateLeftIMU() {
+        Yaw = IMU.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XZY, AngleUnit.DEGREES).thirdAngle;
+        while (!(Yaw > Angle || isStopRequested())) {
+            Yaw = IMU.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XZY, AngleUnit.DEGREES).thirdAngle;
+            IMUTurnLeft();
+            telemetry.addData("Yaw", Yaw);
+            telemetry.update();
+        }
+        StopRobot();
+    }
+
+    private void turnLeft180() {
+        Angle = 180;
+        if (gamepad1.right_bumper) {
+            Yaw = IMU.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).thirdAngle;
+            while ((Yaw > Angle || isStopRequested())) {
+                Yaw = IMU.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).thirdAngle;
+                IMUTurnLeft();
+                telemetry.addData("Yaw", Yaw);
+                telemetry.update();
+            }
+        }
+    }
+
+    private void bigArm() {
+        if (gamepad1.right_trigger>0) {
+            ArmMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+            ArmMotor.setPower(0.5);
+            } else if (gamepad1.left_trigger>0) {
+            ArmMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+            ArmMotor.setPower(0.5);
+
+        }else{
+            ArmMotor.setPower(0);
+        }
+        ArmMotor.setTargetPosition(ArmMotor.getCurrentPosition());
     }
 
     private void Movement() {
@@ -135,10 +205,10 @@ public class BeamerTele extends LinearOpMode {
                 LY = gamepad1.left_stick_y;
                 LX = gamepad1.left_stick_x;
                 RX = gamepad1.right_stick_x;
-                front_right.setPower((LY + LX + RX) / 0.95);
-                back_right.setPower((LY - (LX - RX)) / 0.95);
-                front_left.setPower((LY - (LX + RX)) / 0.95);
-                back_left.setPower((LY + (LX - RX)) / 0.95);
+                front_right.setPower(((LY + LX + RX) / 0.95));
+                back_right.setPower(((LY + (LX - RX)) / 0.95));
+                front_left.setPower(((LY - (LX + RX)) / 0.95));
+                back_left.setPower(((LY - (LX - RX)) / 0.95));
             } else {
                 front_right.setPower(0);
                 back_right.setPower(0);
@@ -151,9 +221,9 @@ public class BeamerTele extends LinearOpMode {
                 LX = gamepad1.left_stick_x;
                 RX = gamepad1.right_stick_x;
                 front_right.setPower(((LY + LX + RX) / 0.95) / 1.75);
-                back_right.setPower(((LY - (LX - RX)) / 0.95) / 1.75);
+                back_right.setPower(((LY + (LX - RX)) / 0.95) / 1.75);
                 front_left.setPower(((LY - (LX + RX)) / 0.95) / 1.75);
-                back_left.setPower(((LY + (LX - RX)) / 0.95) / 1.75);
+                back_left.setPower(((LY - (LX - RX)) / 0.95) / 1.75);
             } else {
                 front_right.setPower(0);
                 back_right.setPower(0);
@@ -166,9 +236,9 @@ public class BeamerTele extends LinearOpMode {
                 LX = gamepad1.left_stick_x;
                 RX = gamepad1.right_stick_x;
                 front_right.setPower(((LY + LX + RX) / 0.95) / 3.5);
-                back_right.setPower(((LY - (LX - RX)) / 0.95) / 3.5);
+                back_right.setPower(((LY + (LX - RX)) / 0.95) / 3.5);
                 front_left.setPower(((LY - (LX + RX)) / 0.95) / 3.5);
-                back_left.setPower(((LY + (LX - RX)) / 0.95) / 3.5);
+                back_left.setPower(((LY - (LX - RX)) / 0.95) / 3.5);
             } else {
                 front_right.setPower(0);
                 back_right.setPower(0);
