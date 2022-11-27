@@ -25,6 +25,8 @@ public class BeamerTele extends LinearOpMode {
     private DcMotor front_left;
     private DcMotor back_left;
     private DcMotor ArmMotor;
+    private Servo Claw;
+    private Servo DClaw;
     private DcMotor StringMotor;
 
     int Fast;
@@ -81,6 +83,8 @@ public class BeamerTele extends LinearOpMode {
         back_left = hardwareMap.get(DcMotor.class, "back_left");
         ArmMotor = hardwareMap.get(DcMotor.class, "ArmMotor");
         StringMotor = hardwareMap.get(DcMotor.class, "StringMotor");
+        Claw = hardwareMap.get(Servo.class, "Claw");
+        DClaw = hardwareMap.get(Servo.class, "DClaw");
         InitIMU();
         front_right.setDirection(DcMotorSimple.Direction.FORWARD);
         back_right.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -90,40 +94,31 @@ public class BeamerTele extends LinearOpMode {
         ArmMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         Fast = 1;
         waitForStart();
-        ArmMotor.setTargetPosition(250);
-        ArmMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        ((DcMotorEx) ArmMotor).setVelocity(-750);
-        while (opModeIsActive() && ArmMotor.isBusy()) {
-            idle();
-        }
+        ArmMotor.setTargetPosition(0);
+        DClaw.setPosition(0.3);
         while (opModeIsActive()) {
             Telemetry();
             Movement();
-            turnLeft180();
             Arm();
-            bigArm();
         }
     }
 
-    /**
-     * Describe this function...
-     */
     private void Arm() {
         if (gamepad2.dpad_up) {
-            ArmMotor.setTargetPosition(675);
+            ArmMotor.setTargetPosition(925);
         } else if (gamepad2.dpad_right) {
-            ArmMotor.setTargetPosition(580);
+            ArmMotor.setTargetPosition(900);
         } else if (gamepad2.dpad_left) {
-            ArmMotor.setTargetPosition(370);
+            ArmMotor.setTargetPosition(550);
         } else if (gamepad2.dpad_down) {
-            ArmMotor.setTargetPosition(150);
+            ArmMotor.setTargetPosition(125);
         }
         if (ArmMotor.getCurrentPosition() < ArmMotor.getTargetPosition() - 16) {
             ArmMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            ((DcMotorEx) ArmMotor).setVelocity(-750);
+            ((DcMotorEx) ArmMotor).setVelocity(-1000);
         } else if (ArmMotor.getCurrentPosition() > ArmMotor.getTargetPosition() + 16) {
             ArmMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            ((DcMotorEx) ArmMotor).setVelocity(400);
+            ((DcMotorEx) ArmMotor).setVelocity(600);
         } else if (ArmMotor.getTargetPosition() == 250) {
             ((DcMotorEx) ArmMotor).setVelocity(0);
             ArmMotor.setPower(0);
@@ -170,20 +165,6 @@ public class BeamerTele extends LinearOpMode {
                 telemetry.update();
             }
         }
-    }
-
-    private void bigArm() {
-        if (gamepad1.right_trigger>0) {
-            ArmMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-            ArmMotor.setPower(0.5);
-            } else if (gamepad1.left_trigger>0) {
-            ArmMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-            ArmMotor.setPower(0.5);
-
-        }else{
-            ArmMotor.setPower(0);
-        }
-        ArmMotor.setTargetPosition(ArmMotor.getCurrentPosition());
     }
 
     private void Movement() {
