@@ -67,7 +67,7 @@ public class BeamerTele extends LinearOpMode {
         telemetry.addData("Arm Target", ArmMotor.getTargetPosition());
         telemetry.addData("Arm Current", ArmMotor.getCurrentPosition());
         telemetry.addData("String Motor Position: ", StringMotor.getCurrentPosition());
-        telemetry.addData("Yaw", IMU.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle);
+        telemetry.addData("Yaw", IMU.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES).thirdAngle);
         telemetry.update();
     }
 
@@ -90,7 +90,7 @@ public class BeamerTele extends LinearOpMode {
         ArmMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         ArmMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         Fast = 1;
-        DClaw.setPosition(0.65);
+        DClaw.setPosition(0.69);
         waitForStart();
         ArmMotor.setTargetPosition(0);
         //Higher number is further down and vice versa
@@ -99,12 +99,13 @@ public class BeamerTele extends LinearOpMode {
             Movement();
             Arm();
             extendedArm();
+            turnLeft180();
         }
     }
 
     private void extendedArm() {
         if(gamepad2.b) {
-            Claw.setPosition(0.75);
+            Claw.setPosition(1);
         }
         if(gamepad2.a) {
             Claw.setPosition(0);
@@ -120,8 +121,14 @@ public class BeamerTele extends LinearOpMode {
 
     private void Arm() {
         //Higher number is further down and vice versa FOR DCLAW
+        if (gamepad2.y) {
+            ArmMotor.setTargetPosition(ArmMotor.getCurrentPosition() + 25);
+        }
+        if (gamepad2.x) {
+            ArmMotor.setTargetPosition(ArmMotor.getCurrentPosition() - 25);
+        }
         if (gamepad2.dpad_up) {
-            ArmMotor.setTargetPosition(1040);
+            ArmMotor.setTargetPosition(1125);
         }
         if (gamepad2.dpad_right) {
             ArmMotor.setTargetPosition(900);
@@ -130,20 +137,26 @@ public class BeamerTele extends LinearOpMode {
             ArmMotor.setTargetPosition(25);
         }
 
-        if (ArmMotor.getCurrentPosition() < ArmMotor.getTargetPosition() - 16) {
+        if (ArmMotor.getCurrentPosition() < ArmMotor.getTargetPosition() - 50) {
             ArmMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            ((DcMotorEx) ArmMotor).setVelocity(-1000);
-        } else if (ArmMotor.getCurrentPosition() > ArmMotor.getTargetPosition() + 16) {
+
+            try {
+                ((DcMotorEx) ArmMotor).setVelocity(-1000);
+                Thread.sleep(500);
+            } catch (InterruptedException e) {}
+            if(ArmMotor.getTargetPosition() == 1125) {
+                DClaw.setPosition(.9);
+            }
+        } else if (ArmMotor.getCurrentPosition() > ArmMotor.getTargetPosition() + 50) {
             ArmMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            ((DcMotorEx) ArmMotor).setVelocity(500);
-        } else {
-            if (ArmMotor.getTargetPosition() == 1040 || ArmMotor.getTargetPosition() == 900) {
-                DClaw.setPosition(1.3);
-            } else if (ArmMotor.getTargetPosition() == 25) {
-                DClaw.setPosition(0.65);
+            try {
+                ((DcMotorEx) ArmMotor).setVelocity(500);
+                Thread.sleep(500);
+            } catch (InterruptedException e){}
+            if(ArmMotor.getTargetPosition() == 25) {
+                DClaw.setPosition(0.69);
             }
         }
-
     }
 
     private void IMUTurnLeft() {
