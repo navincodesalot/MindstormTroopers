@@ -90,7 +90,7 @@ public class BeamerTele extends LinearOpMode {
         ArmMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         ArmMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         Fast = 1;
-        DClaw.setPosition(0.69);
+        DClaw.setPosition(0.71);
         waitForStart();
         ArmMotor.setTargetPosition(0);
         //Higher number is further down and vice versa
@@ -99,7 +99,6 @@ public class BeamerTele extends LinearOpMode {
             Movement();
             Arm();
             extendedArm();
-            turnLeft180();
         }
     }
 
@@ -107,12 +106,12 @@ public class BeamerTele extends LinearOpMode {
         if(gamepad2.b) {
             Claw.setPosition(1);
         }
-        if(gamepad2.a) {
+        if(gamepad2.x) {
             Claw.setPosition(0);
         }
-        if (gamepad2.right_bumper && StringMotor.getCurrentPosition() <= 50 && StringMotor.getCurrentPosition() >= -1900) {
-            StringMotor.setPower(-0.7);
-        } else if (gamepad2.left_bumper && StringMotor.getCurrentPosition() <= 50 && StringMotor.getCurrentPosition() >= -1900) {
+        if (gamepad2.right_bumper && StringMotor.getCurrentPosition() <= 250 && StringMotor.getCurrentPosition() >= -2100) {
+            StringMotor.setPower(-0.85);
+        } else if (gamepad2.left_bumper && StringMotor.getCurrentPosition() <= 250 && StringMotor.getCurrentPosition() >= -2100) {
             StringMotor.setPower(0.23);
         } else {
             StringMotor.setPower(0);
@@ -124,17 +123,17 @@ public class BeamerTele extends LinearOpMode {
         if (gamepad2.y) {
             ArmMotor.setTargetPosition(ArmMotor.getCurrentPosition() + 25);
         }
-        if (gamepad2.x) {
+        if (gamepad2.a) {
             ArmMotor.setTargetPosition(ArmMotor.getCurrentPosition() - 25);
         }
         if (gamepad2.dpad_up) {
             ArmMotor.setTargetPosition(1125);
         }
         if (gamepad2.dpad_right) {
-            ArmMotor.setTargetPosition(900);
+            ArmMotor.setTargetPosition(1080);
         }
         if (gamepad2.dpad_down) {
-            ArmMotor.setTargetPosition(25);
+            ArmMotor.setTargetPosition(10);
         }
 
         if (ArmMotor.getCurrentPosition() < ArmMotor.getTargetPosition() - 50) {
@@ -142,19 +141,19 @@ public class BeamerTele extends LinearOpMode {
 
             try {
                 ((DcMotorEx) ArmMotor).setVelocity(-1000);
-                Thread.sleep(500);
+                Thread.sleep(600);
             } catch (InterruptedException e) {}
-            if(ArmMotor.getTargetPosition() == 1125) {
-                DClaw.setPosition(.9);
+            if(ArmMotor.getTargetPosition() == 1125 || ArmMotor.getTargetPosition() == 1080) {
+                DClaw.setPosition(0.9);
             }
         } else if (ArmMotor.getCurrentPosition() > ArmMotor.getTargetPosition() + 50) {
             ArmMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             try {
                 ((DcMotorEx) ArmMotor).setVelocity(500);
-                Thread.sleep(500);
+                Thread.sleep(600);
             } catch (InterruptedException e){}
-            if(ArmMotor.getTargetPosition() == 25) {
-                DClaw.setPosition(0.69);
+            if(ArmMotor.getTargetPosition() == 10) {
+                DClaw.setPosition(0.71);
             }
         }
     }
