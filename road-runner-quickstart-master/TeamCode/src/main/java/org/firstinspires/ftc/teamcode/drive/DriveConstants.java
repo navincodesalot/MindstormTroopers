@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 /*
  * Constants shared between multiple drive types.
  *
- * TODO: Tune or adjust the following constants to fit your robot. Note that the non-final
+ * Tune or adjust the following constants to fit your robot. Note that the non-final
  * fields may also be edited through the dashboard (connect to the robot's WiFi network and
  * navigate to https://192.168.49.1:8080/dash). Make sure to save the values here after you
  * adjust them in the dashboard; **config variable changes don't persist between app restarts**.
@@ -31,7 +31,7 @@ public class DriveConstants {
      * If using the built-in motor velocity PID, update MOTOR_VELO_PID with the tuned coefficients
      * from DriveVelocityPIDTuner.
      */
-    public static final boolean RUN_USING_ENCODER = true;
+    public static final boolean RUN_USING_ENCODER = false;
     public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(0, 0, 0,
             getMotorVelocityF(MAX_RPM / 60 * TICKS_PER_REV));
 
