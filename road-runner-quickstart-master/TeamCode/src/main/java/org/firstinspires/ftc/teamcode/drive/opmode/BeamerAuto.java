@@ -33,7 +33,6 @@ import org.openftc.easyopencv.OpenCvInternalCamera;
 
 import java.util.ArrayList;
 
-@TeleOp
 public class BeamerAuto extends LinearOpMode
 {
     OpenCvCamera camera;
