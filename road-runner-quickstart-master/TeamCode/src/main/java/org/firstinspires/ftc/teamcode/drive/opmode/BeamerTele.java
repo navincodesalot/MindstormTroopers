@@ -16,7 +16,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 
 
-@TeleOp(name = "BeamerTele (Blocks to Java)")
+@TeleOp
 public class BeamerTele extends LinearOpMode {
 
     private BNO055IMU IMU;
