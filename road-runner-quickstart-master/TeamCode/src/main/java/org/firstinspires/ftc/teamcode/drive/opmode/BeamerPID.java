@@ -13,7 +13,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.trajectorysequence.sequencesegment.SequenceSegment;
 
 @Config
 @Autonomous(name = "PID Tuner")
@@ -28,7 +27,7 @@ public class BeamerPID extends LinearOpMode {
     public static double Ki = 0.0;
     public static double Kd = 0.0;
 
-    public static double targetPosition = 5000; // todo Find target pos manually
+    public static int targetPosition = 5000; // todo Find target pos manually
 
     private final FtcDashboard dashboard = FtcDashboard.getInstance();
 
@@ -38,7 +37,7 @@ public class BeamerPID extends LinearOpMode {
         TelemetryPacket packet = new TelemetryPacket();
 
         dashboard.setTelemetryTransmissionInterval(25);
-        liftMotor = hardwareMap.get(DcMotorEx.class, "liftMotor"); //todo
+        liftMotor = hardwareMap.get(DcMotorEx.class, "liftMotor"); // todo
 
         liftMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
