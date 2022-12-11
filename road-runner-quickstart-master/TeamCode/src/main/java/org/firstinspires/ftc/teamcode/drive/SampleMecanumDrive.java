@@ -68,7 +68,7 @@ public class SampleMecanumDrive extends MecanumDrive {
 
     private TrajectoryFollower follower;
 
-    private DcMotorEx leftFront, leftRear, rightRear, rightFront, liftMotor1, liftMotor2;
+    private DcMotorEx leftFront, leftRear, rightRear, rightFront;
     private List<DcMotorEx> motors;
 
     private BNO055IMU imu;
@@ -120,9 +120,6 @@ public class SampleMecanumDrive extends MecanumDrive {
         leftRear = hardwareMap.get(DcMotorEx.class, "leftRear");
         rightRear = hardwareMap.get(DcMotorEx.class, "rightRear");
         rightFront = hardwareMap.get(DcMotorEx.class, "rightFront");
-
-        liftMotor1 = hardwareMap.get(DcMotorEx.class, "liftMotor1"); //todo add further motors if needed
-        liftMotor2 = hardwareMap.get(DcMotorEx.class, "liftMotor2");
 
         motors = Arrays.asList(leftFront, leftRear, rightRear, rightFront);
 

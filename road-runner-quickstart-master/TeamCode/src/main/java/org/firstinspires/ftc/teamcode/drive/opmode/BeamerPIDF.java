@@ -6,6 +6,7 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
@@ -30,6 +31,14 @@ public class BeamerPIDF extends OpMode {
 
         liftMotor1 = hardwareMap.get(DcMotorEx.class, "liftMotor1"); // todo
         liftMotor2 = hardwareMap.get(DcMotorEx.class, "liftMotor2");
+
+        liftMotor1.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        liftMotor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        liftMotor2.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        liftMotor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        liftMotor1.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        liftMotor2.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     //this function is used to tune PIDF
