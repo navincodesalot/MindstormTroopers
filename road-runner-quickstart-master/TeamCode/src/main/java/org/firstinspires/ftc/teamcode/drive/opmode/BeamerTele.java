@@ -20,14 +20,14 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 public class BeamerTele extends LinearOpMode {
 
     private BNO055IMU IMU;
-    private DcMotor front_right;
-    private DcMotor back_right;
-    private DcMotor front_left;
-    private DcMotor back_left;
-    private DcMotor ArmMotor;
+    private DcMotorEx front_right;
+    private DcMotorEx back_right;
+    private DcMotorEx front_left;
+    private DcMotorEx back_left;
+    private DcMotorEx ArmMotor;
     private Servo Claw;
     private Servo DClaw;
-    private DcMotor StringMotor;
+    private DcMotorEx StringMotor;
 
     int Fast;
 
@@ -74,21 +74,21 @@ public class BeamerTele extends LinearOpMode {
     @Override
     public void runOpMode() {
         IMU = hardwareMap.get(BNO055IMU.class, "IMU");
-        front_right = hardwareMap.get(DcMotor.class, "front_right");
-        back_right = hardwareMap.get(DcMotor.class, "back_right");
-        front_left = hardwareMap.get(DcMotor.class, "front_left");
-        back_left = hardwareMap.get(DcMotor.class, "back_left");
-        ArmMotor = hardwareMap.get(DcMotor.class, "ArmMotor");
-        StringMotor = hardwareMap.get(DcMotor.class, "StringMotor");
+        front_right = hardwareMap.get(DcMotorEx.class, "front_right");
+        back_right = hardwareMap.get(DcMotorEx.class, "back_right");
+        front_left = hardwareMap.get(DcMotorEx.class, "front_left");
+        back_left = hardwareMap.get(DcMotorEx.class, "back_left");
+        ArmMotor = hardwareMap.get(DcMotorEx.class, "ArmMotor");
+        StringMotor = hardwareMap.get(DcMotorEx.class, "StringMotor");
         Claw = hardwareMap.get(Servo.class, "Claw");
         DClaw = hardwareMap.get(Servo.class, "DClaw");
         InitIMU();
-        front_right.setDirection(DcMotorSimple.Direction.FORWARD);
-        back_right.setDirection(DcMotorSimple.Direction.REVERSE);
-        front_left.setDirection(DcMotorSimple.Direction.REVERSE);
-        back_left.setDirection(DcMotorSimple.Direction.FORWARD);
-        ArmMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        ArmMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        front_right.setDirection(DcMotorEx.Direction.FORWARD);
+        back_right.setDirection(DcMotorEx.Direction.REVERSE);
+        front_left.setDirection(DcMotorEx.Direction.REVERSE);
+        back_left.setDirection(DcMotorEx.Direction.FORWARD);
+        ArmMotor.setDirection(DcMotorEx.Direction.FORWARD);
+        ArmMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         Fast = 1;
         DClaw.setPosition(0.71);
         waitForStart();
@@ -137,7 +137,7 @@ public class BeamerTele extends LinearOpMode {
         }
 
         if (ArmMotor.getCurrentPosition() < ArmMotor.getTargetPosition() - 50) {
-            ArmMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            ArmMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
 
             try {
                 ((DcMotorEx) ArmMotor).setVelocity(-1000);
@@ -147,7 +147,7 @@ public class BeamerTele extends LinearOpMode {
                 DClaw.setPosition(0.9);
             }
         } else if (ArmMotor.getCurrentPosition() > ArmMotor.getTargetPosition() + 50) {
-            ArmMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            ArmMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
             try {
                 ((DcMotorEx) ArmMotor).setVelocity(500);
                 Thread.sleep(600);
@@ -159,10 +159,10 @@ public class BeamerTele extends LinearOpMode {
     }
 
     private void IMUTurnLeft() {
-        front_right.setDirection(DcMotorSimple.Direction.REVERSE);
-        back_right.setDirection(DcMotorSimple.Direction.REVERSE);
-        front_left.setDirection(DcMotorSimple.Direction.REVERSE);
-        back_left.setDirection(DcMotorSimple.Direction.REVERSE);
+        front_right.setDirection(DcMotorEx.Direction.REVERSE);
+        back_right.setDirection(DcMotorEx.Direction.REVERSE);
+        front_left.setDirection(DcMotorEx.Direction.REVERSE);
+        back_left.setDirection(DcMotorEx.Direction.REVERSE);
         front_left.setPower(0.55);
         back_left.setPower(0.55);
         front_right.setPower(0.55);
