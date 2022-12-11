@@ -29,7 +29,7 @@ public class BeamerCentricTele extends LinearOpMode {
 
         // Retrieve our pose from the PoseStorage.currentPose static field
         // See AutoTransferPose.java for further details
-        // drive.setPoseEstimate(PoseStorage.currentPose); //todo
+        drive.setPoseEstimate(PoseStorage.currentPose);
 
         waitForStart();
 

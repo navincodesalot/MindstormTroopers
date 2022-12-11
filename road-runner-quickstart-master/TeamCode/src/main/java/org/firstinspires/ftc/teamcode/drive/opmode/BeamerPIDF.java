@@ -16,37 +16,60 @@ public class BeamerPIDF extends OpMode {
     private PIDController controller;
 
     public static double p = 0, i = 0, d = 0;
-    public static double f = 0;
+    public static double f = 0; //g value https://www.ctrlaltftc.com/feedforward-control#slide-gravity-feedforward
 
     public static int target  = 0; //todo
 
-    private final double ticks_in_degree = 700 / 180.0; // todo
-
-    private DcMotorEx liftMotor;
+    private DcMotorEx liftMotor1, liftMotor2;
 
     @Override
     public void init() {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         controller = new PIDController(p, i, d);
-        Telemetry telemetry = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry()); // todo
+        Telemetry telemetry = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        liftMotor = hardwareMap.get(DcMotorEx.class, "liftMotor"); // todo
-
+        liftMotor1 = hardwareMap.get(DcMotorEx.class, "liftMotor1"); // todo
+        liftMotor2 = hardwareMap.get(DcMotorEx.class, "liftMotor2");
     }
 
+    //this function is used to tune PIDF
     @Override
     public void loop() {
         controller.setPID(p, i, d);
-        int liftPos = liftMotor.getCurrentPosition();
-        double pid = controller.calculate(liftPos, target);
-        double ff = Math.cos(Math.toRadians(target / ticks_in_degree)) * f;
+        int state1 = liftMotor1.getCurrentPosition();
+        int state2 = liftMotor1.getCurrentPosition();
 
-        double power = pid + ff;
+        double pid1 = controller.calculate(state1, target);
+        double pid2 = controller.calculate(state2, target);
 
-        liftMotor.setPower(power);
+        double power1 = pid1 + f;
+        double power2 = pid2 + f;
 
-        telemetry.addData("Pos", liftPos);
+        liftMotor1.setPower(power1);
+        liftMotor2.setPower(power2);
+
+        telemetry.addData("Pos1", state1);
+        telemetry.addData("Pos2", state2);
         telemetry.addData("Target", target);
         telemetry.update();
     }
+
+    //this function will actually be used to return power to both motors
+    // Ex:
+    //      liftMotor1.setPower(returnPower(liftMotor1.getCurrentPosition(), target));
+    //      liftMotor2.setPower(returnPower(liftMotor2.getCurrentPosition(), target));
+
+//    public double returnPower(double state, double target) {
+//        controller.setPID(p, i, d);
+//        double pid = controller.calculate(state, target);
+//
+//        double power = pid + f;
+//
+//        liftMotor1.setPower(power);
+//
+//        telemetry.addData("Pos", state);
+//        telemetry.addData("Target", target);
+//        telemetry.update();
+//        return power;
+//    }
 }
