@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.sequencesegment.SequenceSegment;
 
 @Config
-@Autonomous
+@Autonomous(name = "PID Tuner")
 public class BeamerPID extends LinearOpMode {
     DcMotorEx liftMotor; //todo
     ElapsedTime timer = new ElapsedTime();
