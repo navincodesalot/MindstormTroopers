@@ -24,10 +24,10 @@ public class BeamerTele extends LinearOpMode {
     private DcMotorEx back_right;
     private DcMotorEx front_left;
     private DcMotorEx back_left;
-    private DcMotorEx ArmMotor;
-    private Servo Claw;
-    private Servo DClaw;
-    private DcMotorEx StringMotor;
+//    private DcMotorEx ArmMotor;
+//    private Servo Claw;
+//    private Servo DClaw;
+//    private DcMotorEx StringMotor;
 
     int Fast;
 
@@ -64,10 +64,11 @@ public class BeamerTele extends LinearOpMode {
     private void Telemetry() {
         telemetry.addData("BackRightPos", back_right.getCurrentPosition());
         telemetry.addData("BackLeftPos", back_left.getCurrentPosition());
-        telemetry.addData("Arm Target", ArmMotor.getTargetPosition());
-        telemetry.addData("Arm Current", ArmMotor.getCurrentPosition());
-        telemetry.addData("String Motor Position: ", StringMotor.getCurrentPosition());
-        telemetry.addData("Yaw", IMU.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES).thirdAngle);
+        telemetry.addData("imu", IMU.getAngularOrientation());
+//        telemetry.addData("Arm Target", ArmMotor.getTargetPosition());
+//        telemetry.addData("Arm Current", ArmMotor.getCurrentPosition());
+//        telemetry.addData("String Motor Position: ", StringMotor.getCurrentPosition());
+        telemetry.addData("Yaw", IMU.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle);
         telemetry.update();
     }
 
@@ -78,129 +79,127 @@ public class BeamerTele extends LinearOpMode {
         back_right = hardwareMap.get(DcMotorEx.class, "back_right");
         front_left = hardwareMap.get(DcMotorEx.class, "front_left");
         back_left = hardwareMap.get(DcMotorEx.class, "back_left");
-        ArmMotor = hardwareMap.get(DcMotorEx.class, "ArmMotor");
-        StringMotor = hardwareMap.get(DcMotorEx.class, "StringMotor");
-        Claw = hardwareMap.get(Servo.class, "Claw");
-        DClaw = hardwareMap.get(Servo.class, "DClaw");
+//        ArmMotor = hardwareMap.get(DcMotorEx.class, "ArmMotor");
+//        StringMotor = hardwareMap.get(DcMotorEx.class, "StringMotor");
+//        Claw = hardwareMap.get(Servo.class, "Claw");
+//        DClaw = hardwareMap.get(Servo.class, "DClaw");
         InitIMU();
         front_right.setDirection(DcMotorEx.Direction.FORWARD);
-        back_right.setDirection(DcMotorEx.Direction.REVERSE);
+        back_right.setDirection(DcMotorEx.Direction.FORWARD);
         front_left.setDirection(DcMotorEx.Direction.REVERSE);
-        back_left.setDirection(DcMotorEx.Direction.FORWARD);
-        ArmMotor.setDirection(DcMotorEx.Direction.FORWARD);
-        ArmMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        back_left.setDirection(DcMotorEx.Direction.REVERSE);
+//        ArmMotor.setDirection(DcMotorEx.Direction.FORWARD);
+//        ArmMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         Fast = 1;
-        DClaw.setPosition(0.71);
+//        DClaw.setPosition(0.71);
         waitForStart();
-        ArmMotor.setTargetPosition(0);
+//        ArmMotor.setTargetPosition(0);
         //Higher number is further down and vice versa
         while (opModeIsActive()) {
             Telemetry();
             Movement();
-            Arm();
-            extendedArm();
         }
     }
-
-    private void extendedArm() {
-        if(gamepad2.b) {
-            Claw.setPosition(1);
-        }
-        if(gamepad2.x) {
-            Claw.setPosition(0);
-        }
-        if (gamepad2.right_bumper && StringMotor.getCurrentPosition() <= 250 && StringMotor.getCurrentPosition() >= -2100) {
-            StringMotor.setPower(-0.85);
-        } else if (gamepad2.left_bumper && StringMotor.getCurrentPosition() <= 250 && StringMotor.getCurrentPosition() >= -2100) {
-            StringMotor.setPower(0.23);
-        } else {
-            StringMotor.setPower(0);
-        }
-    }
-
-    private void Arm() {
-        //Higher number is further down and vice versa FOR DCLAW
-        if (gamepad2.y) {
-            ArmMotor.setTargetPosition(ArmMotor.getCurrentPosition() + 25);
-        }
-        if (gamepad2.a) {
-            ArmMotor.setTargetPosition(ArmMotor.getCurrentPosition() - 25);
-        }
-        if (gamepad2.dpad_up) {
-            ArmMotor.setTargetPosition(1125);
-        }
-        if (gamepad2.dpad_right) {
-            ArmMotor.setTargetPosition(1080);
-        }
-        if (gamepad2.dpad_down) {
-            ArmMotor.setTargetPosition(10);
-        }
-
-        if (ArmMotor.getCurrentPosition() < ArmMotor.getTargetPosition() - 50) {
-            ArmMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-
-            try {
-                ((DcMotorEx) ArmMotor).setVelocity(-1000);
-                Thread.sleep(600);
-            } catch (InterruptedException e) {}
-            if(ArmMotor.getTargetPosition() == 1125 || ArmMotor.getTargetPosition() == 1080) {
-                DClaw.setPosition(0.9);
-            }
-        } else if (ArmMotor.getCurrentPosition() > ArmMotor.getTargetPosition() + 50) {
-            ArmMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-            try {
-                ((DcMotorEx) ArmMotor).setVelocity(500);
-                Thread.sleep(600);
-            } catch (InterruptedException e){}
-            if(ArmMotor.getTargetPosition() == 10) {
-                DClaw.setPosition(0.71);
-            }
-        }
-    }
-
-    private void IMUTurnLeft() {
-        front_right.setDirection(DcMotorEx.Direction.REVERSE);
-        back_right.setDirection(DcMotorEx.Direction.REVERSE);
-        front_left.setDirection(DcMotorEx.Direction.REVERSE);
-        back_left.setDirection(DcMotorEx.Direction.REVERSE);
-        front_left.setPower(0.55);
-        back_left.setPower(0.55);
-        front_right.setPower(0.55);
-        back_right.setPower(0.55);
-    }
-
-    private void StopRobot() {
-        front_left.setPower(0);
-        back_left.setPower(0);
-        front_right.setPower(0);
-        back_right.setPower(0);
-    }
-
-    private void RotateLeftIMU() {
-        Roll = IMU.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
-        while (!(Roll > Angle || isStopRequested())) {
-            Roll = IMU.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
-            IMUTurnLeft();
-            telemetry.addData("Yaw", Roll);
-            telemetry.update();
-        }
-        StopRobot();
-    }
-
-    private void turnLeft180() {
-        if (gamepad1.right_bumper) {
-            Roll = IMU.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
-            if(Roll < 0){
-                while ((Roll < (Roll+180) || isStopRequested())) {
-                    Roll = IMU.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
-                    IMUTurnLeft();
-                    telemetry.addData("Roll", Roll);
-                    telemetry.update();
-                }
-            }
-            StopRobot();
-        }
-    }
+//
+//    private void extendedArm() {
+//        if(gamepad2.b) {
+//            Claw.setPosition(1);
+//        }
+//        if(gamepad2.x) {
+//            Claw.setPosition(0);
+//        }
+//        if (gamepad2.right_bumper && StringMotor.getCurrentPosition() <= 250 && StringMotor.getCurrentPosition() >= -2100) {
+//            StringMotor.setPower(-0.85);
+//        } else if (gamepad2.left_bumper && StringMotor.getCurrentPosition() <= 250 && StringMotor.getCurrentPosition() >= -2100) {
+//            StringMotor.setPower(0.23);
+//        } else {
+//            StringMotor.setPower(0);
+//        }
+//    }
+//
+//    private void Arm() {
+//        //Higher number is further down and vice versa FOR DCLAW
+//        if (gamepad2.y) {
+//            ArmMotor.setTargetPosition(ArmMotor.getCurrentPosition() + 25);
+//        }
+//        if (gamepad2.a) {
+//            ArmMotor.setTargetPosition(ArmMotor.getCurrentPosition() - 25);
+//        }
+//        if (gamepad2.dpad_up) {
+//            ArmMotor.setTargetPosition(1125);
+//        }
+//        if (gamepad2.dpad_right) {
+//            ArmMotor.setTargetPosition(1080);
+//        }
+//        if (gamepad2.dpad_down) {
+//            ArmMotor.setTargetPosition(10);
+//        }
+//
+//        if (ArmMotor.getCurrentPosition() < ArmMotor.getTargetPosition() - 50) {
+//            ArmMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+//
+//            try {
+//                ((DcMotorEx) ArmMotor).setVelocity(-1000);
+//                Thread.sleep(600);
+//            } catch (InterruptedException e) {}
+//            if(ArmMotor.getTargetPosition() == 1125 || ArmMotor.getTargetPosition() == 1080) {
+//                DClaw.setPosition(0.9);
+//            }
+//        } else if (ArmMotor.getCurrentPosition() > ArmMotor.getTargetPosition() + 50) {
+//            ArmMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+//            try {
+//                ((DcMotorEx) ArmMotor).setVelocity(500);
+//                Thread.sleep(600);
+//            } catch (InterruptedException e){}
+//            if(ArmMotor.getTargetPosition() == 10) {
+//                DClaw.setPosition(0.71);
+//            }
+//        }
+//    }
+//
+//    private void IMUTurnLeft() {
+//        front_right.setDirection(DcMotorEx.Direction.REVERSE);
+//        back_right.setDirection(DcMotorEx.Direction.REVERSE);
+//        front_left.setDirection(DcMotorEx.Direction.REVERSE);
+//        back_left.setDirection(DcMotorEx.Direction.REVERSE);
+//        front_left.setPower(0.55);
+//        back_left.setPower(0.55);
+//        front_right.setPower(0.55);
+//        back_right.setPower(0.55);
+//    }
+//
+//    private void StopRobot() {
+//        front_left.setPower(0);
+//        back_left.setPower(0);
+//        front_right.setPower(0);
+//        back_right.setPower(0);
+//    }
+//
+//    private void RotateLeftIMU() {
+//        Roll = IMU.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
+//        while (!(Roll > Angle || isStopRequested())) {
+//            Roll = IMU.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
+//            IMUTurnLeft();
+//            telemetry.addData("Yaw", Roll);
+//            telemetry.update();
+//        }
+//        StopRobot();
+//    }
+//
+//    private void turnLeft180() {
+//        if (gamepad1.right_bumper) {
+//            Roll = IMU.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
+//            if(Roll < 0){
+//                while ((Roll < (Roll+180) || isStopRequested())) {
+//                    Roll = IMU.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
+//                    IMUTurnLeft();
+//                    telemetry.addData("Roll", Roll);
+//                    telemetry.update();
+//                }
+//            }
+//            StopRobot();
+//        }
+//    }
 
     private void Movement() {
         int my_0;
