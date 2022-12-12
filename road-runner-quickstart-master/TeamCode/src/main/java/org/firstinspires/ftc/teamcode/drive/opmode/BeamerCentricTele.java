@@ -5,6 +5,7 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import java.lang.Math;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
@@ -62,7 +63,7 @@ public class BeamerCentricTele extends LinearOpMode {
             // Print pose to telemetry
             telemetry.addData("x", poseEstimate.getX());
             telemetry.addData("y", poseEstimate.getY());
-            telemetry.addData("heading", poseEstimate.getHeading());
+            telemetry.addData("heading in degrees", Math.toDegrees(poseEstimate.getHeading()));
             telemetry.update();
         }
     }
