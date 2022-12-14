@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.drive.DriveSignal;
+import com.outoftheboxrobotics.photoncore.PhotonCore;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -33,6 +34,7 @@ public class BeamerPID extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+        PhotonCore.enable();
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         TelemetryPacket packet = new TelemetryPacket();
 

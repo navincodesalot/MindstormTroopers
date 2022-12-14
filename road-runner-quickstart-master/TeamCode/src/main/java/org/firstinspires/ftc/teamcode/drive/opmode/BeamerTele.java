@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.drive.opmode;
 
+import com.outoftheboxrobotics.photoncore.PhotonCore;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -74,6 +75,7 @@ public class BeamerTele extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+        PhotonCore.enable();
         IMU = hardwareMap.get(BNO055IMU.class, "IMU");
         front_right = hardwareMap.get(DcMotorEx.class, "front_right");
         back_right = hardwareMap.get(DcMotorEx.class, "back_right");

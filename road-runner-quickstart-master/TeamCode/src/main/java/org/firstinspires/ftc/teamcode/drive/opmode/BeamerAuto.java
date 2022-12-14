@@ -21,6 +21,7 @@
 
 package org.firstinspires.ftc.teamcode.drive.opmode;
 
+import com.outoftheboxrobotics.photoncore.PhotonCore;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -63,6 +64,7 @@ public class BeamerAuto extends LinearOpMode
 
     @Override
     public void runOpMode() {
+        PhotonCore.enable();
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
         // Set the pose estimate to where you know the bot will start in autonomous
