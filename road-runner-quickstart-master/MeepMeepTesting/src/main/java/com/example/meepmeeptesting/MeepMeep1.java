@@ -8,7 +8,7 @@ import com.noahbres.meepmeep.core.colorscheme.scheme.ColorSchemeRedDark;
 import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder;
 import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
 
-public class MeepMeepTesting {
+public class MeepMeep1 {
     public static void main(String[] args) {
         MeepMeep meepMeep = new MeepMeep(600);
 
@@ -17,12 +17,11 @@ public class MeepMeepTesting {
 
         double blueY = 63.3;
         double redY = returnYCoord(blueY);
-        int loco = 1;
 
         // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
         RoadRunnerBotEntity blueBot = new DefaultBotBuilder(meepMeep)
                 .setColorScheme(new ColorSchemeBlueDark())
-                .setConstraints(63, 60, Math.toRadians(180), Math.toRadians(180), 13)
+                .setConstraints(50, 45, Math.toRadians(180), Math.toRadians(180), 13)
 
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(new Pose2d(blueX, blueY, Math.toRadians(-90))) // increment y to go further towards blue wall
@@ -49,12 +48,13 @@ public class MeepMeepTesting {
 
                                 .lineToSplineHeading(new Pose2d(32, 10, Math.toRadians(230)))
                                 .waitSeconds(1)
+                                .lineToSplineHeading(new Pose2d(57, 11.5, Math.toRadians(0)))
                                 .build()
                 );
 
         RoadRunnerBotEntity redBot = new DefaultBotBuilder(meepMeep)
                 .setColorScheme(new ColorSchemeRedDark())
-                .setConstraints(63, 60, Math.toRadians(180), Math.toRadians(180), 13)
+                .setConstraints(50, 45, Math.toRadians(180), Math.toRadians(180), 13)
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(new Pose2d(redX, redY, Math.toRadians(90)))
                                 .waitSeconds(0.5)
@@ -80,6 +80,7 @@ public class MeepMeepTesting {
 
                                 .lineToSplineHeading(new Pose2d(-32, -10, Math.toRadians(50)))
                                 .waitSeconds(1)
+                                .lineToSplineHeading(new Pose2d(-57, -11.5, Math.toRadians(180)))
                                 .build()
                 );
 
