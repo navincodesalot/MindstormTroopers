@@ -282,8 +282,7 @@ public class SampleMecanumDrive extends MecanumDrive {
         for (DcMotorEx motor : motors) {
             wheelVelocities.add(encoderTicksToInches(motor.getVelocity()));
         }
-        return wheelVelocities;
-    }
+        return wheelVelocities;    }
 
     @Override
     public void setMotorPowers(double v, double v1, double v2, double v3) {

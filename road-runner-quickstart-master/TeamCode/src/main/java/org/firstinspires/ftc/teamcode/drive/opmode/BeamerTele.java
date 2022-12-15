@@ -25,6 +25,8 @@ public class BeamerTele extends LinearOpMode {
     private DcMotorEx back_right;
     private DcMotorEx front_left;
     private DcMotorEx back_left;
+    private DcMotorEx liftMotor1;
+    private DcMotorEx liftMotor2;
 //    private DcMotorEx ArmMotor;
 //    private Servo Claw;
 //    private Servo DClaw;
@@ -81,6 +83,8 @@ public class BeamerTele extends LinearOpMode {
         back_right = hardwareMap.get(DcMotorEx.class, "back_right");
         front_left = hardwareMap.get(DcMotorEx.class, "front_left");
         back_left = hardwareMap.get(DcMotorEx.class, "back_left");
+        liftMotor1 = hardwareMap.get(DcMotorEx.class, "liftMotor1");
+        liftMotor2 = hardwareMap.get(DcMotorEx.class, "liftMotor2");
 //        ArmMotor = hardwareMap.get(DcMotorEx.class, "ArmMotor");
 //        StringMotor = hardwareMap.get(DcMotorEx.class, "StringMotor");
 //        Claw = hardwareMap.get(Servo.class, "Claw");
@@ -100,9 +104,18 @@ public class BeamerTele extends LinearOpMode {
         while (opModeIsActive()) {
             Telemetry();
             Movement();
+            extendLift();
         }
     }
-//
+    private void extendLift() {
+        while (gamepad2.right_bumper) {
+            liftMotor2.setPower(-0.40);
+        }
+
+        while(gamepad2.left_bumper) {
+            liftMotor2.setPower(0.4);
+        }
+    }//
 //    private void extendedArm() {
 //        if(gamepad2.b) {
 //            Claw.setPosition(1);
