@@ -108,14 +108,22 @@ public class BeamerTele extends LinearOpMode {
         }
     }
     private void extendLift() {
-        while (gamepad2.right_bumper) {
-            liftMotor2.setPower(-0.40);
+        if (gamepad2.right_bumper) {
+            liftMotor1.setPower(-0.5);
+            liftMotor2.setPower(-0.50);
+        } else {
+            liftMotor1.setPower(0);
+            liftMotor2.setPower(0);
         }
-
-        while(gamepad2.left_bumper) {
-            liftMotor2.setPower(0.4);
+        //Both need to go Counter Clockwise to go down
+        if (gamepad2.left_bumper) {
+            liftMotor1.setPower(0.50);
+            liftMotor2.setPower(0.50);
+        } else {
+            liftMotor1.setPower(0);
+            liftMotor2.setPower(0);
         }
-    }//
+    }
 //    private void extendedArm() {
 //        if(gamepad2.b) {
 //            Claw.setPosition(1);
