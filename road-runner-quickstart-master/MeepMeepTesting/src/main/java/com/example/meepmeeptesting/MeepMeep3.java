@@ -18,11 +18,12 @@ public class MeepMeep3 {
         double blueY = 63.3;
         double redY = returnYCoord(blueY);
 
-        // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
-        RoadRunnerBotEntity blueBot = new DefaultBotBuilder(meepMeep)
-                .setColorScheme(new ColorSchemeBlueDark())
-                .setConstraints(50, 45, Math.toRadians(180), Math.toRadians(180), 13)
+        int maxVel = 50, maxAccel = 45, trackWidth = 13;
 
+        // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
+        RoadRunnerBotEntity rightBlueBot = new DefaultBotBuilder(meepMeep)
+                .setColorScheme(new ColorSchemeBlueDark())
+                .setConstraints(maxVel, maxAccel, Math.toRadians(180), Math.toRadians(180), trackWidth)
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(new Pose2d(blueX, blueY, Math.toRadians(-90))) // increment y to go further towards blue wall
                                 .waitSeconds(0.5)
@@ -52,9 +53,73 @@ public class MeepMeep3 {
                                 .build()
                 );
 
-        RoadRunnerBotEntity redBot = new DefaultBotBuilder(meepMeep)
+        RoadRunnerBotEntity leftBlueBot = new DefaultBotBuilder(meepMeep)
+                .setColorScheme(new ColorSchemeBlueDark())
+                .setConstraints(maxVel, maxAccel, Math.toRadians(180), Math.toRadians(180), trackWidth)
+                .followTrajectorySequence(drive ->
+                        drive.trajectorySequenceBuilder(new Pose2d(redX, blueY, Math.toRadians(-90))) // increment y to go further towards blue wall
+                                .waitSeconds(0.5)
+                                .lineToSplineHeading(new Pose2d(-32, 10, Math.toRadians(-50))) // opp coterminal ang
+                                .waitSeconds(0.5)
+                                .lineToSplineHeading(new Pose2d(-57, 11.5, Math.toRadians(180)))
+                                .waitSeconds(1)
+
+                                .lineToSplineHeading(new Pose2d(-32, 10, Math.toRadians(-50)))
+                                .waitSeconds(1)
+                                .lineToSplineHeading(new Pose2d(-57, 11.5, Math.toRadians(180)))
+                                .waitSeconds(1)
+
+                                .lineToSplineHeading(new Pose2d(-32, 10, Math.toRadians(-50)))
+                                .waitSeconds(1)
+                                .lineToSplineHeading(new Pose2d(-57, 11.5, Math.toRadians(180)))
+                                .waitSeconds(1)
+
+                                .lineToSplineHeading(new Pose2d(-32, 10, Math.toRadians(-50)))
+                                .waitSeconds(1)
+                                .lineToSplineHeading(new Pose2d(-57, 11.5, Math.toRadians(180)))
+                                .waitSeconds(1)
+
+                                .lineToSplineHeading(new Pose2d(-32, 10, Math.toRadians(-50)))
+                                .waitSeconds(1)
+                                .lineToSplineHeading(new Pose2d(-57, 11.5, Math.toRadians(180)))
+                                .build()
+                );
+
+        RoadRunnerBotEntity rightRedBot = new DefaultBotBuilder(meepMeep)
                 .setColorScheme(new ColorSchemeRedDark())
-                .setConstraints(50, 45, Math.toRadians(180), Math.toRadians(180), 13)
+                .setConstraints(maxVel, maxAccel, Math.toRadians(180), Math.toRadians(180), trackWidth)
+                .followTrajectorySequence(drive ->
+                        drive.trajectorySequenceBuilder(new Pose2d(blueX, redY, Math.toRadians(90))) // increment y to go further towards blue wall
+                                .waitSeconds(0.5)
+                                .lineToSplineHeading(new Pose2d(32, -10, Math.toRadians(-230))) // opp coterminal ang
+                                .waitSeconds(0.5)
+                                .lineToSplineHeading(new Pose2d(57, -11.5, Math.toRadians(0)))
+                                .waitSeconds(1)
+
+                                .lineToSplineHeading(new Pose2d(32, -10, Math.toRadians(-230)))
+                                .waitSeconds(1)
+                                .lineToSplineHeading(new Pose2d(57, -11.5, Math.toRadians(0)))
+                                .waitSeconds(1)
+
+                                .lineToSplineHeading(new Pose2d(32, -10, Math.toRadians(-230)))
+                                .waitSeconds(1)
+                                .lineToSplineHeading(new Pose2d(57, -11.5, Math.toRadians(0)))
+                                .waitSeconds(1)
+
+                                .lineToSplineHeading(new Pose2d(32, -10, Math.toRadians(-230)))
+                                .waitSeconds(1)
+                                .lineToSplineHeading(new Pose2d(57, -11.5, Math.toRadians(0)))
+                                .waitSeconds(1)
+
+                                .lineToSplineHeading(new Pose2d(32, -10, Math.toRadians(-230)))
+                                .waitSeconds(1)
+                                .lineToSplineHeading(new Pose2d(57, -11.5, Math.toRadians(0)))
+                                .build()
+                );
+
+        RoadRunnerBotEntity leftRedBot = new DefaultBotBuilder(meepMeep)
+                .setColorScheme(new ColorSchemeRedDark())
+                .setConstraints(maxVel, maxAccel, Math.toRadians(180), Math.toRadians(180), trackWidth)
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(new Pose2d(redX, redY, Math.toRadians(90)))
                                 .waitSeconds(0.5)
@@ -87,8 +152,10 @@ public class MeepMeep3 {
         meepMeep.setBackground(MeepMeep.Background.FIELD_POWERPLAY_OFFICIAL)
                 .setDarkMode(true)
                 .setBackgroundAlpha(0.95f)
-                .addEntity(blueBot)
-                .addEntity(redBot)
+                .addEntity(rightBlueBot)
+                .addEntity(leftBlueBot)
+                .addEntity(rightRedBot)
+                .addEntity(leftRedBot)
                 .start();
     }
 
