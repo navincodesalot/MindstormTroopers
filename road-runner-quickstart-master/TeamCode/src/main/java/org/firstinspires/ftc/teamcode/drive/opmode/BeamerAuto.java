@@ -178,15 +178,7 @@ public class BeamerAuto extends LinearOpMode
     }
 
     void tagToTelemetry(AprilTagDetection detection) {
-        String det = "";
-        if(detection.id == 2){
-            det = "1";
-        } else if(detection.id == 10){
-            det = "2";
-        } else if(detection.id == 18){
-            det = "3";
-        }
-        telemetry.addLine(String.format("\nDetected tag ID=%d", det));
+        telemetry.addLine(String.format("\nDetected tag ID=%d", detection.id));
         telemetry.addLine(String.format("Translation X: %.2f feet", detection.pose.x*FEET_PER_METER));
         telemetry.addLine(String.format("Translation Y: %.2f feet", detection.pose.y*FEET_PER_METER));
         telemetry.addLine(String.format("Translation Z: %.2f feet", detection.pose.z*FEET_PER_METER));

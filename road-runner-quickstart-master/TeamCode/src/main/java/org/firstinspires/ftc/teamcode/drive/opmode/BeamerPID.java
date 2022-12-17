@@ -27,8 +27,9 @@ public class BeamerPID extends LinearOpMode {
     public static double Kp = 0.0;
     public static double Ki = 0.0;
     public static double Kd = 0.0;
+    public static double Kf = 0.0;
 
-    public static int targetPosition = 5000; // todo Find target pos manually
+    public static int targetPosition = -1746; // todo Find target pos manually
 
     private final FtcDashboard dashboard = FtcDashboard.getInstance();
 
@@ -52,18 +53,18 @@ public class BeamerPID extends LinearOpMode {
         liftMotor2.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
 
         int targetPosition = 5000; // todo
-
+        waitForStart();
         while(opModeIsActive()) {
-            double power1 = returnPower(liftMotor1.getCurrentPosition(), targetPosition);
+//            double power1 = returnPower(liftMotor1.getCurrentPosition(), targetPosition);
             double power2 = returnPower(liftMotor2.getCurrentPosition(), targetPosition);
 
-            packet.put("Power1", power1);
+//            packet.put("Power1", power1);
             packet.put("Power2", power2);
             packet.put("Position", liftMotor1.getCurrentPosition());
             packet.put("Error", lastError);
 
-            liftMotor1.setPower(power1);
-            liftMotor2.setPower(power2);
+//            liftMotor1.setTargetPosition();
+            liftMotor2.setPower(-power2);
 
             dashboard.sendTelemetryPacket(packet);
         }
@@ -75,7 +76,7 @@ public class BeamerPID extends LinearOpMode {
 
         timer.reset();
 
-        double output = (error * Kp) + (derivative * Kd) + (integralSum * Ki);
+        double output = (error * Kp) + (derivative * Kd) + (integralSum * Ki) + Kf;
         return output;
     }
 

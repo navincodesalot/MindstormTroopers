@@ -18,12 +18,12 @@ public class MeepMeep2 {
         double blueY = 63.3;
         double redY = returnYCoord(blueY);
 
-        int maxVel = 50, maxAccel = 45, trackWidth = 13;
+        int maxVel = 55, maxAccel = 45, trackWidth = 13;
 
         // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
         RoadRunnerBotEntity rightBlueBot = new DefaultBotBuilder(meepMeep)
                 .setColorScheme(new ColorSchemeBlueDark())
-                .setConstraints(maxVel, maxAccel, Math.toRadians(180), Math.toRadians(180), trackWidth)
+                .setConstraints(maxVel, maxAccel, 5.50, Math.toRadians(180), trackWidth)
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(new Pose2d(blueX, blueY, Math.toRadians(-90))) // increment y to go further towards blue wall
                                 .waitSeconds(0.5)

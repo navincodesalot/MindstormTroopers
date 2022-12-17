@@ -69,8 +69,8 @@ public class BeamerTele extends LinearOpMode {
         telemetry.addData("BackLeftPos", back_left.getCurrentPosition());
         telemetry.addData("imu", IMU.getAngularOrientation());
 //        telemetry.addData("Arm Target", ArmMotor.getTargetPosition());
-//        telemetry.addData("Arm Current", ArmMotor.getCurrentPosition());
-//        telemetry.addData("String Motor Position: ", StringMotor.getCurrentPosition());
+        telemetry.addData("Lift 1", liftMotor1.getCurrentPosition());
+        telemetry.addData("Lift 2", liftMotor2.getCurrentPosition());
         telemetry.addData("Yaw", IMU.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle);
         telemetry.update();
     }
@@ -95,7 +95,9 @@ public class BeamerTele extends LinearOpMode {
         front_left.setDirection(DcMotorEx.Direction.REVERSE);
         back_left.setDirection(DcMotorEx.Direction.REVERSE);
 //        ArmMotor.setDirection(DcMotorEx.Direction.FORWARD);
-//        ArmMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        liftMotor1.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        liftMotor2.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+
         Fast = 1;
 //        DClaw.setPosition(0.71);
         waitForStart();
@@ -107,22 +109,35 @@ public class BeamerTele extends LinearOpMode {
             extendLift();
         }
     }
+
     private void extendLift() {
-        if (gamepad2.right_bumper) {
-            liftMotor1.setPower(-0.5);
-            liftMotor2.setPower(-0.50);
-        } else {
-            liftMotor1.setPower(0);
-            liftMotor2.setPower(0);
+//        //Higher number is further down and vice versa FOR DCLAW
+
+        if (gamepad2.dpad_up) {
+            liftMotor1.setTargetPosition(-1700);
+            liftMotor2.setTargetPosition(-1749);
         }
-        //Both need to go Counter Clockwise to go down
-        if (gamepad2.left_bumper) {
-            liftMotor1.setPower(0.50);
-            liftMotor2.setPower(0.50);
-        } else {
-            liftMotor1.setPower(0);
-            liftMotor2.setPower(0);
+        if (gamepad2.dpad_right) {
+            liftMotor2.setTargetPosition(-1125);
+            liftMotor1.setTargetPosition(-1125);
         }
+        if (gamepad2.dpad_down) {
+            liftMotor1.setTargetPosition(0);
+            liftMotor2.setTargetPosition(0);
+        }
+
+        if (liftMotor1.getCurrentPosition() < liftMotor1.getTargetPosition() - 50 && liftMotor2.getCurrentPosition() < liftMotor2.getTargetPosition() - 50 ) {
+            liftMotor1.setVelocity(-850);
+            liftMotor2.setVelocity(-850);
+            liftMotor1.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+            liftMotor2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        } else if (liftMotor1.getCurrentPosition() > liftMotor1.getTargetPosition() + 50 && liftMotor2.getCurrentPosition() > liftMotor2.getTargetPosition() + 50) {
+            liftMotor1.setVelocity(850);
+            liftMotor2.setVelocity(850);
+            liftMotor1.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+            liftMotor2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        }
+//
     }
 //    private void extendedArm() {
 //        if(gamepad2.b) {
