@@ -27,10 +27,9 @@ public class BeamerTele extends LinearOpMode {
     private DcMotorEx back_left;
     private DcMotorEx liftMotor1;
     private DcMotorEx liftMotor2;
-//    private DcMotorEx ArmMotor;
-//    private Servo Claw;
-//    private Servo DClaw;
-//    private DcMotorEx StringMotor;
+    private Servo claw;
+    private Servo dclaw;
+    private Servo arm;
 
     int Fast;
 
@@ -85,6 +84,10 @@ public class BeamerTele extends LinearOpMode {
         back_left = hardwareMap.get(DcMotorEx.class, "back_left");
         liftMotor1 = hardwareMap.get(DcMotorEx.class, "liftMotor1");
         liftMotor2 = hardwareMap.get(DcMotorEx.class, "liftMotor2");
+
+        claw = hardwareMap.get(Servo.class, "claw");
+        dclaw = hardwareMap.get(Servo.class, "dclaw");
+        arm = hardwareMap.get(Servo.class, "arm");
 //        ArmMotor = hardwareMap.get(DcMotorEx.class, "ArmMotor");
 //        StringMotor = hardwareMap.get(DcMotorEx.class, "StringMotor");
 //        Claw = hardwareMap.get(Servo.class, "Claw");
@@ -99,13 +102,13 @@ public class BeamerTele extends LinearOpMode {
         liftMotor2.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
 
         Fast = 1;
-//        DClaw.setPosition(0.71);
         waitForStart();
 //        ArmMotor.setTargetPosition(0);
         //Higher number is further down and vice versa
         while (opModeIsActive()) {
             Telemetry();
             Movement();
+            dclaw.setPosition(1);
             extendLift();
         }
     }
@@ -113,31 +116,67 @@ public class BeamerTele extends LinearOpMode {
     private void extendLift() {
 //        //Higher number is further down and vice versa FOR DCLAW
 
+        if (gamepad2.x) {
+            claw.setPosition(0);
+        }
+        if (gamepad2.b) {
+            claw.setPosition(1);
+        }
+
+        if (gamepad2.right_bumper){
+            dclaw.setPosition(0);
+        }
+
+        if (gamepad2.left_bumper){
+            dclaw.setPosition(1);
+        }
+
+        if(gamepad2.right_stick_button){
+            arm.setPosition(0.5);
+        }
+
+        if(gamepad2.left_stick_button){
+            arm.setPosition(1);
+        }
+
+
         if (gamepad2.dpad_up) {
-            liftMotor1.setTargetPosition(-1700);
-            liftMotor2.setTargetPosition(-1749);
+            liftMotor1.setTargetPosition(-1699);
+            liftMotor2.setTargetPosition(-1746);
+//            arm.setPosition(0.5);
+//            dclaw.setPosition(0.5);
         }
         if (gamepad2.dpad_right) {
-            liftMotor2.setTargetPosition(-1125);
-            liftMotor1.setTargetPosition(-1125);
+            liftMotor2.setTargetPosition(-1450);
+            liftMotor1.setTargetPosition(-1501);
+//            arm.setPosition(0);
+//            dclaw.setPosition(0.5);
         }
         if (gamepad2.dpad_down) {
             liftMotor1.setTargetPosition(0);
             liftMotor2.setTargetPosition(0);
+//            arm.setPosition(0);
+//            dclaw.setPosition(0);
         }
-
-        if (liftMotor1.getCurrentPosition() < liftMotor1.getTargetPosition() - 50 && liftMotor2.getCurrentPosition() < liftMotor2.getTargetPosition() - 50 ) {
-            liftMotor1.setVelocity(-850);
-            liftMotor2.setVelocity(-850);
+        if (gamepad2.y) {
+            liftMotor1.setTargetPosition(liftMotor1.getTargetPosition() - 25);
+            liftMotor2.setTargetPosition(liftMotor2.getTargetPosition() - 25);
+        }
+        if (gamepad2.a) {
+            liftMotor1.setTargetPosition(liftMotor1.getTargetPosition() + 25);
+            liftMotor2.setTargetPosition(liftMotor2.getTargetPosition() + 25);
+        }
+        if (liftMotor1.getCurrentPosition() < liftMotor1.getTargetPosition() - 50 && liftMotor2.getCurrentPosition() < liftMotor2.getTargetPosition() - 50) {
+            liftMotor1.setVelocity(-2000);
+            liftMotor2.setVelocity(-2000);
             liftMotor1.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
             liftMotor2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         } else if (liftMotor1.getCurrentPosition() > liftMotor1.getTargetPosition() + 50 && liftMotor2.getCurrentPosition() > liftMotor2.getTargetPosition() + 50) {
-            liftMotor1.setVelocity(850);
-            liftMotor2.setVelocity(850);
+            liftMotor1.setVelocity(1300);
+            liftMotor2.setVelocity(1300);
             liftMotor1.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
             liftMotor2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         }
-//
     }
 //    private void extendedArm() {
 //        if(gamepad2.b) {

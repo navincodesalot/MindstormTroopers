@@ -15,50 +15,58 @@ public class MeepMeep2 {
         double blueX = 35;
         double redX = returnXCoord(blueX);
 
-        double blueY = 63.3;
+        double blueY = 61;
         double redY = returnYCoord(blueY);
+        Pose2d startPose = new Pose2d(blueX, blueY, Math.toRadians(-90));
 
         int maxVel = 55, maxAccel = 45, trackWidth = 13;
 
         // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
         RoadRunnerBotEntity rightBlueBot = new DefaultBotBuilder(meepMeep)
+
                 .setColorScheme(new ColorSchemeBlueDark())
                 .setConstraints(maxVel, maxAccel, 5.50, Math.toRadians(180), trackWidth)
                 .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(new Pose2d(blueX, blueY, Math.toRadians(-90))) // increment y to go further towards blue wall
-                                .waitSeconds(0.5)
-                                .lineToSplineHeading(new Pose2d(32, 10, Math.toRadians(230))) // coterminal ang
-                                .waitSeconds(0.5)
-                                .lineToSplineHeading(new Pose2d(57, 11.5, Math.toRadians(0)))
+                                 drive.trajectorySequenceBuilder(startPose) // increment y to go further towards blue wall
                                 .waitSeconds(1)
-
-                                .lineToSplineHeading(new Pose2d(32, 10, Math.toRadians(230)))
-                                .waitSeconds(1)
-                                .lineToSplineHeading(new Pose2d(57, 11.5, Math.toRadians(0)))
-                                .waitSeconds(1)
-
-                                .lineToSplineHeading(new Pose2d(32, 10, Math.toRadians(230)))
-                                .waitSeconds(1)
-                                .lineToSplineHeading(new Pose2d(57, 11.5, Math.toRadians(0)))
-                                .waitSeconds(1)
-
-                                .lineToSplineHeading(new Pose2d(32, 10, Math.toRadians(230)))
-                                .waitSeconds(1)
-                                .lineToSplineHeading(new Pose2d(57, 11.5, Math.toRadians(0)))
-                                .waitSeconds(1)
-
-                                .lineToSplineHeading(new Pose2d(32, 10, Math.toRadians(230)))
-                                .waitSeconds(1)
-                                .lineToSplineHeading(new Pose2d(35, 13, Math.toRadians(0)))
+                                .lineTo(new Vector2d(35, 1.8)) // 2
+                                .lineToSplineHeading(new Pose2d(77, 1.8, Math.toRadians(180))) // 1
                                 .build()
                 );
+//                        drive.trajectorySequenceBuilder(new Pose2d(blueX, blueY, Math.toRadians(-90))) // increment y to go further towards blue wall
+//                                .waitSeconds(0.5)
+//                                .lineToSplineHeading(new Pose2d(32, 10, Math.toRadians(230))) // coterminal ang
+//                                .waitSeconds(0.5)
+//                                .lineToSplineHeading(new Pose2d(57, 11.5, Math.toRadians(0)))
+//                                .waitSeconds(1)
+//
+//                                .lineToSplineHeading(new Pose2d(32, 10, Math.toRadians(230)))
+//                                .waitSeconds(1)
+//                                .lineToSplineHeading(new Pose2d(57, 11.5, Math.toRadians(0)))
+//                                .waitSeconds(1)
+//
+//                                .lineToSplineHeading(new Pose2d(32, 10, Math.toRadians(230)))
+//                                .waitSeconds(1)
+//                                .lineToSplineHeading(new Pose2d(57, 11.5, Math.toRadians(0)))
+//                                .waitSeconds(1)
+//
+//                                .lineToSplineHeading(new Pose2d(32, 10, Math.toRadians(230)))
+//                                .waitSeconds(1)
+//                                .lineToSplineHeading(new Pose2d(57, 11.5, Math.toRadians(0)))
+//                                .waitSeconds(1)
+//
+//                                .lineToSplineHeading(new Pose2d(32, 10, Math.toRadians(230)))
+//                                .waitSeconds(1)
+//                                .lineToSplineHeading(new Pose2d(35, 13, Math.toRadians(0)))
+//                                .build()
+//                );
         RoadRunnerBotEntity leftBlueBot = new DefaultBotBuilder(meepMeep)
                 .setColorScheme(new ColorSchemeBlueDark())
                 .setConstraints(maxVel, maxAccel, Math.toRadians(180), Math.toRadians(180), trackWidth)
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(new Pose2d(redX, blueY, Math.toRadians(-90))) // increment y to go further towards blue wall
                                 .waitSeconds(0.5)
-                                .lineToSplineHeading(new Pose2d(-32, 10, Math.toRadians(-50))) // opp coterminal ang
+                                .lineToLinearHeading(new Pose2d(-35, 10, Math.toRadians(-50))) // opp coterminal ang
                                 .waitSeconds(0.5)
                                 .lineToSplineHeading(new Pose2d(-57, 11.5, Math.toRadians(180)))
                                 .waitSeconds(1)

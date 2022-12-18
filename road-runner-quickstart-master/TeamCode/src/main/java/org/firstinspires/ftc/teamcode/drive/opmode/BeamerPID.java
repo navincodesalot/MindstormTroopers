@@ -7,6 +7,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.drive.DriveSignal;
 import com.outoftheboxrobotics.photoncore.PhotonCore;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -16,6 +17,7 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 @Config
+@Disabled
 @Autonomous(name = "PID Tuner")
 public class BeamerPID extends LinearOpMode {
     DcMotorEx liftMotor1, liftMotor2; //todo
