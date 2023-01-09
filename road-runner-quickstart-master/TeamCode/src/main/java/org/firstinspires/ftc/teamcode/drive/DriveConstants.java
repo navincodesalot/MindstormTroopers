@@ -20,7 +20,7 @@ public class DriveConstants {
     /*
      * These are motor constants that should be listed online for your motors.
      */
-    public static final double TICKS_PER_REV = ((((1+(46/17))) * (1+(46/11))) * 28);
+    public static final double TICKS_PER_REV = 537.7; // use exact for more accuracy https://www.gobilda.com/5203-series-yellow-jacket-planetary-gear-motor-19-2-1-ratio-24mm-length-8mm-rex-shaft-312-rpm-3-3-5v-encoder/
     public static final double MAX_RPM = 312;
 
     /*
