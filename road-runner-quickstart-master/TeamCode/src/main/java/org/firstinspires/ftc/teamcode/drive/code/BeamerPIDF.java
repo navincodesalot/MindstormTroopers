@@ -14,17 +14,15 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 @Config
-@Disabled
 @TeleOp(name = "PIDF Tuner")
 public class BeamerPIDF extends OpMode {
     private PIDController controller;
 
-    public static double p = 0, i = 0, d = 0;
-    public static double f = 0; //g value https://www.ctrlaltftc.com/feedforward-control#slide-gravity-feedforward
+    public static double p = 0.05, i = 0, d = 0, f = -0.13;
 
-    public static int target  = -1746; //todo
-
-    private DcMotorEx liftMotor1, liftMotor2;
+    public static int target  = -100; // change to see effect
+    final double ticks_in_degrees = 537.7 / 180.0; // or divided by 360
+    private DcMotorEx arm;
 
     @Override
     public void init() {
@@ -32,57 +30,48 @@ public class BeamerPIDF extends OpMode {
         controller = new PIDController(p, i, d);
         telemetry = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        liftMotor1 = hardwareMap.get(DcMotorEx.class, "liftMotor1"); // todo
-        liftMotor2 = hardwareMap.get(DcMotorEx.class, "liftMotor2");
+        arm = hardwareMap.get(DcMotorEx.class, "arm");
 
-        liftMotor1.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        liftMotor2.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        arm.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
 
-        liftMotor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        liftMotor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        liftMotor1.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-        liftMotor2.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        arm.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     //this function is used to tune PIDF
     @Override
     public void loop() {
         controller.setPID(p, i, d);
-        int state1 = liftMotor1.getCurrentPosition();
-        int state2 = liftMotor2.getCurrentPosition();
+        int state = arm.getCurrentPosition();
 
-        double pid1 = controller.calculate(state1, target);
-//        double pid2 = controller.calculate(state2, target);
+        double pid = controller.calculate(state, target);
+        double ff = Math.cos(Math.toRadians(target / ticks_in_degrees)) * f;
+        double power = pid + ff;
+        arm.setPower(power);
 
-        double power = pid1 + f;
-//        double power2 = pid2 + f;
-
-//        liftMotor1.setPower(-power);
-        liftMotor2.setPower(-power);
-
-        telemetry.addData("Pos1", state1);
-        telemetry.addData("Pos2", state2);
+        telemetry.addData("Pos", state);
         telemetry.addData("Target", target);
         telemetry.update();
     }
 
     //this function will actually be used to return power to both motors
     // Ex:
-    //      liftMotor1.setPower(returnPower(liftMotor1.getCurrentPosition(), target));
-    //      liftMotor2.setPower(returnPower(liftMotor2.getCurrentPosition(), target));
+    //      arm.setPower(returnPower(arm.getCurrentPosition(), target));
 
-//    public double returnPower(double state, double target) {
-//        controller.setPID(p, i, d);
-//        double pid = controller.calculate(state, target);
-//
-//        double power = pid + f;
-//
-//        liftMotor1.setPower(power);
-//
-//        telemetry.addData("Pos", state);
-//        telemetry.addData("Target", target);
-//        telemetry.update();
-//        return power;
-//    }
+    public double returnPower(double state, double target) {
+        controller.setPID(p, i, d);
+        double pid = controller.calculate(state, target);
+        double ff = Math.cos(Math.toRadians(target / ticks_in_degrees)) * f;
+        double power = pid + ff;
+
+        arm.setPower(power);
+
+        arm.setPower(power);
+
+        telemetry.addData("Pos", state);
+        telemetry.addData("Target", target);
+        telemetry.update();
+        return power;
+    }
 }

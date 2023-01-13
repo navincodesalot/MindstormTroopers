@@ -287,7 +287,6 @@ public class SampleMecanumDrive extends MecanumDrive {
     @Override
 
     public void setMotorPowers(double v, double v1, double v2, double v3) {
-        double multiplier = 12 / batteryVoltageSensor.getVoltage();
         leftFront.setPower(v);
         leftRear.setPower(v1);
         rightRear.setPower(v2);
@@ -302,7 +301,7 @@ public class SampleMecanumDrive extends MecanumDrive {
     @Override
     public Double getExternalHeadingVelocity() {
         return (double) imu
-                .getAngularVelocity().zRotationRate;
+                .getAngularVelocity().xRotationRate;
     }
 
     public static TrajectoryVelocityConstraint getVelocityConstraint(double maxVel, double maxAngularVel, double trackWidth) {

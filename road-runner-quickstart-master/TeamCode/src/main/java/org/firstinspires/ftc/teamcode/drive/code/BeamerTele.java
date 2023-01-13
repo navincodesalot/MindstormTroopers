@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.drive.code;
 
 import com.outoftheboxrobotics.photoncore.PhotonCore;
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -25,11 +26,9 @@ public class BeamerTele extends LinearOpMode {
     private DcMotorEx back_right;
     private DcMotorEx front_left;
     private DcMotorEx back_left;
-    private DcMotorEx liftMotor1;
-    private DcMotorEx liftMotor2;
+    private DcMotorEx arm;
     private Servo claw;
-    private Servo dclaw;
-    private Servo arm;
+    private Servo bclaw;
 
     int Fast;
 
@@ -42,7 +41,7 @@ public class BeamerTele extends LinearOpMode {
     int Power;
 
 
-    /**
+    /**.0
      * Describe this function...
      */
     private void InitIMU() {
@@ -67,9 +66,9 @@ public class BeamerTele extends LinearOpMode {
         telemetry.addData("BackRightPos", back_right.getCurrentPosition());
         telemetry.addData("BackLeftPos", back_left.getCurrentPosition());
         telemetry.addData("imu", IMU.getAngularOrientation());
-//        telemetry.addData("Arm Target", ArmMotor.getTargetPosition());
-        telemetry.addData("Lift 1", liftMotor1.getCurrentPosition());
-        telemetry.addData("Lift 2", liftMotor2.getCurrentPosition());
+        telemetry.addData("Arm Pos", arm.getCurrentPosition());
+//        telemetry.addData("Lift 1", liftMotor1.getCurrentPosition());
+//        telemetry.addData("Lift 2", liftMotor2.getCurrentPosition());
         telemetry.addData("Yaw", IMU.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle);
         telemetry.update();
     }
@@ -77,107 +76,140 @@ public class BeamerTele extends LinearOpMode {
     @Override
     public void runOpMode() {
         PhotonCore.enable();
-        IMU = hardwareMap.get(BNO055IMU.class, "IMU");
+        IMU = hardwareMap.get(BNO055IMU.class, "imu");
         front_right = hardwareMap.get(DcMotorEx.class, "front_right");
         back_right = hardwareMap.get(DcMotorEx.class, "back_right");
         front_left = hardwareMap.get(DcMotorEx.class, "front_left");
         back_left = hardwareMap.get(DcMotorEx.class, "back_left");
-        liftMotor1 = hardwareMap.get(DcMotorEx.class, "liftMotor1");
-        liftMotor2 = hardwareMap.get(DcMotorEx.class, "liftMotor2");
-
+        arm = hardwareMap.get(DcMotorEx.class, "arm");
         claw = hardwareMap.get(Servo.class, "claw");
-        dclaw = hardwareMap.get(Servo.class, "dclaw");
-        arm = hardwareMap.get(Servo.class, "arm");
-//        ArmMotor = hardwareMap.get(DcMotorEx.class, "ArmMotor");
-//        StringMotor = hardwareMap.get(DcMotorEx.class, "StringMotor");
-//        Claw = hardwareMap.get(Servo.class, "Claw");
-//        DClaw = hardwareMap.get(Servo.class, "DClaw");
+        bclaw = hardwareMap.get(Servo.class, "bclaw");
         InitIMU();
         front_right.setDirection(DcMotorEx.Direction.FORWARD);
         back_right.setDirection(DcMotorEx.Direction.FORWARD);
         front_left.setDirection(DcMotorEx.Direction.REVERSE);
         back_left.setDirection(DcMotorEx.Direction.REVERSE);
-//        ArmMotor.setDirection(DcMotorEx.Direction.FORWARD);
-        liftMotor1.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        liftMotor2.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        arm.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        //        ArmMotor.setDirection(DcMotorEx.Direction.FORWARD);
 
         Fast = 1;
         waitForStart();
-//        ArmMotor.setTargetPosition(0);
+        arm.setTargetPosition(0);
+        claw.setPosition(0.3); //close claw on init
         //Higher number is further down and vice versa
         while (opModeIsActive()) {
             Telemetry();
             Movement();
-            dclaw.setPosition(1);
-            extendLift();
+            armController();
+            clawController();
+//            extendArm();
         }
     }
 
-    private void extendLift() {
-//        //Higher number is further down and vice versa FOR DCLAW
-
-        if (gamepad2.x) {
-            claw.setPosition(0);
+    private void clawController() {
+        if (gamepad2.x) { //close claw
+            claw.setPosition(0.3);
         }
-        if (gamepad2.b) {
+
+        if (gamepad2.b) { //open claw
             claw.setPosition(1);
         }
+    }
 
-        if (gamepad2.right_bumper){
-            dclaw.setPosition(0);
-        }
-
-        if (gamepad2.left_bumper){
-            dclaw.setPosition(1);
-        }
-
-        if(gamepad2.right_stick_button){
-            arm.setPosition(0.5);
-        }
-
-        if(gamepad2.left_stick_button){
-            arm.setPosition(1);
-        }
-
-
+    private void armController() {
+//        //Higher number is further down and vice versa FOR claw
         if (gamepad2.dpad_up) {
-            liftMotor1.setTargetPosition(-1699);
-            liftMotor2.setTargetPosition(-1746);
-//            arm.setPosition(0.5);
-//            dclaw.setPosition(0.5);
+            arm.setTargetPosition(136); //grab cone from bottom
         }
         if (gamepad2.dpad_right) {
-            liftMotor2.setTargetPosition(-1450);
-            liftMotor1.setTargetPosition(-1501);
-//            arm.setPosition(0);
-//            dclaw.setPosition(0.5);
+            arm.setTargetPosition(-20); //put into bucket
         }
         if (gamepad2.dpad_down) {
-            liftMotor1.setTargetPosition(0);
-            liftMotor2.setTargetPosition(0);
-//            arm.setPosition(0);
-//            dclaw.setPosition(0);
+            arm.setTargetPosition(115); //lift cone slightly
         }
+        if (gamepad2.dpad_left) {
+            arm.setTargetPosition(23); //1st post
+        }
+        //Need to make this function or pidf loop for slide as well
         if (gamepad2.y) {
-            liftMotor1.setTargetPosition(liftMotor1.getTargetPosition() - 25);
-            liftMotor2.setTargetPosition(liftMotor2.getTargetPosition() - 25);
+            arm.setTargetPosition(arm.getTargetPosition() - 25);
         }
         if (gamepad2.a) {
-            liftMotor1.setTargetPosition(liftMotor1.getTargetPosition() + 25);
-            liftMotor2.setTargetPosition(liftMotor2.getTargetPosition() + 25);
+            arm.setTargetPosition(arm.getTargetPosition() + 25);
         }
-        if (liftMotor1.getCurrentPosition() < liftMotor1.getTargetPosition() - 50 && liftMotor2.getCurrentPosition() < liftMotor2.getTargetPosition() - 50) {
-            liftMotor1.setVelocity(-2000);
-            liftMotor2.setVelocity(-2000);
-            liftMotor1.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-            liftMotor2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        } else if (liftMotor1.getCurrentPosition() > liftMotor1.getTargetPosition() + 50 && liftMotor2.getCurrentPosition() > liftMotor2.getTargetPosition() + 50) {
-            liftMotor1.setVelocity(1300);
-            liftMotor2.setVelocity(1300);
-            liftMotor1.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-            liftMotor2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        if (arm.getCurrentPosition() < arm.getTargetPosition() - 1) {
+            arm.setVelocity(-150);
+            arm.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        } else if (arm.getCurrentPosition() > arm.getTargetPosition() + 1) {
+            arm.setVelocity(150);
+            arm.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         }
-    }
+   }
+//    private void extendLift() {
+////        //Higher number is further down and vice versa FOR DCLAW
+//
+//        if (gamepad2.x) {
+//            claw.setPosition(0);
+//        }
+//        if (gamepad2.b) {
+//            claw.setPosition(1);
+//        }
+//
+//        if (gamepad2.right_bumper){
+//            dclaw.setPosition(0);
+//        }
+//
+//        if (gamepad2.left_bumper){
+//            dclaw.setPosition(1);
+//        }
+//
+//        if(gamepad2.right_stick_button){
+//            arm.setPosition(0.5);
+//        }
+//
+//        if(gamepad2.left_stick_button){
+//            arm.setPosition(1);
+//        }
+//
+//
+//        if (gamepad2.dpad_up) {
+//            liftMotor1.setTargetPosition(-1699);
+//            liftMotor2.setTargetPosition(-1746);
+////            arm.setPosition(0.5);
+////            dclaw.setPosition(0.5);
+//        }
+//        if (gamepad2.dpad_right) {
+//            liftMotor2.setTargetPosition(-1450);
+//            liftMotor1.setTargetPosition(-1501);
+////            arm.setPosition(0);
+////            dclaw.setPosition(0.5);
+//        }
+//        if (gamepad2.dpad_down) {
+//            liftMotor1.setTargetPosition(0);
+//            liftMotor2.setTargetPosition(0);
+////            arm.setPosition(0);
+////            dclaw.setPosition(0);
+//        }
+//        if (gamepad2.y) {
+//            liftMotor1.setTargetPosition(liftMotor1.getTargetPosition() - 25);
+//            liftMotor2.setTargetPosition(liftMotor2.getTargetPosition() - 25);
+//        }
+//        if (gamepad2.a) {
+//            liftMotor1.setTargetPosition(liftMotor1.getTargetPosition() + 25);
+//            liftMotor2.setTargetPosition(liftMotor2.getTargetPosition() + 25);
+//        }
+//        if (liftMotor1.getCurrentPosition() < liftMotor1.getTargetPosition() - 50 && liftMotor2.getCurrentPosition() < liftMotor2.getTargetPosition() - 50) {
+//            liftMotor1.setVelocity(-2000);
+//            liftMotor2.setVelocity(-2000);
+//            liftMotor1.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+//            liftMotor2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+//        } else if (liftMotor1.getCurrentPosition() > liftMotor1.getTargetPosition() + 50 && liftMotor2.getCurrentPosition() > liftMotor2.getTargetPosition() + 50) {
+//            liftMotor1.setVelocity(1300);
+//            liftMotor2.setVelocity(1300);
+//            liftMotor1.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+//            liftMotor2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+//        }
+//    }
 //    private void extendedArm() {
 //        if(gamepad2.b) {
 //            Claw.setPosition(1);
