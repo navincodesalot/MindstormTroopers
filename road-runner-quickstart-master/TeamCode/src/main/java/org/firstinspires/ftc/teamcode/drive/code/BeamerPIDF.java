@@ -14,11 +14,12 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 @Config
+@Disabled
 @TeleOp(name = "PIDF Tuner")
 public class BeamerPIDF extends OpMode {
     private PIDController controller;
 
-    public static double p = 0.05, i = 0, d = 0, f = -0.13;
+    public static double p = 0.0095, i = 0, d = 0.0009, f = -0.15;
 
     public static int target  = -100; // change to see effect
     final double ticks_in_degrees = 537.7 / 180.0; // or divided by 360

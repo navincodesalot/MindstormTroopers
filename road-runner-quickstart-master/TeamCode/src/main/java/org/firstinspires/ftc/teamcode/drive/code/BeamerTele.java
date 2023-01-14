@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.drive.code;
 
+import com.arcrobotics.ftclib.controller.PIDController;
 import com.outoftheboxrobotics.photoncore.PhotonCore;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -16,17 +17,18 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
+import com.arcrobotics.ftclib.controller.PIDController;
 
 
 @TeleOp
 public class BeamerTele extends LinearOpMode {
-
     private BNO055IMU IMU;
     private DcMotorEx front_right;
     private DcMotorEx back_right;
     private DcMotorEx front_left;
     private DcMotorEx back_left;
     private DcMotorEx arm;
+    private DcMotorEx slide;
     private Servo claw;
     private Servo bclaw;
 
@@ -66,9 +68,9 @@ public class BeamerTele extends LinearOpMode {
         telemetry.addData("BackRightPos", back_right.getCurrentPosition());
         telemetry.addData("BackLeftPos", back_left.getCurrentPosition());
         telemetry.addData("imu", IMU.getAngularOrientation());
-        telemetry.addData("Arm Pos", arm.getCurrentPosition());
+        telemetry.addData("Arm Current", arm.getCurrentPosition());
 //        telemetry.addData("Lift 1", liftMotor1.getCurrentPosition());
-//        telemetry.addData("Lift 2", liftMotor2.getCurrentPosition());
+        telemetry.addData("Slide Current", slide.getCurrentPosition());
         telemetry.addData("Yaw", IMU.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle);
         telemetry.update();
     }
@@ -82,6 +84,7 @@ public class BeamerTele extends LinearOpMode {
         front_left = hardwareMap.get(DcMotorEx.class, "front_left");
         back_left = hardwareMap.get(DcMotorEx.class, "back_left");
         arm = hardwareMap.get(DcMotorEx.class, "arm");
+        slide = hardwareMap.get(DcMotorEx.class, "slide");
         claw = hardwareMap.get(Servo.class, "claw");
         bclaw = hardwareMap.get(Servo.class, "bclaw");
         InitIMU();
@@ -90,6 +93,10 @@ public class BeamerTele extends LinearOpMode {
         front_left.setDirection(DcMotorEx.Direction.REVERSE);
         back_left.setDirection(DcMotorEx.Direction.REVERSE);
         arm.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+
+        arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        arm.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         //        ArmMotor.setDirection(DcMotorEx.Direction.FORWARD);
 
         Fast = 1;
@@ -100,20 +107,47 @@ public class BeamerTele extends LinearOpMode {
         while (opModeIsActive()) {
             Telemetry();
             Movement();
-            armController();
             clawController();
 //            extendArm();
         }
     }
 
     private void clawController() {
-        if (gamepad2.x) { //close claw
+        if (gamepad2.b) { //close claw
             claw.setPosition(0.3);
         }
 
-        if (gamepad2.b) { //open claw
+        if (gamepad2.x) { //open claw
             claw.setPosition(1);
         }
+        if (gamepad2.dpad_down) {
+            arm.setPower(returnPower(arm.getCurrentPosition(), 145)); //grab cone
+        }
+        if (gamepad2.dpad_left) {
+            arm.setPower(returnPower(arm.getCurrentPosition(), 115)); //lift cone slightly
+        }
+        if (gamepad2.dpad_right) {
+            arm.setPower(returnPower(arm.getCurrentPosition(), 23)); //1st post
+        }
+        if (gamepad2.dpad_up) {
+            arm.setPower(returnPower(arm.getCurrentPosition(), -20)); //put into bucket
+        }
+    }
+    public double p = 0.0095, i = 0, d = 0.0009, f = -0.15;
+    public PIDController controller = new PIDController(p, i, d);
+
+    public double returnPower(double state, double target) {
+        final double ticks_in_degrees = 537.7 / 180.0; // or divided by 360
+
+        controller.setPID(p, i, d);
+        double pid = controller.calculate(state, target);
+        double ff = Math.cos(Math.toRadians(target / ticks_in_degrees)) * f;
+        double power = pid + ff;
+
+        telemetry.addData("Pos", state);
+        telemetry.addData("Target", target);
+        telemetry.update();
+        return power;
     }
 
     private void armController() {
@@ -143,6 +177,25 @@ public class BeamerTele extends LinearOpMode {
         } else if (arm.getCurrentPosition() > arm.getTargetPosition() + 1) {
             arm.setVelocity(150);
             arm.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        }
+   }
+
+   private void coneLoop() {
+        boolean run = false;
+        int targetPos = 0;
+        if (gamepad1.y) {
+            run = true;
+            if (gamepad1.y) {
+                targetPos = slide.getCurrentPosition();
+                run = false;
+            }
+        }
+        if (gamepad1.a && targetPos != 0) {
+            // drop claw
+            // close claw
+            //pickup cone
+            // run to slide
+            slide.setTargetPosition(targetPos);
         }
    }
 //    private void extendLift() {
