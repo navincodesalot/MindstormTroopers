@@ -1,16 +1,21 @@
 package org.firstinspires.ftc.teamcode.drive.code;
 
+import android.transition.Slide;
+
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.outoftheboxrobotics.photoncore.PhotonCore;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.exception.RobotCoreException;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import java.util.List;
+
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -74,6 +79,11 @@ public class BeamerTele extends LinearOpMode {
         telemetry.addData("Yaw", IMU.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle);
         telemetry.update();
     }
+    Gamepad currentGamepad1 = new Gamepad();
+    Gamepad currentGamepad2 = new Gamepad();
+
+    Gamepad previousGamepad1 = new Gamepad();
+    Gamepad previousGamepad2 = new Gamepad();
 
     @Override
     public void runOpMode() {
@@ -97,18 +107,25 @@ public class BeamerTele extends LinearOpMode {
         arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         arm.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        slide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         //        ArmMotor.setDirection(DcMotorEx.Direction.FORWARD);
 
         Fast = 1;
         waitForStart();
         arm.setTargetPosition(0);
-        claw.setPosition(0.3); //close claw on init
+        slide.setTargetPosition(0);
+//        claw.setPosition(0.3); //close claw on init
         //Higher number is further down and vice versa
         while (opModeIsActive()) {
+            previousGamepad1.copy(currentGamepad1);
+            previousGamepad2.copy(currentGamepad2);
+
+            currentGamepad1.copy(gamepad1);
+            currentGamepad2.copy(gamepad2);
+
             Telemetry();
             Movement();
             clawController();
-//            extendArm();
         }
     }
 
@@ -120,24 +137,24 @@ public class BeamerTele extends LinearOpMode {
         if (gamepad2.x) { //open claw
             claw.setPosition(1);
         }
-        if (gamepad2.dpad_down) {
-            arm.setPower(returnPower(arm.getCurrentPosition(), 145)); //grab cone
+        if (currentGamepad1.dpad_down && !previousGamepad1.dpad_down) {
+            arm.setPower(returnPower(arm.getCurrentPosition(), 130)); //grab cone
         }
-        if (gamepad2.dpad_left) {
-            arm.setPower(returnPower(arm.getCurrentPosition(), 115)); //lift cone slightly
+        if (currentGamepad1.dpad_left && !previousGamepad1.dpad_left) {
+            arm.setPower(returnPower(arm.getCurrentPosition(), 100)); //lift cone slightly
         }
-        if (gamepad2.dpad_right) {
-            arm.setPower(returnPower(arm.getCurrentPosition(), 23)); //1st post
+        if (currentGamepad1.dpad_right && !previousGamepad1.dpad_right) {
+            arm.setPower(returnPower(arm.getCurrentPosition(), 20)); //1st post todo maybe works
         }
-        if (gamepad2.dpad_up) {
-            arm.setPower(returnPower(arm.getCurrentPosition(), -20)); //put into bucket
+        if (currentGamepad1.dpad_up && !previousGamepad1.dpad_up) {
+            arm.setPower(returnPower(arm.getCurrentPosition(), -25)); //put into bucket
         }
     }
-    public double p = 0.0095, i = 0, d = 0.0009, f = -0.15;
+    public double p = 0.005, i = 0.05, d = 0.0009, f = -0.008;
     public PIDController controller = new PIDController(p, i, d);
 
     public double returnPower(double state, double target) {
-        final double ticks_in_degrees = 537.7 / 180.0; // or divided by 360
+        final double ticks_in_degrees = 537.7 / 360.0; // for 360 degree rotation
 
         controller.setPID(p, i, d);
         double pid = controller.calculate(state, target);
@@ -362,6 +379,29 @@ public class BeamerTele extends LinearOpMode {
 //            StopRobot();
 //        }
 //    }
+
+    private void slideCorrect() {
+        if (gamepad1.x) {
+            slide.setTargetPosition(-315); //second cone
+        }
+        if (gamepad1.b) {
+            slide.setTargetPosition(-600); //3rd cone
+        }
+        if (gamepad1.y) {
+            slide.setTargetPosition(slide.getTargetPosition() - 25);
+        }
+        if (gamepad1.a) {
+            slide.setTargetPosition(slide.getTargetPosition() + 25);
+        }
+
+        if (slide.getCurrentPosition() < slide.getTargetPosition() - 25){
+            slide.setPower(0.8);
+            slide.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        } else if (slide.getCurrentPosition() > slide.getTargetPosition() + 25) {
+            slide.setVelocity(-0.8);
+            slide.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        }
+    }
 
     private void Movement() {
         int my_0;
