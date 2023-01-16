@@ -50,7 +50,7 @@ public class BeamerPIDF extends OpMode {
         int state = arm.getCurrentPosition();
 
         double pid = controller.calculate(state, target);
-        double ff = Math.cos(Math.toRadians(state / ticks_in_degrees)) * f;
+        double ff = Math.cos(Math.toRadians(target / ticks_in_degrees)) * f;
         double power = pid + ff;
 
         power /= divide;
