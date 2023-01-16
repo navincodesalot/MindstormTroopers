@@ -107,6 +107,8 @@ public class BeamerTele extends LinearOpMode {
         arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         arm.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        arm.setDirection(DcMotorSimple.Direction.REVERSE);
+        slide.setDirection(DcMotorSimple.Direction.REVERSE);
         slide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         //        ArmMotor.setDirection(DcMotorEx.Direction.FORWARD);
 
@@ -125,7 +127,7 @@ public class BeamerTele extends LinearOpMode {
 
             Telemetry();
             Movement();
-            clawController();
+            slideController();
         }
     }
 
@@ -138,19 +140,20 @@ public class BeamerTele extends LinearOpMode {
             claw.setPosition(1);
         }
         if (currentGamepad1.dpad_down && !previousGamepad1.dpad_down) {
-            arm.setPower(returnPower(arm.getCurrentPosition(), 130)); //grab cone
+            arm.setPower(returnPower(arm.getCurrentPosition(), -130)); //grab cone
         }
         if (currentGamepad1.dpad_left && !previousGamepad1.dpad_left) {
-            arm.setPower(returnPower(arm.getCurrentPosition(), 100)); //lift cone slightly
+            arm.setPower(returnPower(arm.getCurrentPosition(), -100)); //lift cone slightly
         }
         if (currentGamepad1.dpad_right && !previousGamepad1.dpad_right) {
             arm.setPower(returnPower(arm.getCurrentPosition(), 20)); //1st post todo maybe works
         }
         if (currentGamepad1.dpad_up && !previousGamepad1.dpad_up) {
-            arm.setPower(returnPower(arm.getCurrentPosition(), -25)); //put into bucket
+            arm.setPower(returnPower(arm.getCurrentPosition(), 20)); //put into bucket
         }
     }
-    public double p = 0.005, i = 0.05, d = 0.0009, f = -0.008;
+    public static double p = 0.0055, i = 0.045, d = 0.00035, f = 0.000000001;
+    public double divide = 1.1;
     public PIDController controller = new PIDController(p, i, d);
 
     public double returnPower(double state, double target) {
@@ -160,6 +163,7 @@ public class BeamerTele extends LinearOpMode {
         double pid = controller.calculate(state, target);
         double ff = Math.cos(Math.toRadians(target / ticks_in_degrees)) * f;
         double power = pid + ff;
+        power /= divide;
 
         telemetry.addData("Pos", state);
         telemetry.addData("Target", target);
@@ -167,33 +171,33 @@ public class BeamerTele extends LinearOpMode {
         return power;
     }
 
-    private void armController() {
+    private void slideController() {
 //        //Higher number is further down and vice versa FOR claw
         if (gamepad2.dpad_up) {
-            arm.setTargetPosition(136); //grab cone from bottom
+            slide.setTargetPosition(2750); //grab cone from bottom
         }
         if (gamepad2.dpad_right) {
-            arm.setTargetPosition(-20); //put into bucket
+            slide.setTargetPosition(-20); //put into bucket
         }
         if (gamepad2.dpad_down) {
-            arm.setTargetPosition(115); //lift cone slightly
+            slide.setTargetPosition(0); //lift cone slightly
         }
         if (gamepad2.dpad_left) {
-            arm.setTargetPosition(23); //1st post
+            slide.setTargetPosition(23); //1st post
         }
         //Need to make this function or pidf loop for slide as well
         if (gamepad2.y) {
-            arm.setTargetPosition(arm.getTargetPosition() - 25);
+            slide.setTargetPosition(slide.getTargetPosition() - 25);
         }
         if (gamepad2.a) {
-            arm.setTargetPosition(arm.getTargetPosition() + 25);
+            slide.setTargetPosition(slide.getTargetPosition() + 25);
         }
-        if (arm.getCurrentPosition() < arm.getTargetPosition() - 1) {
-            arm.setVelocity(-150);
-            arm.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        } else if (arm.getCurrentPosition() > arm.getTargetPosition() + 1) {
-            arm.setVelocity(150);
-            arm.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        if (slide.getCurrentPosition() < slide.getTargetPosition() - 1) {
+            slide.setVelocity(-7500);
+            slide.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        } else if (slide.getCurrentPosition() > slide.getTargetPosition() + 1) {
+            slide.setVelocity(7500);
+            slide.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         }
    }
 

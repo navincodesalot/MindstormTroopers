@@ -10,6 +10,8 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
@@ -19,15 +21,15 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 public class BeamerPIDF extends OpMode {
     private PIDController controller;
 
-    public static double p = 0.003, i = 0.05, d = 0.00075, f = 0.0007; // when going down to 130 its 5 off
+    public static double p = 0.0055, i = 0.045, d = 0.00035, f = 0.000000001; // when going down to 130 its 5 off
 
     public static int target  = 130; // change to see effect
     final static double ticks_in_degrees = 537.7 / 360.0; // for 360 degree rotation
+    public static double divide = 1.1;
     private DcMotorEx arm;
 
     @Override
     public void init() {
-        PhotonCore.enable();
         controller = new PIDController(p, i, d);
         telemetry = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
 
@@ -38,6 +40,7 @@ public class BeamerPIDF extends OpMode {
         arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         arm.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        arm.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     //this function is used to tune PIDF
@@ -49,6 +52,8 @@ public class BeamerPIDF extends OpMode {
         double pid = controller.calculate(state, target);
         double ff = Math.cos(Math.toRadians(target / ticks_in_degrees)) * f;
         double power = pid + ff;
+
+        power /= divide;
         arm.setPower(power);
 
         telemetry.addData("Pos", state);

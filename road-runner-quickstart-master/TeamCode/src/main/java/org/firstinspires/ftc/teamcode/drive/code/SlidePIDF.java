@@ -10,6 +10,8 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
@@ -22,7 +24,7 @@ public class SlidePIDF extends OpMode {
     public static double p = 0, i = 0, d = 0;
     public static double f = -0.12; //g value https://www.ctrlaltftc.com/feedforward-control#slide-gravity-feedforward
 
-    public static int target  = -315; //todo
+    public static int target  = -2800; //todo
 
     private DcMotorEx slide;
 
@@ -39,6 +41,7 @@ public class SlidePIDF extends OpMode {
         slide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         slide.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        slide.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     //this function is used to tune PIDF
