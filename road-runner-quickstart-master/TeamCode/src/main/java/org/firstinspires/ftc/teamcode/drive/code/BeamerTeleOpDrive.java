@@ -162,6 +162,7 @@ public class BeamerTeleOpDrive extends LinearOpMode {
         }
         // todo
         if (gamepad1.a && targetPos != 0) {
+            //Still have to figure out movement automatically using rr (move forward with inches)
             slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), 0));
             claw.setPosition(1);
             arm.setPower(armPIDF.returnPower(arm.getCurrentPosition(), -130)); //grab cone
