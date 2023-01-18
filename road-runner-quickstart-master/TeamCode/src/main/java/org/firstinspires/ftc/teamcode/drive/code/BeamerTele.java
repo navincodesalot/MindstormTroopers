@@ -110,7 +110,6 @@ public class BeamerTele extends LinearOpMode {
         arm.setDirection(DcMotorSimple.Direction.REVERSE);
         slide.setDirection(DcMotorSimple.Direction.REVERSE);
         slide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        //        ArmMotor.setDirection(DcMotorEx.Direction.FORWARD);
 
         Fast = 1;
         waitForStart();
@@ -127,11 +126,11 @@ public class BeamerTele extends LinearOpMode {
 
             Telemetry();
             Movement();
-            slideController();
+            functionController();
         }
     }
 
-    private void clawController() {
+    private void functionController() {
         if (gamepad2.b) { //close claw
             claw.setPosition(0.3);
         }
@@ -140,31 +139,39 @@ public class BeamerTele extends LinearOpMode {
             claw.setPosition(1);
         }
         if (currentGamepad1.dpad_down && !previousGamepad1.dpad_down) {
-            arm.setPower(returnPower(arm.getCurrentPosition(), -130)); //grab cone
+            arm.setPower(returnArmPower(arm.getCurrentPosition(), -130)); //grab cone
         }
         if (currentGamepad1.dpad_left && !previousGamepad1.dpad_left) {
-            arm.setPower(returnPower(arm.getCurrentPosition(), -100)); //lift cone slightly
+            arm.setPower(returnArmPower(arm.getCurrentPosition(), -100)); //lift cone slightly
         }
         if (currentGamepad1.dpad_right && !previousGamepad1.dpad_right) {
-            arm.setPower(returnPower(arm.getCurrentPosition(), 20)); //1st post todo maybe works
+            arm.setPower(returnArmPower(arm.getCurrentPosition(), 20)); //1st post todo maybe works
         }
         if (currentGamepad1.dpad_up && !previousGamepad1.dpad_up) {
-            arm.setPower(returnPower(arm.getCurrentPosition(), 20)); //put into bucket
+            arm.setPower(returnArmPower(arm.getCurrentPosition(), 20)); //put into bucket
         }
         if(gamepad2.y){
-            bclaw.setPosition(0);
+            bclaw.setPosition(0.92);
         }
         if(gamepad2.a){
-            bclaw.setPosition(1);
+            bclaw.setPosition(0);
         }
     }
 
+    public double returnSlidePower(double state, double target) {
+        double p = 0.07, i = 0.4, d = 0.001, f = 0.04;
+        PIDController controller = new PIDController(p, i, d);
+        controller.setPID(p, i, d);
 
-    public static double p = 0.0055, i = 0.045, d = 0.00035, f = 0.000000001;
-    public double divide = 1.1;
-    public PIDController controller = new PIDController(p, i, d);
+        double pid = controller.calculate(state, target);
+        double power = pid + f;
+        return power;
+    }
 
-    public double returnPower(double state, double target) {
+    public double returnArmPower(double state, double target) {
+        double p = 0.0055, i = 0.045, d = 0.00035, f = 0.000000001;
+        double divide = 1.1;
+        PIDController controller = new PIDController(p, i, d);
         final double ticks_in_degrees = 537.7 / 360.0; // for 360 degree rotation
 
         controller.setPID(p, i, d);
@@ -178,36 +185,6 @@ public class BeamerTele extends LinearOpMode {
         telemetry.update();
         return power;
     }
-
-    private void slideController() {
-//        //Higher number is further down and vice versa FOR claw
-        if (gamepad2.dpad_up) {
-            slide.setTargetPosition(2750); //grab cone from bottom
-        }
-        if (gamepad2.dpad_right) {
-            slide.setTargetPosition(-20); //put into bucket
-        }
-        if (gamepad2.dpad_down) {
-            slide.setTargetPosition(0); //lift cone slightly
-        }
-        if (gamepad2.dpad_left) {
-            slide.setTargetPosition(23); //1st post
-        }
-        //Need to make this function or pidf loop for slide as well
-        if (gamepad2.y) {
-            slide.setTargetPosition(slide.getTargetPosition() - 25);
-        }
-        if (gamepad2.a) {
-            slide.setTargetPosition(slide.getTargetPosition() + 25);
-        }
-        if (slide.getCurrentPosition() < slide.getTargetPosition() - 1) {
-            slide.setVelocity(-7500);
-            slide.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        } else if (slide.getCurrentPosition() > slide.getTargetPosition() + 1) {
-            slide.setVelocity(7500);
-            slide.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        }
-   }
 
    private void coneLoop() {
         boolean run = false;
@@ -227,193 +204,6 @@ public class BeamerTele extends LinearOpMode {
             slide.setTargetPosition(targetPos);
         }
    }
-//    private void extendLift() {
-////        //Higher number is further down and vice versa FOR DCLAW
-//
-//        if (gamepad2.x) {
-//            claw.setPosition(0);
-//        }
-//        if (gamepad2.b) {
-//            claw.setPosition(1);
-//        }
-//
-//        if (gamepad2.right_bumper){
-//            dclaw.setPosition(0);
-//        }
-//
-//        if (gamepad2.left_bumper){
-//            dclaw.setPosition(1);
-//        }
-//
-//        if(gamepad2.right_stick_button){
-//            arm.setPosition(0.5);
-//        }
-//
-//        if(gamepad2.left_stick_button){
-//            arm.setPosition(1);
-//        }
-//
-//
-//        if (gamepad2.dpad_up) {
-//            liftMotor1.setTargetPosition(-1699);
-//            liftMotor2.setTargetPosition(-1746);
-////            arm.setPosition(0.5);
-////            dclaw.setPosition(0.5);
-//        }
-//        if (gamepad2.dpad_right) {
-//            liftMotor2.setTargetPosition(-1450);
-//            liftMotor1.setTargetPosition(-1501);
-////            arm.setPosition(0);
-////            dclaw.setPosition(0.5);
-//        }
-//        if (gamepad2.dpad_down) {
-//            liftMotor1.setTargetPosition(0);
-//            liftMotor2.setTargetPosition(0);
-////            arm.setPosition(0);
-////            dclaw.setPosition(0);
-//        }
-//        if (gamepad2.y) {
-//            liftMotor1.setTargetPosition(liftMotor1.getTargetPosition() - 25);
-//            liftMotor2.setTargetPosition(liftMotor2.getTargetPosition() - 25);
-//        }
-//        if (gamepad2.a) {
-//            liftMotor1.setTargetPosition(liftMotor1.getTargetPosition() + 25);
-//            liftMotor2.setTargetPosition(liftMotor2.getTargetPosition() + 25);
-//        }
-//        if (liftMotor1.getCurrentPosition() < liftMotor1.getTargetPosition() - 50 && liftMotor2.getCurrentPosition() < liftMotor2.getTargetPosition() - 50) {
-//            liftMotor1.setVelocity(-2000);
-//            liftMotor2.setVelocity(-2000);
-//            liftMotor1.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-//            liftMotor2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-//        } else if (liftMotor1.getCurrentPosition() > liftMotor1.getTargetPosition() + 50 && liftMotor2.getCurrentPosition() > liftMotor2.getTargetPosition() + 50) {
-//            liftMotor1.setVelocity(1300);
-//            liftMotor2.setVelocity(1300);
-//            liftMotor1.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-//            liftMotor2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-//        }
-//    }
-//    private void extendedArm() {
-//        if(gamepad2.b) {
-//            Claw.setPosition(1);
-//        }
-//        if(gamepad2.x) {
-//            Claw.setPosition(0);
-//        }
-//        if (gamepad2.right_bumper && StringMotor.getCurrentPosition() <= 250 && StringMotor.getCurrentPosition() >= -2100) {
-//            StringMotor.setPower(-0.85);
-//        } else if (gamepad2.left_bumper && StringMotor.getCurrentPosition() <= 250 && StringMotor.getCurrentPosition() >= -2100) {
-//            StringMotor.setPower(0.23);
-//        } else {
-//            StringMotor.setPower(0);
-//        }
-//    }
-//
-//    private void Arm() {
-//        //Higher number is further down and vice versa FOR DCLAW
-//        if (gamepad2.y) {
-//            ArmMotor.setTargetPosition(ArmMotor.getCurrentPosition() + 25);
-//        }
-//        if (gamepad2.a) {
-//            ArmMotor.setTargetPosition(ArmMotor.getCurrentPosition() - 25);
-//        }
-//        if (gamepad2.dpad_up) {
-//            ArmMotor.setTargetPosition(1125);
-//        }
-//        if (gamepad2.dpad_right) {
-//            ArmMotor.setTargetPosition(1080);
-//        }
-//        if (gamepad2.dpad_down) {
-//            ArmMotor.setTargetPosition(10);
-//        }
-//
-//        if (ArmMotor.getCurrentPosition() < ArmMotor.getTargetPosition() - 50) {
-//            ArmMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-//
-//            try {
-//                ((DcMotorEx) ArmMotor).setVelocity(-1000);
-//                Thread.sleep(600);
-//            } catch (InterruptedException e) {}
-//            if(ArmMotor.getTargetPosition() == 1125 || ArmMotor.getTargetPosition() == 1080) {
-//                DClaw.setPosition(0.9);
-//            }
-//        } else if (ArmMotor.getCurrentPosition() > ArmMotor.getTargetPosition() + 50) {
-//            ArmMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-//            try {
-//                ((DcMotorEx) ArmMotor).setVelocity(500);
-//                Thread.sleep(600);
-//            } catch (InterruptedException e){}
-//            if(ArmMotor.getTargetPosition() == 10) {
-//                DClaw.setPosition(0.71);
-//            }
-//        }
-//    }
-//
-//    private void IMUTurnLeft() {
-//        front_right.setDirection(DcMotorEx.Direction.REVERSE);
-//        back_right.setDirection(DcMotorEx.Direction.REVERSE);
-//        front_left.setDirection(DcMotorEx.Direction.REVERSE);
-//        back_left.setDirection(DcMotorEx.Direction.REVERSE);
-//        front_left.setPower(0.55);
-//        back_left.setPower(0.55);
-//        front_right.setPower(0.55);
-//        back_right.setPower(0.55);
-//    }
-//
-//    private void StopRobot() {
-//        front_left.setPower(0);
-//        back_left.setPower(0);
-//        front_right.setPower(0);
-//        back_right.setPower(0);
-//    }
-//
-//    private void RotateLeftIMU() {
-//        Roll = IMU.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
-//        while (!(Roll > Angle || isStopRequested())) {
-//            Roll = IMU.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
-//            IMUTurnLeft();
-//            telemetry.addData("Yaw", Roll);
-//            telemetry.update();
-//        }
-//        StopRobot();
-//    }
-//
-//    private void turnLeft180() {
-//        if (gamepad1.right_bumper) {
-//            Roll = IMU.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
-//            if(Roll < 0){
-//                while ((Roll < (Roll+180) || isStopRequested())) {
-//                    Roll = IMU.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
-//                    IMUTurnLeft();
-//                    telemetry.addData("Roll", Roll);
-//                    telemetry.update();
-//                }
-//            }
-//            StopRobot();
-//        }
-//    }
-
-    private void slideCorrect() {
-        if (gamepad1.x) {
-            slide.setTargetPosition(-315); //second cone
-        }
-        if (gamepad1.b) {
-            slide.setTargetPosition(-600); //3rd cone
-        }
-        if (gamepad1.y) {
-            slide.setTargetPosition(slide.getTargetPosition() - 25);
-        }
-        if (gamepad1.a) {
-            slide.setTargetPosition(slide.getTargetPosition() + 25);
-        }
-
-        if (slide.getCurrentPosition() < slide.getTargetPosition() - 25){
-            slide.setPower(0.8);
-            slide.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        } else if (slide.getCurrentPosition() > slide.getTargetPosition() + 25) {
-            slide.setVelocity(-0.8);
-            slide.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        }
-    }
 
     private void Movement() {
         int my_0;
