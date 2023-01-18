@@ -151,7 +151,15 @@ public class BeamerTele extends LinearOpMode {
         if (currentGamepad1.dpad_up && !previousGamepad1.dpad_up) {
             arm.setPower(returnPower(arm.getCurrentPosition(), 20)); //put into bucket
         }
+        if(gamepad2.y){
+            bclaw.setPosition(0);
+        }
+        if(gamepad2.a){
+            bclaw.setPosition(1);
+        }
     }
+
+
     public static double p = 0.0055, i = 0.045, d = 0.00035, f = 0.000000001;
     public double divide = 1.1;
     public PIDController controller = new PIDController(p, i, d);

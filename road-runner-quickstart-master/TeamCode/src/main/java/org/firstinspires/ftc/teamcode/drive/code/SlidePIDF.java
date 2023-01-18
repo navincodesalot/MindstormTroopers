@@ -59,7 +59,7 @@ public class SlidePIDF extends OpMode {
 
         telemetry.addData("SlidePos", state);
         telemetry.addData("Target", target);
-        telmetery.addData("Pid Power", pid);
+        telemetry.addData("Pid Power", pid);
         telemetry.update();
     }
 
