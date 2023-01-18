@@ -39,15 +39,6 @@ public class BeamerTele extends LinearOpMode {
 
     int Fast;
 
-    float Roll;
-
-    int Angle;
-    List<Recognition> recognitions;
-    int Time;
-    int DetLocat;
-    int Power;
-
-
     /**.0
      * Describe this function...
      */
@@ -70,13 +61,8 @@ public class BeamerTele extends LinearOpMode {
     /**     * Describe this function...
      */
     private void Telemetry() {
-        telemetry.addData("BackRightPos", back_right.getCurrentPosition());
-        telemetry.addData("BackLeftPos", back_left.getCurrentPosition());
-        telemetry.addData("imu", IMU.getAngularOrientation());
         telemetry.addData("Arm Current", arm.getCurrentPosition());
-//        telemetry.addData("Lift 1", liftMotor1.getCurrentPosition());
         telemetry.addData("Slide Current", slide.getCurrentPosition());
-        telemetry.addData("Yaw", IMU.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle);
         telemetry.update();
     }
     Gamepad currentGamepad1 = new Gamepad();
@@ -97,7 +83,6 @@ public class BeamerTele extends LinearOpMode {
         slide = hardwareMap.get(DcMotorEx.class, "slide");
         claw = hardwareMap.get(Servo.class, "claw");
         bclaw = hardwareMap.get(Servo.class, "bclaw");
-        InitIMU();
         front_right.setDirection(DcMotorEx.Direction.FORWARD);
         back_right.setDirection(DcMotorEx.Direction.FORWARD);
         front_left.setDirection(DcMotorEx.Direction.REVERSE);
