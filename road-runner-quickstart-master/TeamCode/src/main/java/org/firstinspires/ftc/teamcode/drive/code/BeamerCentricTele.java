@@ -174,7 +174,8 @@ public class BeamerCentricTele extends LinearOpMode {
         }
         // todo
         if (gamepad1.a && targetPos != 0) {
-            //Still have to figure out movement automatically using rr (move forward with inches)
+            // Still have to figure out movement automatically using rr (move forward with inches)
+            // Use ASYNC FSM
             slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), 0));
             claw.setPosition(1);
             arm.setPower(armPIDF.returnPower(arm.getCurrentPosition(), -130)); //grab cone
