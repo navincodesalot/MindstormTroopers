@@ -24,10 +24,6 @@ import org.firstinspires.ftc.teamcode.drive.code.pidf.slidePIDF;
 
 @TeleOp
 public class BeamerCentricTele extends LinearOpMode {
-    private DcMotorEx front_right;
-    private DcMotorEx back_right;
-    private DcMotorEx front_left;
-    private DcMotorEx back_left;
     private DcMotorEx arm;
     private DcMotorEx slide;
     private Servo claw;
@@ -49,19 +45,10 @@ public class BeamerCentricTele extends LinearOpMode {
         // Retrieve our pose from the PoseStorage.currentPose static field
         // See AutoTransferPose.java for further details
         drive.setPoseEstimate(PoseStorage.currentPose);
-
-        front_right = hardwareMap.get(DcMotorEx.class, "front_right");
-        back_right = hardwareMap.get(DcMotorEx.class, "back_right");
-        front_left = hardwareMap.get(DcMotorEx.class, "front_left");
-        back_left = hardwareMap.get(DcMotorEx.class, "back_left");
         arm = hardwareMap.get(DcMotorEx.class, "arm");
         slide = hardwareMap.get(DcMotorEx.class, "slide");
         claw = hardwareMap.get(Servo.class, "claw");
         bclaw = hardwareMap.get(Servo.class, "bclaw");
-        front_right.setDirection(DcMotorEx.Direction.FORWARD);
-        back_right.setDirection(DcMotorEx.Direction.FORWARD);
-        front_left.setDirection(DcMotorEx.Direction.REVERSE);
-        back_left.setDirection(DcMotorEx.Direction.REVERSE);
 
         arm.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
