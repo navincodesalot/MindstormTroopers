@@ -23,10 +23,6 @@ import org.firstinspires.ftc.teamcode.drive.code.pidf.slidePIDF;
 
 @TeleOp
 public class BeamerTeleOpDrive extends LinearOpMode {
-    private DcMotorEx front_right;
-    private DcMotorEx back_right;
-    private DcMotorEx front_left;
-    private DcMotorEx back_left;
     private DcMotorEx arm;
     private DcMotorEx slide;
     private Servo claw;
@@ -41,11 +37,6 @@ public class BeamerTeleOpDrive extends LinearOpMode {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         drive.setPoseEstimate(PoseStorage.currentPose);
-
-        front_right = hardwareMap.get(DcMotorEx.class, "front_right");
-        back_right = hardwareMap.get(DcMotorEx.class, "back_right");
-        front_left = hardwareMap.get(DcMotorEx.class, "front_left");
-        back_left = hardwareMap.get(DcMotorEx.class, "back_left");
         arm = hardwareMap.get(DcMotorEx.class, "arm");
         slide = hardwareMap.get(DcMotorEx.class, "slide");
         claw = hardwareMap.get(Servo.class, "claw");
