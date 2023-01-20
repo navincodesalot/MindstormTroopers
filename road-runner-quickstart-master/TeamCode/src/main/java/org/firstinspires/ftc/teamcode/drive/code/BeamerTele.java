@@ -26,6 +26,7 @@ import com.arcrobotics.ftclib.controller.PIDController;
 
 
 @TeleOp
+@Disabled
 public class BeamerTele extends LinearOpMode {
     private BNO055IMU IMU;
     private DcMotorEx front_right;
