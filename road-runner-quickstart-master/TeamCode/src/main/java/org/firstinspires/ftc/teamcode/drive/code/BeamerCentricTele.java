@@ -9,6 +9,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.drive.code.pidf.armPIDF;
 import org.firstinspires.ftc.teamcode.drive.code.pidf.slidePIDF;
@@ -22,15 +24,7 @@ import org.firstinspires.ftc.teamcode.drive.code.pidf.slidePIDF;
  * See lines 42-57.
  */
 
-//public enum State {
-//    INIT,
-//    ARM_DOWN,
-//    ARM_UP,
-//    GRAB_CONE,
-//    INTO_BUCKET,
-//    DROP_CONE,
-//    SLIDE_UP
-//}
+
 
 @TeleOp
 public class BeamerCentricTele extends LinearOpMode {
@@ -41,6 +35,21 @@ public class BeamerCentricTele extends LinearOpMode {
 
     double clawClose = 0.3;
     boolean save = false;
+
+    public enum State {
+        STOP,
+        INIT,
+        ARM_DOWN,
+        ARM_UP,
+        GRAB_CONE,
+        INTO_BUCKET,
+        DROP_CONE,
+        SLIDE_UP,
+        ARM_BACK_DOWN
+    }
+    State currState = State.INIT;
+    double waitTime1 = 1.5;
+    ElapsedTime waitTimer1 = new ElapsedTime();
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -69,6 +78,9 @@ public class BeamerCentricTele extends LinearOpMode {
         slide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         slide.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         slide.setDirection(DcMotorSimple.Direction.REVERSE);
+
+//        static double waitTime1 = 1.5;
+//        ElapsedTime waitTimer1 = new ElapsedTime();
 
         waitForStart();
 
@@ -171,15 +183,64 @@ public class BeamerCentricTele extends LinearOpMode {
         }
         // todo
         if (gamepad1.a && targetPos != 0) {
+            currState = State.INIT;
+
+            switch(currState) {
+                case INIT:
+                    slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), 0));
+                    claw.setPosition(1);
+                    currState = State.ARM_DOWN;
+                    break;
+                case ARM_DOWN:
+                    arm.setPower(armPIDF.returnPower(arm.getCurrentPosition(), -100)); //grab cone
+                    currState = State.GRAB_CONE;
+                    break;
+                case GRAB_CONE:
+                    claw.setPosition(clawClose);
+                    currState = State.ARM_UP;
+                    if (gamepad1.x) {
+                        currState = State.STOP;
+                    }
+                    break;
+                case ARM_UP:
+                    arm.setPower(armPIDF.returnPower(arm.getCurrentPosition(), 15));
+                    currState = State.INTO_BUCKET;
+                    break;
+                case INTO_BUCKET:
+                    claw.setPosition(1);
+                    currState = State.ARM_BACK_DOWN;
+                    if (gamepad1.x) {
+                        currState = State.STOP;
+                    }
+                    break;
+                case ARM_BACK_DOWN:
+                    arm.setPower(armPIDF.returnPower(arm.getCurrentPosition(), -100));
+                    currState = State.SLIDE_UP;
+                    break;
+                case SLIDE_UP:
+                    slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), targetPos));
+                    currState = State.DROP_CONE;
+                    break;
+                case DROP_CONE:
+                    bclaw.setPosition(0.92);
+//                    //wait for one sec
+//                    waitTimer1.reset();
+                    currState = State.STOP;
+                    break;
+
+            }
+
             // Still have to figure out movement automatically using rr (move forward with inches)
             // Use ASYNC FSM
-            slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), 0));
-            claw.setPosition(1);
-            arm.setPower(armPIDF.returnPower(arm.getCurrentPosition(), -130)); //grab cone
-            claw.setPosition(clawClose);
-            arm.setPower(armPIDF.returnPower(arm.getCurrentPosition(), 20)); //put into bucket
-            slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), targetPos));
-            slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), 0));
+//            slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), 0));
+//            claw.setPosition(1);
+//            arm.setPower(armPIDF.returnPower(arm.getCurrentPosition(), -100)); //grab cone
+//            claw.setPosition(clawClose);
+//            arm.setPower(armPIDF.returnPower(arm.getCurrentPosition(), 15)); //put into bucket
+//            claw.setPosition(1);
+//            slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), targetPos));
+//            bclaw.setPosition(0.92);
+//            slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), 0));
         }
     }
 }
