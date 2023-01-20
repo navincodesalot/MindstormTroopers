@@ -41,10 +41,6 @@ public class BeamerTeleOpDrive extends LinearOpMode {
         slide = hardwareMap.get(DcMotorEx.class, "slide");
         claw = hardwareMap.get(Servo.class, "claw");
         bclaw = hardwareMap.get(Servo.class, "bclaw");
-        front_right.setDirection(DcMotorEx.Direction.FORWARD);
-        back_right.setDirection(DcMotorEx.Direction.FORWARD);
-        front_left.setDirection(DcMotorEx.Direction.REVERSE);
-        back_left.setDirection(DcMotorEx.Direction.REVERSE);
 
         arm.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

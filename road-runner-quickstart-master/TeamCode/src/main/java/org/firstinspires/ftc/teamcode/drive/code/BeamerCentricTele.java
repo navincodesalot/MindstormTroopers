@@ -22,6 +22,16 @@ import org.firstinspires.ftc.teamcode.drive.code.pidf.slidePIDF;
  * See lines 42-57.
  */
 
+//public enum State {
+//    INIT,
+//    ARM_DOWN,
+//    ARM_UP,
+//    GRAB_CONE,
+//    INTO_BUCKET,
+//    DROP_CONE,
+//    SLIDE_UP
+//}
+
 @TeleOp
 public class BeamerCentricTele extends LinearOpMode {
     private DcMotorEx arm;
