@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.drive.code;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.outoftheboxrobotics.photoncore.PhotonCore;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -9,8 +8,8 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.drive.code.pidf.armPIDF;
-import org.firstinspires.ftc.teamcode.drive.code.pidf.slidePIDF;
+import org.firstinspires.ftc.teamcode.drive.code.auto.pidf.armPIDF;
+import org.firstinspires.ftc.teamcode.drive.code.auto.pidf.slidePIDF;
 
 /**
  * This opmode demonstrates how to create a teleop using just the SampleMecanumDrive class without
@@ -27,10 +26,10 @@ public class BeamerTeleOpDrive extends LinearOpMode {
     private DcMotorEx slide;
     private Servo claw;
     private Servo bclaw;
-    double targetPosA;
+    double targetPosA = -20;
     double target = 0;
     double high = 2650;
-    double low = 35;
+    double low = 0;
     double clawClose = 0.3;
     boolean save = false;
 
@@ -72,8 +71,7 @@ public class BeamerTeleOpDrive extends LinearOpMode {
                     )
             );
             drive.update();
-            slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), target));
-            arm.setPower(armPIDF.returnPower(arm.getCurrentPosition(), targetPosA));
+
 
 //            gp1Controller();
             gp2Controller();
@@ -115,6 +113,9 @@ public class BeamerTeleOpDrive extends LinearOpMode {
     }
 
     private void gp2Controller() {
+        slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), target));
+        arm.setPower(armPIDF.returnPower(arm.getCurrentPosition(), targetPosA));
+
         if (gamepad2.right_bumper) {
             target = high;
         }
@@ -128,11 +129,15 @@ public class BeamerTeleOpDrive extends LinearOpMode {
         if (gamepad2.x) { //open claw
             claw.setPosition(1);
         }
-        if(gamepad2.dpad_up) { //drop
+        if(gamepad1.y) { //drop
             bclaw.setPosition(0.92);
         }
-        if(gamepad2.dpad_down) { //pickup
+        if(gamepad1.a) { //pickup
             bclaw.setPosition(0);
+        }
+
+        if(gamepad2.left_stick_button){
+            targetPosA = -20;
         }
 
         if (gamepad2.a) {

@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.drive.code;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.outoftheboxrobotics.photoncore.PhotonCore;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -12,8 +13,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.drive.code.pidf.armPIDF;
-import org.firstinspires.ftc.teamcode.drive.code.pidf.slidePIDF;
+import org.firstinspires.ftc.teamcode.drive.code.auto.pidf.armPIDF;
+import org.firstinspires.ftc.teamcode.drive.code.auto.pidf.slidePIDF;
 
 /**
  * This opmode demonstrates how one would implement field centric control using
@@ -27,6 +28,7 @@ import org.firstinspires.ftc.teamcode.drive.code.pidf.slidePIDF;
 
 
 @TeleOp
+@Disabled
 public class BeamerCentricTele extends LinearOpMode {
     private DcMotorEx arm;
     private DcMotorEx slide;
