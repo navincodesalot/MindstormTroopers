@@ -173,7 +173,7 @@ public class BeamerCentricTele extends LinearOpMode {
         }
 
         if (gamepad2.y) {
-            targetPosA = -97;
+            targetPosA = -100;
         }
 
         arm.setPower(armPIDF.returnPower(arm.getCurrentPosition(), targetPosA));

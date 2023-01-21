@@ -116,6 +116,7 @@ public class MeepMeep1 {
                                         .addTemporalMarker(2, () -> {
 //                                    bclaw.setPosition(0);
                                         })
+                                        .lineToSplineHeading(new Pose2d(returnX(35), returnY(12), Math.toRadians(-90)))
                                         .lineToSplineHeading(new Pose2d(returnX(35), returnY(35), Math.toRadians(-90)))
                                         .lineToSplineHeading(new Pose2d(returnX(60), returnY(35), Math.toRadians(-90)))
 //                                .addTemporalMarker(8.5, () -> {

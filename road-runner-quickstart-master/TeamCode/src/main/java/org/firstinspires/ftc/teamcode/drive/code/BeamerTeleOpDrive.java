@@ -36,7 +36,7 @@ public class BeamerTeleOpDrive extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        PhotonCore.enable();
+//        PhotonCore.enable();
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         drive.setPoseEstimate(PoseStorage.currentPose);
@@ -73,35 +73,10 @@ public class BeamerTeleOpDrive extends LinearOpMode {
             );
             drive.update();
             slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), target));
-            if (gamepad2.right_bumper) {
-                target = high;
-            }
-            if (gamepad2.left_bumper) {
-                target = low;
-            }
+            arm.setPower(armPIDF.returnPower(arm.getCurrentPosition(), targetPosA));
 
-            if (gamepad2.b) { //close claw
-                claw.setPosition(clawClose);
-            }
-            if (gamepad2.x) { //open claw
-                claw.setPosition(1);
-            }
-            if(gamepad2.dpad_up) { //drop
-                bclaw.setPosition(0.92);
-            }
-            if(gamepad2.dpad_down) { //pickup
-                bclaw.setPosition(0);
-            }
-
-            if (gamepad2.a) {
-                targetPosA = -100;
-            }
-
-            if (gamepad2.y) {
-                targetPosA = 20;
-            }
 //            gp1Controller();
-//            gp2Controller();
+            gp2Controller();
 //            coneLoop();
 
 
@@ -140,33 +115,41 @@ public class BeamerTeleOpDrive extends LinearOpMode {
     }
 
     private void gp2Controller() {
+        if (gamepad2.right_bumper) {
+            target = high;
+        }
+        if (gamepad2.left_bumper) {
+            target = low;
+        }
+
         if (gamepad2.b) { //close claw
             claw.setPosition(clawClose);
         }
         if (gamepad2.x) { //open claw
             claw.setPosition(1);
         }
-        if(gamepad2.y) { //drop
+        if(gamepad2.dpad_up) { //drop
             bclaw.setPosition(0.92);
         }
-        if(gamepad2.a) { //pickup
+        if(gamepad2.dpad_down) { //pickup
             bclaw.setPosition(0);
         }
 
-        if (gamepad2.dpad_up) {
-            slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), 2450)); //top
+        if (gamepad2.a) {
+            targetPosA = -100;
         }
-        if (gamepad2.dpad_down) {
-            slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), 0)); //down to pickup
+
+        if (gamepad2.y) {
+            targetPosA = 20;
         }
 
         //Adjustments
-        if (gamepad2.right_bumper) {
-            slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), (slide.getCurrentPosition() + 100)));
-        }
-        if (gamepad2.left_bumper) {
-            slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), (slide.getCurrentPosition() - 100)));
-        }
+//        if (gamepad2.right_bumper) {
+//            slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), (slide.getCurrentPosition() + 100)));
+//        }
+//        if (gamepad2.left_bumper) {
+//            slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), (slide.getCurrentPosition() - 100)));
+//        }
     }
 
     private void coneLoop() {

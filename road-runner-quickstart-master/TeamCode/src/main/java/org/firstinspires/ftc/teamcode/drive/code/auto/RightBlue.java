@@ -47,7 +47,7 @@ import java.util.ArrayList;
 
 public class RightBlue extends LinearOpMode {
     private DcMotorEx arm;
-    private DcMotorEx slide;
+//    private DcMotorEx slide;
     private Servo claw;
     private Servo bclaw;
     OpenCvCamera camera;
@@ -85,7 +85,7 @@ public class RightBlue extends LinearOpMode {
         double dropX = 50, dropY = 12, dropHead = 0;
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         arm = hardwareMap.get(DcMotorEx.class, "arm");
-        slide = hardwareMap.get(DcMotorEx.class, "slide");
+//        slide = hardwareMap.get(DcMotorEx.class, "slide");
         claw = hardwareMap.get(Servo.class, "claw");
         bclaw = hardwareMap.get(Servo.class, "bclaw");
 
@@ -94,10 +94,10 @@ public class RightBlue extends LinearOpMode {
         arm.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         arm.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        slide.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        slide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        slide.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-        slide.setDirection(DcMotorSimple.Direction.REVERSE);
+//        slide.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+//        slide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        slide.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+//        slide.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
 
@@ -117,62 +117,63 @@ public class RightBlue extends LinearOpMode {
         TrajectorySequence t1 = drive.trajectorySequenceBuilder(rightBlueStartPose) // increment y to go further towards blue wall
                 .waitSeconds(1) // detect
                 .lineTo(new Vector2d(returnX(35), 8))
-                .addTemporalMarker(2, () -> {
-                    slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), high));
-                })
+//                .addTemporalMarker(2, () -> {
+//                    slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), high));
+//                })
                 .lineToSplineHeading(new Pose2d(returnX(pickX), pickY, Math.toRadians(returnHead(pickHead, 1))))
-                .addTemporalMarker(6, () -> {
-                    bclaw.setPosition(0.92);
-                })
+//                .addTemporalMarker(6, () -> {
+//                    bclaw.setPosition(0.92);
+//                })
                 .waitSeconds(2.5) //bucket drop
-                .addTemporalMarker(9, () -> {
-                    bclaw.setPosition(0);
-                })
+//                .addTemporalMarker(9, () -> {
+//                    bclaw.setPosition(0);
+//                })
                 .lineToSplineHeading(new Pose2d(returnX(12), 12, Math.toRadians(-90)))
-                    .addTemporalMarker(12, () -> {
-                        slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), low));
-                    })
+//                    .addTemporalMarker(12, () -> {
+//                        slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), low));
+//                    })
                 .build();
 
         TrajectorySequence t2 = drive.trajectorySequenceBuilder(rightBlueStartPose) // increment y to go further towards blue wall
                 .waitSeconds(1) // detect
                 .lineTo(new Vector2d(returnX(35), 8))
-                .addTemporalMarker(2, () -> {
-                    slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), high));
-                })
+//                .addTemporalMarker(2, () -> {
+//                    slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), high));
+//                })
                 .lineToSplineHeading(new Pose2d(returnX(pickX), pickY, Math.toRadians(returnHead(pickHead, 1))))
-                .addTemporalMarker(6, () -> {
-                bclaw.setPosition(0.92);
-                })
+//                .addTemporalMarker(6, () -> {
+//                bclaw.setPosition(0.92);
+//                })
                 .waitSeconds(2.5) //bucket drop
-                .addTemporalMarker(9, () -> {
-                bclaw.setPosition(0);
-                })
+//                .addTemporalMarker(9, () -> {
+//                bclaw.setPosition(0);
+//                })
                 .lineToSplineHeading(new Pose2d(returnX(35), 12.5, Math.toRadians(-90)))
-                .addTemporalMarker(12, () -> {
-                    slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), low));
-                })
+//                .addTemporalMarker(12, () -> {
+//                    slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), low));
+//                })
                 .build();
 
         TrajectorySequence t3 = drive.trajectorySequenceBuilder(rightBlueStartPose) // increment y to go further towards blue wall
                 .waitSeconds(1) // detect
                 .lineTo(new Vector2d(returnX(35), 8))
-                .addTemporalMarker(2, () -> {
-                    slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), high));
-                })
+//                .addTemporalMarker(2, () -> {
+//                    slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), high));
+//                })
                 .lineToSplineHeading(new Pose2d(returnX(pickX), pickY, Math.toRadians(returnHead(pickHead, 1))))
-                .addTemporalMarker(6, () -> {
-                    bclaw.setPosition(0.92);
-                })
+//                .addTemporalMarker(6, () -> {
+//                    bclaw.setPosition(0.92);
+//                })
                 .waitSeconds(2.5) //bucket drop
-                .addTemporalMarker(9, () -> {
-                    bclaw.setPosition(0);
-                })
+//                .addTemporalMarker(9, () -> {
+//                    bclaw.setPosition(0);
+//                })
+                .lineToSplineHeading(new Pose2d(returnX(35), 12, Math.toRadians(-90)))
                 .lineToSplineHeading(new Pose2d(returnX(35), 35, Math.toRadians(-90)))
                 .lineToSplineHeading(new Pose2d(returnX(60), 35, Math.toRadians(-90)))
-                .addTemporalMarker(12, () -> {
-                    slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), low));
-                })
+//                .addTemporalMarker(12, () -> {
+//                    slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), low));
+//                })
                 .build();
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -202,7 +203,7 @@ public class RightBlue extends LinearOpMode {
         while (!isStarted() && !isStopRequested()) {
             ArrayList<AprilTagDetection> currentDetections = aprilTagDetectionPipeline.getLatestDetections();
             arm.setTargetPosition(0);
-            slide.setTargetPosition(0);
+//            slide.setTargetPosition(0);
             claw.setPosition(clawClose);
             if(currentDetections.size() != 0) {
                 boolean tagFound = false;

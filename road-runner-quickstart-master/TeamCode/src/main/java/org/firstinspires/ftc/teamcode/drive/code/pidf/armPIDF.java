@@ -4,7 +4,7 @@ import com.arcrobotics.ftclib.controller.PIDController;
 
 public class armPIDF {
     public static double returnPower(double state, double target) {
-        double p = 0.0025, i = 0.05, d = 0.1, f = 0.001;
+        double p = 0.003, i = 0.05, d = 0.1, f = 0.025;
         double divide = 1;
         final double ticks_in_degrees = 537.7 / 360.0;
 
