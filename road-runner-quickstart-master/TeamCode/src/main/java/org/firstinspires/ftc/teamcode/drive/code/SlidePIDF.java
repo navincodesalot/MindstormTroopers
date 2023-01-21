@@ -16,12 +16,12 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 @Config
-@Disabled
+
 @TeleOp(name = "Slide PIDF Tuner")
 public class SlidePIDF extends OpMode {
     private PIDController controller;
 
-    public static double p = 0.07, i = 0.3, d = 0.00085, f = 0.04; //g value https://www.ctrlaltftc.com/feedforward-control#slide-gravity-feedforward
+    public static double p = 0.06, i = 0.13, d = 0.0001, f = 0.04; //g value https://www.ctrlaltftc.com/feedforward-control#slide-gravity-feedforward
 
     public static int target  = 2750; //todo
 

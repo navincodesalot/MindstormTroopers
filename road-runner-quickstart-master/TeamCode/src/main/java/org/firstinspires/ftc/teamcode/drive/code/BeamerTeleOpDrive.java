@@ -27,7 +27,9 @@ public class BeamerTeleOpDrive extends LinearOpMode {
     private DcMotorEx slide;
     private Servo claw;
     private Servo bclaw;
-
+    double target = 0;
+    double high = 2650;
+    double low = 35;
     double clawClose = 0.3;
     boolean save = false;
 
@@ -69,9 +71,30 @@ public class BeamerTeleOpDrive extends LinearOpMode {
                     )
             );
             drive.update();
-            gp1Controller();
-            gp2Controller();
-            coneLoop();
+            slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), target));
+            if (gamepad2.dpad_up) {
+                target = high;
+            }
+            if (gamepad2.dpad_down) {
+                target = low;
+            }
+
+            if (gamepad2.b) { //close claw
+                claw.setPosition(clawClose);
+            }
+            if (gamepad2.x) { //open claw
+                claw.setPosition(1);
+            }
+            if(gamepad2.y) { //drop
+                bclaw.setPosition(0.92);
+            }
+            if(gamepad2.a) { //pickup
+                bclaw.setPosition(0);
+            }
+//            gp1Controller();
+//            gp2Controller();
+//            coneLoop();
+
 
             Pose2d poseEstimate = drive.getPoseEstimate();
             telemetry.addData("Status", save);

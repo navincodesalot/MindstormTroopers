@@ -34,6 +34,8 @@ public class BeamerCentricTele extends LinearOpMode {
     private Servo bclaw;
 
     double clawClose = 0.3;
+    double targetPosS = 0;
+    double targetPosA = 0;
     boolean save = false;
 
     public enum State {
@@ -47,6 +49,7 @@ public class BeamerCentricTele extends LinearOpMode {
         SLIDE_UP,
         ARM_BACK_DOWN
     }
+
     State currState = State.INIT;
     double waitTime1 = 1.5;
     ElapsedTime waitTimer1 = new ElapsedTime();
@@ -106,7 +109,6 @@ public class BeamerCentricTele extends LinearOpMode {
             drive.update();
             gp1Controller();
             gp2Controller();
-            coneLoop();
 
             telemetry.addData("Status", save);
             telemetry.addData("Arm Current", arm.getCurrentPosition());
@@ -119,116 +121,90 @@ public class BeamerCentricTele extends LinearOpMode {
     }
 
     private void gp1Controller() {
-        if (gamepad1.dpad_down) {
-            arm.setPower(armPIDF.returnPower(arm.getCurrentPosition(), -97)); //grab cone
-        }
-        if (gamepad1.dpad_left) {
-            arm.setPower(armPIDF.returnPower(arm.getCurrentPosition(), -20)); //lift cone slightly
-        }
-        if (gamepad1.dpad_right) {
-            arm.setPower(armPIDF.returnPower(arm.getCurrentPosition(), 20)); //1st post todo maybe works
-        }
-        if (gamepad1.dpad_up) {
-            arm.setPower(armPIDF.returnPower(arm.getCurrentPosition(), 20)); //put into bucket
-        }
+//        if (gamepad1.dpad_down) {
+//            arm.setPower(armPIDF.returnPower(arm.getCurrentPosition(), -97)); //grab cone
+//        }
+//        if (gamepad1.dpad_left) {
+//            arm.setPower(armPIDF.returnPower(arm.getCurrentPosition(), -20)); //lift cone slightly
+//        }
+//        if (gamepad1.dpad_right) {
+//            arm.setPower(armPIDF.returnPower(arm.getCurrentPosition(), 20)); //1st post todo maybe works
+//        }
+//        if (gamepad1.dpad_up) {
+//            arm.setPower(armPIDF.returnPower(arm.getCurrentPosition(), 20)); //put into bucket
+//        }
 
         //Adjustments
         if (gamepad1.right_bumper) {
-            arm.setPower(armPIDF.returnPower(arm.getCurrentPosition(), (arm.getCurrentPosition() + 5)));
+            targetPosS += 5;
         }
-        if (gamepad1.left_bumper) {
-            arm.setPower(armPIDF.returnPower(arm.getCurrentPosition(), (arm.getCurrentPosition() - 5)));
+        else if (gamepad1.left_bumper) {
+            targetPosS -= 5;
         }
     }
 
     private void gp2Controller() {
-        if (gamepad2.b) { //close claw
+        if (gamepad2.x) { //close claw
             claw.setPosition(clawClose);
         }
-        if (gamepad2.x) { //open claw
+        if (gamepad2.b) { //open claw
             claw.setPosition(1);
         }
-        if(gamepad2.y) { //drop
+        if (gamepad2.dpad_left) { //drop
             bclaw.setPosition(0.92);
         }
-        if(gamepad2.a) { //pickup
+        if (gamepad2.dpad_right) { //pickup
             bclaw.setPosition(0);
         }
 
         if (gamepad2.dpad_up) {
-            slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), 2450)); //top
+            targetPosS = 2450;
         }
         if (gamepad2.dpad_down) {
-            slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), 0)); //down to pickup
+            targetPosS = 0;
+        }
+        if (gamepad1.left_bumper) {
+            targetPosS = 0;
+            claw.setPosition(1);
         }
 
+        if (gamepad2.a) {
+            targetPosA = 20;
+        }
+
+        if (gamepad2.y) {
+            targetPosA = -97;
+        }
+
+        arm.setPower(armPIDF.returnPower(arm.getCurrentPosition(), targetPosA));
+        slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), targetPosS));
+
+
         //Adjustments
-        if (gamepad2.right_bumper) {
-            slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), (slide.getCurrentPosition() + 100)));
-        }
-        if (gamepad2.left_bumper) {
-            slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), (slide.getCurrentPosition() - 100)));
-        }
+//        if (gamepad2.right_bumper) {
+//            slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), (slide.getCurrentPosition() + 100)));
+//        }
+//        if (gamepad2.left_bumper) {
+//            slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), (slide.getCurrentPosition() - 100)));
+//        }
     }
 
     private void coneLoop() {
-        int targetPos = 0;
-        if (gamepad1.y) {
-            save = true;
-            if (gamepad1.y && save) {
-                telemetry.addData("Saving", targetPos);
-                targetPos = slide.getCurrentPosition();
-                save = false;
-            }
-        }
-        // todo
-        if (gamepad1.a && targetPos != 0) {
-            currState = State.INIT;
+//        int targetPos = 0;
+//        if (gamepad1.y) {
+//            save = true;
+//            if (gamepad1.y && save) {
+//                telemetry.addData("Saving", targetPos);
+//                targetPos = slide.getCurrentPosition();
+//                save = false;
+//            }
+//        }
 
-            switch(currState) {
-                case INIT:
-                    slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), 0));
-                    claw.setPosition(1);
-                    currState = State.ARM_DOWN;
-                    break;
-                case ARM_DOWN:
-                    arm.setPower(armPIDF.returnPower(arm.getCurrentPosition(), -100)); //grab cone
-                    currState = State.GRAB_CONE;
-                    break;
-                case GRAB_CONE:
-                    claw.setPosition(clawClose);
-                    currState = State.ARM_UP;
-                    if (gamepad1.x) {
-                        currState = State.STOP;
-                    }
-                    break;
-                case ARM_UP:
-                    arm.setPower(armPIDF.returnPower(arm.getCurrentPosition(), 15));
-                    currState = State.INTO_BUCKET;
-                    break;
-                case INTO_BUCKET:
-                    claw.setPosition(1);
-                    currState = State.ARM_BACK_DOWN;
-                    if (gamepad1.x) {
-                        currState = State.STOP;
-                    }
-                    break;
-                case ARM_BACK_DOWN:
-                    arm.setPower(armPIDF.returnPower(arm.getCurrentPosition(), -100));
-                    currState = State.SLIDE_UP;
-                    break;
-                case SLIDE_UP:
-                    slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), targetPos));
-                    currState = State.DROP_CONE;
-                    break;
-                case DROP_CONE:
-                    bclaw.setPosition(0.92);
-//                    //wait for one sec
-//                    waitTimer1.reset();
-                    currState = State.STOP;
-                    break;
 
-            }
+
+//
+
+
 
             // Still have to figure out movement automatically using rr (move forward with inches)
             // Use ASYNC FSM
@@ -243,4 +219,4 @@ public class BeamerCentricTele extends LinearOpMode {
 //            slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), 0));
         }
     }
-}
+
