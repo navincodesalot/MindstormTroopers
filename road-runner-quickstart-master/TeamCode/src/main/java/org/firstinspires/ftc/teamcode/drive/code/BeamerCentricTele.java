@@ -120,10 +120,10 @@ public class BeamerCentricTele extends LinearOpMode {
 
     private void gp1Controller() {
         if (gamepad1.dpad_down) {
-            arm.setPower(armPIDF.returnPower(arm.getCurrentPosition(), -130)); //grab cone
+            arm.setPower(armPIDF.returnPower(arm.getCurrentPosition(), -97)); //grab cone
         }
         if (gamepad1.dpad_left) {
-            arm.setPower(armPIDF.returnPower(arm.getCurrentPosition(), -100)); //lift cone slightly
+            arm.setPower(armPIDF.returnPower(arm.getCurrentPosition(), -20)); //lift cone slightly
         }
         if (gamepad1.dpad_right) {
             arm.setPower(armPIDF.returnPower(arm.getCurrentPosition(), 20)); //1st post todo maybe works
