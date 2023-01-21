@@ -19,18 +19,23 @@
  * SOFTWARE.
  */
 
-package org.firstinspires.ftc.teamcode.drive.code;
+package org.firstinspires.ftc.teamcode.drive.code.auto;
 
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.outoftheboxrobotics.photoncore.PhotonCore;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.drive.code.AprilTagDetectionPipeline;
+import org.firstinspires.ftc.teamcode.drive.code.PoseStorage;
+import org.firstinspires.ftc.teamcode.drive.code.pidf.slidePIDF;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
@@ -39,12 +44,17 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 
 import java.util.ArrayList;
 @Autonomous
-@Disabled
-public class RightBeamy extends LinearOpMode {
+
+public class LeftRed extends LinearOpMode {
+    private DcMotorEx arm;
+    private DcMotorEx slide;
     private Servo claw;
-    private Servo dclaw;
-    private Servo arm;
+    private Servo bclaw;
     OpenCvCamera camera;
+    double target = 0;
+    double high = 2650;
+    double low = 0;
+    double clawClose = 0.3;
     AprilTagDetectionPipeline aprilTagDetectionPipeline;
 
     static final double FEET_PER_METER = 3.28084;
@@ -71,23 +81,99 @@ public class RightBeamy extends LinearOpMode {
     @Override
     public void runOpMode() {
         PhotonCore.enable();
+        double pickX = 42, pickY = 8, pickHead = -149;
+        double dropX = 50, dropY = 12, dropHead = 0;
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+        arm = hardwareMap.get(DcMotorEx.class, "arm");
+        slide = hardwareMap.get(DcMotorEx.class, "slide");
         claw = hardwareMap.get(Servo.class, "claw");
-        dclaw = hardwareMap.get(Servo.class, "dclaw");
-        arm = hardwareMap.get(Servo.class, "arm");
+        bclaw = hardwareMap.get(Servo.class, "bclaw");
+
+        arm.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        arm.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        arm.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        slide.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        slide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        slide.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        slide.setDirection(DcMotorSimple.Direction.REVERSE);
+
+
 
         // Set the pose estimate to where you know the bot will start in autonomous
         // Refer to https://www.learnroadrunner.com/trajectories.html#coordinate-system for a map
         // of the field
         // This example sets the bot at x: 10, y: 15, and facing 90 degrees (turned counter-clockwise)
-        double blueX = 35;
-        double redX = returnXCoord(blueX);
 
-        double blueY = 61;
-        double redY = returnYCoord(blueY);
-        Pose2d startPose = new Pose2d(redX, blueY, Math.toRadians(-90));
+        Pose2d leftBlueStartPose = new Pose2d(35, 61, Math.toRadians(-90));
+        Pose2d rightBlueStartPose = new Pose2d(returnX(35), 61, Math.toRadians(-90));
 
-        drive.setPoseEstimate(startPose);
+        Pose2d leftRedStartPose = new Pose2d(35, returnY(61), Math.toRadians(-270));
+        Pose2d rightRedStartPose = new Pose2d(returnX(35), returnY(61), Math.toRadians(-270));
+
+        drive.setPoseEstimate(leftRedStartPose);
+
+        TrajectorySequence t1 = drive.trajectorySequenceBuilder(leftRedStartPose) // increment y to go further towards blue wall
+                .waitSeconds(1) // detect
+                .lineTo(new Vector2d(35, returnY(8)))
+                .addTemporalMarker(2, () -> {
+                    slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), high));
+                })
+                .lineToSplineHeading(new Pose2d(pickX, returnY(pickY), Math.toRadians(returnHead(pickHead))))
+                .addTemporalMarker(2, () -> {
+                    bclaw.setPosition(0.92);
+                })
+                .waitSeconds(2.5) //bucket drop
+                .addTemporalMarker(2, () -> {
+                    bclaw.setPosition(0);
+                })
+                .lineToSplineHeading(new Pose2d(12, returnY(12), Math.toRadians(-90)))
+                .addTemporalMarker(8.5, () -> {
+                    slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), low));
+                })
+                .build();
+
+        TrajectorySequence t2 = drive.trajectorySequenceBuilder(leftRedStartPose) // increment y to go further towards blue wall
+                .waitSeconds(1) // detect
+                .lineTo(new Vector2d(35, returnY(8)))
+                .addTemporalMarker(2, () -> {
+                slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), high));
+                })
+                .lineToSplineHeading(new Pose2d(pickX, returnY(pickY), Math.toRadians(returnHead(pickHead))))
+                .addTemporalMarker(2, () -> {
+                bclaw.setPosition(0.92);
+                })
+                .waitSeconds(2.5) //bucket drop
+                .addTemporalMarker(2, () -> {
+                bclaw.setPosition(0);
+                })
+                .lineToSplineHeading(new Pose2d(35, returnY(12.5), Math.toRadians(-90)))
+                .addTemporalMarker(8.5, () -> {
+                    slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), low));
+                })
+                .build();
+
+        TrajectorySequence t3 = drive.trajectorySequenceBuilder(leftRedStartPose) // increment y to go further towards blue wall
+                .waitSeconds(1) // detect
+                .lineTo(new Vector2d(35, returnY(8)))
+                .addTemporalMarker(2, () -> {
+                    slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), high));
+                })
+                .lineToSplineHeading(new Pose2d(pickX, returnY(pickY), Math.toRadians(returnHead(pickHead))))
+                .addTemporalMarker(2, () -> {
+                    bclaw.setPosition(0.92);
+                })
+                .waitSeconds(2.5) //bucket drop
+                .addTemporalMarker(2, () -> {
+                    bclaw.setPosition(0);
+                })
+                .lineToSplineHeading(new Pose2d(35, returnY(35), Math.toRadians(-90)))
+                .lineToSplineHeading(new Pose2d(60, returnY(35), Math.toRadians(-90)))
+                .addTemporalMarker(8.5, () -> {
+                    slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), low));
+                })
+                .build();
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
@@ -115,7 +201,9 @@ public class RightBeamy extends LinearOpMode {
          */
         while (!isStarted() && !isStopRequested()) {
             ArrayList<AprilTagDetection> currentDetections = aprilTagDetectionPipeline.getLatestDetections();
-
+            arm.setTargetPosition(0);
+            slide.setTargetPosition(0);
+            claw.setPosition(clawClose);
             if(currentDetections.size() != 0) {
                 boolean tagFound = false;
 
@@ -178,38 +266,20 @@ public class RightBeamy extends LinearOpMode {
 
         if (tagOfInterest == null || tagOfInterest.id == LEFT) {
             //trajectory
-            claw.setPosition(0);
-            TrajectorySequence trajSeq = drive.trajectorySequenceBuilder(startPose) // increment y to go further towards blue wall
-                    .waitSeconds(1)
-                    .lineTo(new Vector2d(-35, -2)) // 2
-                    .lineToSplineHeading(new Pose2d(-69, -2, Math.toRadians(0))) // 1
-                    .build();
-            drive.followTrajectorySequence(trajSeq);
+            drive.followTrajectorySequence(t1);
             PoseStorage.currentPose = drive.getPoseEstimate(); // Transfer the current pose to PoseStorage so we can use it in TeleOp
         } else if (tagOfInterest.id == MIDDLE) {
             //trajectory
-            claw.setPosition(0);
-            TrajectorySequence trajSeq = drive.trajectorySequenceBuilder(startPose) // increment y to go further towards blue wall
-                    .waitSeconds(1)
-                    .lineTo(new Vector2d(-35, 1.25)) // 2
-                    .build();
-            drive.followTrajectorySequence(trajSeq);
+            drive.followTrajectorySequence(t2);
             PoseStorage.currentPose = drive.getPoseEstimate(); // Transfer the current pose to PoseStorage so we can use it in TeleOp
         } else if (tagOfInterest.id == RIGHT) {
             //trajectory
-            claw.setPosition(0);
-            TrajectorySequence trajSeq = drive.trajectorySequenceBuilder(startPose) // increment y to go further towards blue wall
-                    .waitSeconds(1)
-                    .lineTo(new Vector2d(-35, -2)) // 2
-                    .lineToSplineHeading(new Pose2d(5, -2, Math.toRadians(230))) //3
-                    .build();
-            drive.followTrajectorySequence(trajSeq);
+            drive.followTrajectorySequence(t3);
             PoseStorage.currentPose = drive.getPoseEstimate(); // Transfer the current pose to PoseStorage so we can use it in TeleOp
         }
 
         /* You wouldn't have this in your autonomous, this is just to prevent the sample from ending */
         //     while (opModeIsActive()) {sleep(20);}
-
     }
 
     void tagToTelemetry(AprilTagDetection detection) {
@@ -221,11 +291,11 @@ public class RightBeamy extends LinearOpMode {
         telemetry.addLine(String.format("Rotation Pitch: %.2f degrees", Math.toDegrees(detection.pose.pitch)));
         telemetry.addLine(String.format("Rotation Roll: %.2f degrees", Math.toDegrees(detection.pose.roll)));
     }
-    public static double returnXCoord(double x) {
+    public static double returnX(double x) {
         return x * (-1);
     }
-
-    public static double returnYCoord(double y) {
-        return y * (-1);
-    }
+    public static double returnHead(double h) { h = Math.abs(h); return h -= 180; }
+    public static double returnHead(double h, int i) { h = Math.abs(h); return h -= 360; }
+    public static double returnHead(double h, String s) { h = Math.abs(h); return h -= 180; }
+    public static double returnY(double y) { return y * (-1); }
 }

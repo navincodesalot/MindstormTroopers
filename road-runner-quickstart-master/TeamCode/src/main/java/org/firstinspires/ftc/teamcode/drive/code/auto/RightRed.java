@@ -24,7 +24,6 @@ package org.firstinspires.ftc.teamcode.drive.code.auto;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.outoftheboxrobotics.photoncore.PhotonCore;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -36,6 +35,7 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.drive.code.AprilTagDetectionPipeline;
 import org.firstinspires.ftc.teamcode.drive.code.PoseStorage;
+import org.firstinspires.ftc.teamcode.drive.code.pidf.slidePIDF;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
@@ -44,14 +44,16 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 
 import java.util.ArrayList;
 @Autonomous
-@Disabled
-public class BeamyAuto extends LinearOpMode {
+
+public class RightRed extends LinearOpMode {
     private DcMotorEx arm;
     private DcMotorEx slide;
     private Servo claw;
     private Servo bclaw;
     OpenCvCamera camera;
-
+    double target = 0;
+    double high = 2650;
+    double low = 0;
     double clawClose = 0.3;
     AprilTagDetectionPipeline aprilTagDetectionPipeline;
 
@@ -79,6 +81,8 @@ public class BeamyAuto extends LinearOpMode {
     @Override
     public void runOpMode() {
         PhotonCore.enable();
+        double pickX = 42, pickY = 8, pickHead = -149;
+        double dropX = 50, dropY = 12, dropHead = 0;
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         arm = hardwareMap.get(DcMotorEx.class, "arm");
         slide = hardwareMap.get(DcMotorEx.class, "slide");
@@ -95,14 +99,81 @@ public class BeamyAuto extends LinearOpMode {
         slide.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         slide.setDirection(DcMotorSimple.Direction.REVERSE);
 
+
+
         // Set the pose estimate to where you know the bot will start in autonomous
         // Refer to https://www.learnroadrunner.com/trajectories.html#coordinate-system for a map
         // of the field
         // This example sets the bot at x: 10, y: 15, and facing 90 degrees (turned counter-clockwise)
 
-        Pose2d startPose = new Pose2d(35, 61, Math.toRadians(-90)); // todo
+        Pose2d leftBlueStartPose = new Pose2d(35, 61, Math.toRadians(-90));
+        Pose2d rightBlueStartPose = new Pose2d(returnX(35), 61, Math.toRadians(-90));
 
-        drive.setPoseEstimate(startPose);
+        Pose2d leftRedStartPose = new Pose2d(35, returnY(61), Math.toRadians(-270));
+        Pose2d rightRedStartPose = new Pose2d(returnX(35), returnY(61), Math.toRadians(-270));
+
+        drive.setPoseEstimate(rightRedStartPose);
+
+        TrajectorySequence t1 = drive.trajectorySequenceBuilder(rightRedStartPose) // increment y to go further towards blue wall
+                .waitSeconds(1) // detect
+                .lineTo(new Vector2d(returnX(35), returnY(8)))
+                .addTemporalMarker(2, () -> {
+                    slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), high));
+                })
+                .lineToSplineHeading(new Pose2d(returnX(pickX), returnY(pickY), Math.toRadians(-149)))
+                .addTemporalMarker(2, () -> {
+                    bclaw.setPosition(0.92);
+                })
+                .waitSeconds(2.5) //bucket drop
+                .addTemporalMarker(2, () -> {
+                    bclaw.setPosition(0);
+                })
+                .lineToSplineHeading(new Pose2d(returnX(35), returnY(35), Math.toRadians(-90)))
+                .lineToSplineHeading(new Pose2d(returnX(60), returnY(35), Math.toRadians(-90)))
+                .addTemporalMarker(8.5, () -> {
+                    slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), low));
+                })
+                .build();
+
+        TrajectorySequence t2 = drive.trajectorySequenceBuilder(rightRedStartPose) // increment y to go further towards blue wall
+                .waitSeconds(1) // detect
+                .lineTo(new Vector2d(returnX(35), returnY(8)))
+                .addTemporalMarker(2, () -> {
+                    slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), high));
+                })
+                .lineToSplineHeading(new Pose2d(returnX(pickX), returnY(pickY), Math.toRadians(-149)))
+                .addTemporalMarker(2, () -> {
+                bclaw.setPosition(0.92);
+                })
+                .waitSeconds(2.5) //bucket drop
+                .addTemporalMarker(2, () -> {
+                bclaw.setPosition(0);
+                })
+                .lineToSplineHeading(new Pose2d(returnX(35), returnY(12.5), Math.toRadians(-90)))
+                .addTemporalMarker(8.5, () -> {
+                    slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), low));
+                })
+                .build();
+
+        TrajectorySequence t3 = drive.trajectorySequenceBuilder(rightRedStartPose) // increment y to go further towards blue wall
+                .waitSeconds(1) // detect
+                .lineTo(new Vector2d(returnX(35), returnY(8)))
+                .addTemporalMarker(2, () -> {
+                    slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), high));
+                })
+                .lineToSplineHeading(new Pose2d(returnX(pickX), returnY(pickY), Math.toRadians(-149)))
+                .addTemporalMarker(2, () -> {
+                    bclaw.setPosition(0.92);
+                })
+                .waitSeconds(2.5) //bucket drop
+                .addTemporalMarker(2, () -> {
+                    bclaw.setPosition(0);
+                })
+                .lineToSplineHeading(new Pose2d(returnX(12), returnY(12), Math.toRadians(-90)))
+                .addTemporalMarker(8.5, () -> {
+                    slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), low));
+                })
+                .build();
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
@@ -130,7 +201,9 @@ public class BeamyAuto extends LinearOpMode {
          */
         while (!isStarted() && !isStopRequested()) {
             ArrayList<AprilTagDetection> currentDetections = aprilTagDetectionPipeline.getLatestDetections();
-
+            arm.setTargetPosition(0);
+            slide.setTargetPosition(0);
+            claw.setPosition(clawClose);
             if(currentDetections.size() != 0) {
                 boolean tagFound = false;
 
@@ -193,15 +266,15 @@ public class BeamyAuto extends LinearOpMode {
 
         if (tagOfInterest == null || tagOfInterest.id == LEFT) {
             //trajectory
-
+            drive.followTrajectorySequence(t1);
             PoseStorage.currentPose = drive.getPoseEstimate(); // Transfer the current pose to PoseStorage so we can use it in TeleOp
         } else if (tagOfInterest.id == MIDDLE) {
             //trajectory
-
+            drive.followTrajectorySequence(t2);
             PoseStorage.currentPose = drive.getPoseEstimate(); // Transfer the current pose to PoseStorage so we can use it in TeleOp
         } else if (tagOfInterest.id == RIGHT) {
             //trajectory
-
+            drive.followTrajectorySequence(t3);
             PoseStorage.currentPose = drive.getPoseEstimate(); // Transfer the current pose to PoseStorage so we can use it in TeleOp
         }
 
@@ -218,11 +291,11 @@ public class BeamyAuto extends LinearOpMode {
         telemetry.addLine(String.format("Rotation Pitch: %.2f degrees", Math.toDegrees(detection.pose.pitch)));
         telemetry.addLine(String.format("Rotation Roll: %.2f degrees", Math.toDegrees(detection.pose.roll)));
     }
-    public static double returnXCoord(double x) {
+    public static double returnX(double x) {
         return x * (-1);
     }
-
-    public static double returnYCoord(double y) {
-        return y * (-1);
-    }
+    public static double returnHead(double h) { h = Math.abs(h); return h -= 180; }
+    public static double returnHead(double h, int i) { h = Math.abs(h); return h -= 360; }
+    public static double returnHead(double h, String s) { h = Math.abs(h); return h -= 180; }
+    public static double returnY(double y) { return y * (-1); }
 }
