@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.drive.code;
+package org.firstinspires.ftc.teamcode.drive.code.tele;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
@@ -13,8 +13,9 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.drive.code.auto.pidf.armPIDF;
-import org.firstinspires.ftc.teamcode.drive.code.auto.pidf.slidePIDF;
+import org.firstinspires.ftc.teamcode.drive.code.util.PoseStorage;
+import org.firstinspires.ftc.teamcode.drive.code.util.pidf.armPIDF;
+import org.firstinspires.ftc.teamcode.drive.code.util.pidf.slidePIDF;
 
 /**
  * This opmode demonstrates how one would implement field centric control using

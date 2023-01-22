@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.drive.code;
+package org.firstinspires.ftc.teamcode.drive.code.util.tuning;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;

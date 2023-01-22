@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.drive.code;
+package org.firstinspires.ftc.teamcode.drive.code.tele;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -8,8 +8,9 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.drive.code.auto.pidf.armPIDF;
-import org.firstinspires.ftc.teamcode.drive.code.auto.pidf.slidePIDF;
+import org.firstinspires.ftc.teamcode.drive.code.util.PoseStorage;
+import org.firstinspires.ftc.teamcode.drive.code.util.pidf.armPIDF;
+import org.firstinspires.ftc.teamcode.drive.code.util.pidf.slidePIDF;
 
 /**
  * This opmode demonstrates how to create a teleop using just the SampleMecanumDrive class without

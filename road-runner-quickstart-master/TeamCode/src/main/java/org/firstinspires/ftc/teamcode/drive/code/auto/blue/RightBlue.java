@@ -19,9 +19,10 @@
  * SOFTWARE.
  */
 
-package org.firstinspires.ftc.teamcode.drive.code.auto;
+package org.firstinspires.ftc.teamcode.drive.code.auto.blue;
 
 import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.outoftheboxrobotics.photoncore.PhotonCore;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
@@ -31,19 +32,13 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-//import org.firstinspires.ftc.robotcore.external.hardware..WebcamName;
-import org.firstinspires.ftc.teamcode.drive.code.AprilTagDetectionPipeline;
-import org.firstinspires.ftc.teamcode.drive.code.PoseStorage;
+import org.firstinspires.ftc.teamcode.drive.code.util.AprilTagDetectionPipeline;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.openftc.apriltag.AprilTagDetection;
-import org.openftc.easyopencv.OpenCvCamera;
-import org.openftc.easyopencv.OpenCvCameraFactory;
-import org.openftc.easyopencv.OpenCvCameraRotation;
 
-import java.util.ArrayList;
 @Autonomous
 
-public class LeftBlue extends LinearOpMode {
+public class RightBlue extends LinearOpMode {
     private DcMotorEx arm;
 //    private DcMotorEx slide;
     private Servo claw;
@@ -78,7 +73,7 @@ public class LeftBlue extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-//        PhotonCore.enable();
+        PhotonCore.enable();
         double pickX = 42, pickY = 8, pickHead = -149;
         double dropX = 50, dropY = 12, dropHead = 0;
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
@@ -98,6 +93,7 @@ public class LeftBlue extends LinearOpMode {
 //        slide.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
+
         // Set the pose estimate to where you know the bot will start in autonomous
         // Refer to https://www.learnroadrunner.com/trajectories.html#coordinate-system for a map
         // of the field
@@ -109,15 +105,15 @@ public class LeftBlue extends LinearOpMode {
         Pose2d leftRedStartPose = new Pose2d(35, returnY(61), Math.toRadians(-270));
         Pose2d rightRedStartPose = new Pose2d(returnX(35), returnY(61), Math.toRadians(-270));
 
-        drive.setPoseEstimate(leftBlueStartPose);
+        drive.setPoseEstimate(rightBlueStartPose);
 
-        TrajectorySequence t1 = drive.trajectorySequenceBuilder(leftBlueStartPose) // increment y to go further towards blue wall
+        TrajectorySequence t1 = drive.trajectorySequenceBuilder(rightBlueStartPose) // increment y to go further towards blue wall
                 .waitSeconds(1) // detect
-                .lineTo(new Vector2d(35, 8))
+                .lineTo(new Vector2d(returnX(35), 8))
 //                .addTemporalMarker(2, () -> {
 //                    slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), high));
 //                })
-                .lineToSplineHeading(new Pose2d(pickX, pickY, Math.toRadians(returnHead(pickHead, 1)) + 180))
+                .lineToSplineHeading(new Pose2d(returnX(pickX), pickY, Math.toRadians(returnHead(pickHead, 1))))
 //                .addTemporalMarker(6, () -> {
 //                    bclaw.setPosition(0.92);
 //                })
@@ -125,21 +121,19 @@ public class LeftBlue extends LinearOpMode {
 //                .addTemporalMarker(9, () -> {
 //                    bclaw.setPosition(0);
 //                })
-                .lineToSplineHeading(new Pose2d(35, 12, Math.toRadians(-90)))
-                .lineToSplineHeading(new Pose2d(35, 35, Math.toRadians(-90)))
-                .lineToSplineHeading(new Pose2d(60, 35, Math.toRadians(-90)))
-//                .addTemporalMarker(12, () -> {
-//                    slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), low));
-//                })
+                .lineToSplineHeading(new Pose2d(returnX(12), 12, Math.toRadians(-90)))
+//                    .addTemporalMarker(12, () -> {
+//                        slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), low));
+//                    })
                 .build();
 
-        TrajectorySequence t2 = drive.trajectorySequenceBuilder(leftBlueStartPose) // increment y to go further towards blue wall
+        TrajectorySequence t2 = drive.trajectorySequenceBuilder(rightBlueStartPose) // increment y to go further towards blue wall
                 .waitSeconds(1) // detect
-                .lineTo(new Vector2d(35, 8))
+                .lineTo(new Vector2d(returnX(35), 8))
 //                .addTemporalMarker(2, () -> {
 //                    slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), high));
 //                })
-                .lineToSplineHeading(new Pose2d(pickX, pickY, Math.toRadians(returnHead(pickHead, 1)) + 180))
+                .lineToSplineHeading(new Pose2d(returnX(pickX), pickY, Math.toRadians(returnHead(pickHead, 1))))
 //                .addTemporalMarker(6, () -> {
 //                bclaw.setPosition(0.92);
 //                })
@@ -147,19 +141,19 @@ public class LeftBlue extends LinearOpMode {
 //                .addTemporalMarker(9, () -> {
 //                bclaw.setPosition(0);
 //                })
-                .lineToSplineHeading(new Pose2d(35, 12.5, Math.toRadians(-90)))
+                .lineToSplineHeading(new Pose2d(returnX(35), 12.5, Math.toRadians(-90)))
 //                .addTemporalMarker(12, () -> {
 //                    slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), low));
 //                })
                 .build();
 
-        TrajectorySequence t3 = drive.trajectorySequenceBuilder(leftBlueStartPose) // increment y to go further towards blue wall
+        TrajectorySequence t3 = drive.trajectorySequenceBuilder(rightBlueStartPose) // increment y to go further towards blue wall
                 .waitSeconds(1) // detect
-                .lineTo(new Vector2d(35, 8))
+                .lineTo(new Vector2d(returnX(35), 8))
 //                .addTemporalMarker(2, () -> {
 //                    slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), high));
 //                })
-                .lineToSplineHeading(new Pose2d(pickX, pickY, Math.toRadians(returnHead(pickHead, 1)) + 180))
+                .lineToSplineHeading(new Pose2d(returnX(pickX), pickY, Math.toRadians(returnHead(pickHead, 1))))
 //                .addTemporalMarker(6, () -> {
 //                    bclaw.setPosition(0.92);
 //                })
@@ -167,29 +161,13 @@ public class LeftBlue extends LinearOpMode {
 //                .addTemporalMarker(9, () -> {
 //                    bclaw.setPosition(0);
 //                })
-                .lineToSplineHeading(new Pose2d(12, 12, Math.toRadians(-90)))
+                .lineToSplineHeading(new Pose2d(returnX(35), 12, Math.toRadians(-90)))
+                .lineToSplineHeading(new Pose2d(returnX(35), 35, Math.toRadians(-90)))
+                .lineToSplineHeading(new Pose2d(returnX(60), 35, Math.toRadians(-90)))
 //                .addTemporalMarker(12, () -> {
 //                    slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), low));
 //                })
                 .build();
-
-//        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-//        camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
-//        aprilTagDetectionPipeline = new AprilTagDetectionPipeline(tagsize, fx, fy, cx, cy);
-//
-//        camera.setPipeline(aprilTagDetectionPipeline);
-//        camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
-//            @Override
-//            public void onOpened()
-//            {
-//                camera.startStreaming(800,448, OpenCvCameraRotation.UPRIGHT);
-//            }
-//
-//            @Override
-//            public void onError(int errorCode) {
-//
-//            }
-//        });
         waitForStart();
         drive.followTrajectorySequence(t1);
     }
