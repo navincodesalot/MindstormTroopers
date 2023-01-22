@@ -22,18 +22,35 @@ public class testTele extends LinearOpMode {
         CYCLE
     }
 
+    enum AutoMode {
+        INIT,
+        ARM_DOWN,
+        GRAB_CONE,
+        CLOSE_CLAW,
+        INTO_BUCKET,
+        DROP_CONE,
+        SLIDE_UP,
+        ARM_BACK_DOWN,
+        RESET
+    }
+
     Mode currentMode = Mode.DRIVER_CONTROL;
+    AutoMode autoCurrentMode;
 
     public DcMotorEx arm;
     public DcMotorEx slide;
     public Servo claw;
     public Servo bclaw;
 
+    double btime;
+
     double clawClose = 0.3;
     int armTarget = 0;
     int slideTarget = 0;
     int armPickup = -100;
     boolean save = false;
+
+    int targetPos = 0;
 
     @Override
     public void runOpMode() {
@@ -54,7 +71,7 @@ public class testTele extends LinearOpMode {
             slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), slideTarget));
             arm.setPower(armPIDF.returnPower(arm.getCurrentPosition(), armTarget));
 
-            switch(currentMode) {
+            switch (currentMode) {
                 case DRIVER_CONTROL:
                     drive.setWeightedDrivePower(
                             new Pose2d(
@@ -65,10 +82,10 @@ public class testTele extends LinearOpMode {
                     );
                     drive.update();
 
-                    if(gamepad1.y) { //drop
+                    if (gamepad1.y) { //drop
                         bclaw.setPosition(0.92);
                     }
-                    if(gamepad1.a) { //pickup
+                    if (gamepad1.a) { //pickup
                         bclaw.setPosition(0);
                     }
                     if (gamepad2.right_bumper) {
@@ -83,7 +100,7 @@ public class testTele extends LinearOpMode {
                     if (gamepad2.x) { //open claw
                         claw.setPosition(1);
                     }
-                    if(gamepad2.left_stick_button){
+                    if (gamepad2.left_stick_button) {
                         armTarget = -20;
                     }
                     if (gamepad2.a) {
@@ -98,31 +115,78 @@ public class testTele extends LinearOpMode {
                     }
                     break;
                 case CYCLE:
-                    int targetPos = 0;
                     if (gamepad1.x && save) {
                         telemetry.addData("Saving", targetPos);
                         targetPos = slide.getCurrentPosition();
                         save = false;
+                        autoCurrentMode = AutoMode.INIT;
                     }
-
-                    if (gamepad1.b && targetPos != 0) {
-                        slideTarget = 0; //reset to 0 in case
-                        claw.setPosition(1); //open claw
-                        armTarget = armPickup; //grab cone
-                        claw.setPosition(clawClose); //close claw
-                        armTarget = 20; //put into bucket
-                        claw.setPosition(1); //open claw
-                        armTarget = -20; //move arm
-                        slideTarget = targetPos; // go to target
-                        bclaw.setPosition(0.92); //drop cone
-                        sleep(1000); //wait to drop
-                        bclaw.setPosition(0); //reset
-                        slideTarget = 0; //bring slide down
+                    switch (autoCurrentMode) {
+                        case INIT:
+                            if (gamepad1.b && targetPos != 0) {
+                                autoCurrentMode = AutoMode.ARM_DOWN;
+                            }
+                            break;
+                        case ARM_DOWN:
+                            slideTarget = 0; //reset to 0 in case
+                            autoCurrentMode = AutoMode.GRAB_CONE;
+                            break;
+                        case GRAB_CONE:
+                            if (Math.abs(slide.getCurrentPosition() - slideTarget) < 10) { // our threshold is within 10 encoder ticks of our target
+                                claw.setPosition(1); //open claw
+                                armTarget = armPickup; //grab cone
+                                autoCurrentMode = AutoMode.CLOSE_CLAW;
+                            }
+                            break;
+                        case CLOSE_CLAW:
+                            if (Math.abs(arm.getCurrentPosition() - armTarget) < 5) { // our threshold is within 5 encoder ticks of our target
+                                claw.setPosition(clawClose); //close claw
+                                armTarget = 20;
+                                autoCurrentMode = AutoMode.INTO_BUCKET;
+                            }
+                        case INTO_BUCKET:
+                            if (Math.abs(arm.getCurrentPosition() - armTarget) < 5) { // our threshold is within 5 encoder ticks of our target
+                                claw.setPosition(1); //open claw
+                                autoCurrentMode = AutoMode.ARM_BACK_DOWN;
+                            }
+                            break;
+                        case ARM_BACK_DOWN:
+                            if (Math.abs(arm.getCurrentPosition() - armTarget) < 5) { // our threshold is within 5 encoder ticks of our target
+                                claw.setPosition(1); //open claw
+                                armTarget = -20;
+                                autoCurrentMode = AutoMode.SLIDE_UP;
+                            }
+                            break;
+                        case SLIDE_UP:
+                            if (Math.abs(arm.getCurrentPosition() - armTarget) < 5) { // our threshold is within 5 encoder ticks of our target
+                                slideTarget = targetPos;
+                                autoCurrentMode = AutoMode.DROP_CONE;
+                            }
+                            break;
+                        case DROP_CONE:
+                            if (Math.abs(slide.getCurrentPosition() - slideTarget) < 10) { // our threshold is within 10 encoder ticks of our target
+                                bclaw.setPosition(0.92);
+                                ElapsedTime bclawTimer = new ElapsedTime();
+                                btime = 2; // 2 second wait
+                                if (bclawTimer.seconds() >= btime) {
+                                    bclawTimer.reset();
+                                    autoCurrentMode = AutoMode.RESET;
+                                }
+                            }
+                            break;
+                        case RESET:
+                            bclaw.setPosition(0); //reset
+//                            if (gamepad1.x && autoCurrentMode != autoCurrentMode.INIT) {
+//                                autoCurrentMode = AutoMode.INIT;
+//                            }
+                            if (gamepad1.b) {
+                                autoCurrentMode = AutoMode.INIT;
+                            }
+                            break;
                     }
-
-                    if(gamepad1.right_bumper) {
-                        currentMode = Mode.DRIVER_CONTROL;
-                    }
+                if (gamepad1.right_bumper) {
+                    currentMode = Mode.DRIVER_CONTROL;
+                }
             }
         }
     }
