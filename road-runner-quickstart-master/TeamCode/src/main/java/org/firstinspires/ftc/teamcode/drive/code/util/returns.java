@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.drive.code.util.returns;
+package org.firstinspires.ftc.teamcode.drive.code.util;
 
 public class returns {
     public static double returnX(double x) {
