@@ -32,7 +32,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 //import org.firstinspires.ftc.robotcore.external.hardware..WebcamName;
-import org.firstinspires.ftc.teamcode.drive.code.util.AprilTagDetectionPipeline;
+import org.firstinspires.ftc.teamcode.drive.code.util.detection.AprilTagDetectionPipeline;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.openftc.apriltag.AprilTagDetection;
 

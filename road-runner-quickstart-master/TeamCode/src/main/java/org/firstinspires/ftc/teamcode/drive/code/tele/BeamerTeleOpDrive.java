@@ -73,11 +73,7 @@ public class BeamerTeleOpDrive extends LinearOpMode {
             );
             drive.update();
 
-
-//            gp1Controller();
             gp2Controller();
-//            coneLoop();
-
 
             Pose2d poseEstimate = drive.getPoseEstimate();
             telemetry.addData("Status", save);
@@ -90,28 +86,6 @@ public class BeamerTeleOpDrive extends LinearOpMode {
         }
     }
 
-    private void gp1Controller() {
-        if (gamepad1.dpad_down) {
-            arm.setPower(armPIDF.returnPower(arm.getCurrentPosition(), -130)); //grab cone
-        }
-        if (gamepad1.dpad_left) {
-            arm.setPower(armPIDF.returnPower(arm.getCurrentPosition(), -100)); //lift cone slightly
-        }
-        if (gamepad1.dpad_right) {
-            arm.setPower(armPIDF.returnPower(arm.getCurrentPosition(), 20)); //1st post todo maybe works
-        }
-        if (gamepad1.dpad_up) {
-            arm.setPower(armPIDF.returnPower(arm.getCurrentPosition(), 20)); //put into bucket
-        }
-
-        //Adjustments
-        if (gamepad1.right_bumper) {
-            arm.setPower(armPIDF.returnPower(arm.getCurrentPosition(), (arm.getCurrentPosition() + 5)));
-        }
-        if (gamepad1.left_bumper) {
-            arm.setPower(armPIDF.returnPower(arm.getCurrentPosition(), (arm.getCurrentPosition() - 5)));
-        }
-    }
 
     private void gp2Controller() {
         slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), target));
