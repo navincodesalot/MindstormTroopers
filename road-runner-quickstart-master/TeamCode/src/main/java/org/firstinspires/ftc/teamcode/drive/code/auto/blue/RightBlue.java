@@ -43,7 +43,7 @@ public class RightBlue extends LinearOpMode {
         bclaw = hardwareMap.get(Servo.class, "bclaw");
 
         Pose2d startPose = startPoses.rightBlueStartPose;
-
+        Pose2d parkPose;
         arm.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         arm.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
@@ -68,10 +68,6 @@ public class RightBlue extends LinearOpMode {
                 .addTemporalMarker(9, () -> {
                     bclaw.setPosition(0); //bucket drop
                 })
-                .lineToSplineHeading(new Pose2d(returnX(12), 12, Math.toRadians(-90)))
-                    .addTemporalMarker(12, () -> {
-                        slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), low));
-                    })
                 .build();
 
         TrajectorySequence t2 = drive.trajectorySequenceBuilder(startPose)
@@ -87,10 +83,6 @@ public class RightBlue extends LinearOpMode {
                 .waitSeconds(2.5)
                 .addTemporalMarker(9, () -> {
                     bclaw.setPosition(0); //bucket drop
-                })
-                .lineToSplineHeading(new Pose2d(returnX(35), 12.5, Math.toRadians(-90)))
-                .addTemporalMarker(12, () -> {
-                    slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), low));
                 })
                 .build();
 
@@ -108,6 +100,22 @@ public class RightBlue extends LinearOpMode {
                 .addTemporalMarker(9, () -> {
                     bclaw.setPosition(0); //bucket drop
                 })
+                .build();
+
+        TrajectorySequence p1 = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
+                .lineToSplineHeading(new Pose2d(returnX(12), 12, Math.toRadians(-90)))
+                .addTemporalMarker(12, () -> {
+                    slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), low));
+                })
+                .build();
+        TrajectorySequence p2 = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
+                .lineToSplineHeading(new Pose2d(returnX(35), 12.5, Math.toRadians(-90)))
+                .addTemporalMarker(12, () -> {
+                    slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), low));
+                })
+                .build();
+
+        TrajectorySequence p3 = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                 .lineToSplineHeading(new Pose2d(returnX(35), 12, Math.toRadians(-90)))
                 .lineToSplineHeading(new Pose2d(returnX(35), 35, Math.toRadians(-90)))
                 .lineToSplineHeading(new Pose2d(returnX(60), 35, Math.toRadians(-90)))
@@ -120,14 +128,17 @@ public class RightBlue extends LinearOpMode {
         if (detection == null || detection == AprilTagDetectionPipeline.SignalPosition.LEFT) {
             //run t1 traj
             drive.followTrajectorySequenceAsync(t1);
+            drive.followTrajectorySequenceAsync(p1);
             PoseStorage.currentPose = drive.getPoseEstimate(); // Transfer the current pose to PoseStorage so we can use it in TeleOp
         } else if (detection == AprilTagDetectionPipeline.SignalPosition.MIDDLE) {
             //run t2 traj
             drive.followTrajectorySequenceAsync(t2);
+            drive.followTrajectorySequenceAsync(p2);
             PoseStorage.currentPose = drive.getPoseEstimate();
         } else if (detection == AprilTagDetectionPipeline.SignalPosition.RIGHT) {
             //run t3 traj
             drive.followTrajectorySequenceAsync(t3);
+            drive.followTrajectorySequenceAsync(p3);
             PoseStorage.currentPose = drive.getPoseEstimate();
         }
     }
