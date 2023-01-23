@@ -26,11 +26,7 @@ public class testTele extends LinearOpMode {
         INIT,
         ARM_DOWN,
         GRAB_CONE,
-        CLOSE_CLAW,
-        INTO_BUCKET,
-        DROP_CONE,
         SLIDE_UP,
-        ARM_BACK_DOWN,
         RESET
     }
 
@@ -135,35 +131,24 @@ public class testTele extends LinearOpMode {
                             if (Math.abs(slide.getCurrentPosition() - slideTarget) < 10) { // our threshold is within 10 encoder ticks of our target
                                 claw.setPosition(1); //open claw
                                 armTarget = armPickup; //grab cone
-                                autoCurrentMode = AutoMode.CLOSE_CLAW;
+                                if (Math.abs(arm.getCurrentPosition() - armTarget) < 5) { // our threshold is within 5 encoder ticks of our target
+                                    claw.setPosition(clawClose); //close claw
+                                    armTarget = 20;
+                                }
+
+                                if (Math.abs(arm.getCurrentPosition() - armTarget) < 5) { // our threshold is within 5 encoder ticks of our target
+                                    claw.setPosition(1); //open claw
+                                    armTarget = -35;
+                                    autoCurrentMode = AutoMode.SLIDE_UP;
+                                }
+                               
                             }
-                            break;
-                        case CLOSE_CLAW:
-                            if (Math.abs(arm.getCurrentPosition() - armTarget) < 5) { // our threshold is within 5 encoder ticks of our target
-                                claw.setPosition(clawClose); //close claw
-                                armTarget = 20;
-                                autoCurrentMode = AutoMode.INTO_BUCKET;
-                            }
-                        case INTO_BUCKET:
-                            if (Math.abs(arm.getCurrentPosition() - armTarget) < 5) { // our threshold is within 5 encoder ticks of our target
-                                claw.setPosition(1); //open claw
-                                autoCurrentMode = AutoMode.ARM_BACK_DOWN;
-                            }
-                            break;
-                        case ARM_BACK_DOWN:
-                            if (Math.abs(arm.getCurrentPosition() - armTarget) < 5) { // our threshold is within 5 encoder ticks of our target
-                                claw.setPosition(1); //open claw
-                                armTarget = -20;
-                                autoCurrentMode = AutoMode.SLIDE_UP;
-                            }
-                            break;
+                            break;      
+                  
                         case SLIDE_UP:
                             if (Math.abs(arm.getCurrentPosition() - armTarget) < 5) { // our threshold is within 5 encoder ticks of our target
                                 slideTarget = targetPos;
-                                autoCurrentMode = AutoMode.DROP_CONE;
                             }
-                            break;
-                        case DROP_CONE:
                             if (Math.abs(slide.getCurrentPosition() - slideTarget) < 10) { // our threshold is within 10 encoder ticks of our target
                                 bclaw.setPosition(0.92);
                                 ElapsedTime bclawTimer = new ElapsedTime();
@@ -174,6 +159,7 @@ public class testTele extends LinearOpMode {
                                 }
                             }
                             break;
+        
                         case RESET:
                             bclaw.setPosition(0); //reset
 //                            if (gamepad1.x && autoCurrentMode != autoCurrentMode.INIT) {
