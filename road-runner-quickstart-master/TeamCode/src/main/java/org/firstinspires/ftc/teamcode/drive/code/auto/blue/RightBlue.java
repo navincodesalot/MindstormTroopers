@@ -26,9 +26,13 @@ public class RightBlue extends LinearOpMode {
     private DcMotorEx slide;
     private Servo claw;
     private Servo bclaw;
-    double target = 0;
-    double high = 2650;
-    double low = 0;
+    double slideTarget = 0;
+    double sHigh = 2650;
+    double sLow = 0;
+    double aDrop = 20;
+    double aPick = -100;
+    double aStatic = -20;
+    double armTarget = 0;
     double clawClose = 0.3;
 
 
@@ -58,7 +62,7 @@ public class RightBlue extends LinearOpMode {
                 .waitSeconds(1) // detect
                 .lineTo(new Vector2d(returnX(35), 8))
                 .addTemporalMarker(2, () -> {
-                    slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), high));
+                    slideTarget = sHigh;
                 })
                 .lineToSplineHeading(new Pose2d(returnX(pickX), pickY, Math.toRadians(returnHead(pickHead, 1))))
                 .addTemporalMarker(6, () -> {
@@ -74,7 +78,7 @@ public class RightBlue extends LinearOpMode {
                 .waitSeconds(1) // detect
                 .lineTo(new Vector2d(returnX(35), 8))
                 .addTemporalMarker(2, () -> {
-                    slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), high));
+                    slideTarget = sHigh;
                 })
                 .lineToSplineHeading(new Pose2d(returnX(pickX), pickY, Math.toRadians(returnHead(pickHead, 1))))
                 .addTemporalMarker(6, () -> {
@@ -90,7 +94,7 @@ public class RightBlue extends LinearOpMode {
                 .waitSeconds(1) // detect
                 .lineTo(new Vector2d(returnX(35), 8))
                 .addTemporalMarker(2, () -> {
-                    slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), high));
+                    slideTarget = sHigh;
                 })
                 .lineToSplineHeading(new Pose2d(returnX(pickX), pickY, Math.toRadians(returnHead(pickHead, 1))))
                 .addTemporalMarker(6, () -> {
@@ -105,13 +109,13 @@ public class RightBlue extends LinearOpMode {
         TrajectorySequence p1 = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                 .lineToSplineHeading(new Pose2d(returnX(12), 12, Math.toRadians(-90)))
                 .addTemporalMarker(12, () -> {
-                    slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), low));
+                    slideTarget = sLow;
                 })
                 .build();
         TrajectorySequence p2 = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                 .lineToSplineHeading(new Pose2d(returnX(35), 12.5, Math.toRadians(-90)))
                 .addTemporalMarker(12, () -> {
-                    slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), low));
+                    slideTarget = sLow;
                 })
                 .build();
 
@@ -120,7 +124,7 @@ public class RightBlue extends LinearOpMode {
                 .lineToSplineHeading(new Pose2d(returnX(35), 35, Math.toRadians(-90)))
                 .lineToSplineHeading(new Pose2d(returnX(60), 35, Math.toRadians(-90)))
                 .addTemporalMarker(12, () -> {
-                    slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), low));
+                    slideTarget = sLow;
                 })
                 .build();
 
@@ -140,6 +144,11 @@ public class RightBlue extends LinearOpMode {
             drive.followTrajectorySequenceAsync(t3);
             drive.followTrajectorySequenceAsync(p3);
             PoseStorage.currentPose = drive.getPoseEstimate();
+        }
+        while (opModeIsActive() && !isStopRequested()) {
+            drive.update();
+            slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), slideTarget));
+            arm.setPower(armPIDF.returnPower(arm.getCurrentPosition(), armTarget));
         }
     }
 }

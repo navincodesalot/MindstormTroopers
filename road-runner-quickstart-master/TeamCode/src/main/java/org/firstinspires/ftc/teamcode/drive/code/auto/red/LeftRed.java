@@ -27,6 +27,11 @@ public class LeftRed extends LinearOpMode {
     private Servo claw;
     private Servo bclaw;
     double slideTarget = 0;
+    double sHigh = 2650;
+    double sLow = 0;
+    double aDrop = 20;
+    double aPick = -100;
+    double aStatic = -20;
     double armTarget = 0;
     double clawClose = 0.3;
 
@@ -57,7 +62,7 @@ public class LeftRed extends LinearOpMode {
                 .waitSeconds(1) // detect
                 .lineTo(new Vector2d(35, returnY(8)))
                 .addTemporalMarker(2, () -> {
-                    slideTarget = 2650;
+                    slideTarget = sHigh;
                 })
                 .lineToSplineHeading(new Pose2d(pickX, returnY(pickY), Math.toRadians(returnHead(pickHead))))
                 .addTemporalMarker(2, () -> {
@@ -73,7 +78,7 @@ public class LeftRed extends LinearOpMode {
                 .waitSeconds(1) // detect
                 .lineTo(new Vector2d(35, returnY(8)))
                 .addTemporalMarker(2, () -> {
-                    slideTarget = 2650;
+                    slideTarget = sHigh;
                 })
                 .lineToSplineHeading(new Pose2d(pickX, returnY(pickY), Math.toRadians(returnHead(pickHead))))
                 .addTemporalMarker(2, () -> {
@@ -89,7 +94,7 @@ public class LeftRed extends LinearOpMode {
                 .waitSeconds(1) // detect
                 .lineTo(new Vector2d(35, returnY(8)))
                 .addTemporalMarker(2, () -> {
-                    slideTarget = 2650;
+                    slideTarget = sHigh;
                 })
                 .lineToSplineHeading(new Pose2d(pickX, returnY(pickY), Math.toRadians(returnHead(pickHead))))
                 .addTemporalMarker(2, () -> {
@@ -104,13 +109,13 @@ public class LeftRed extends LinearOpMode {
         TrajectorySequence p1 = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                 .lineToSplineHeading(new Pose2d(12, returnY(12), Math.toRadians(-90)))
                 .addTemporalMarker(8.5, () -> {
-                    slideTarget = 0;
+                    slideTarget = sLow;
                 })
                 .build();
         TrajectorySequence p2 = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                 .lineToSplineHeading(new Pose2d(35, returnY(12.5), Math.toRadians(-90)))
                 .addTemporalMarker(8.5, () -> {
-                    slideTarget = 0;
+                    slideTarget = sLow;
                 })
                 .build();
 
@@ -119,7 +124,7 @@ public class LeftRed extends LinearOpMode {
                 .lineToSplineHeading(new Pose2d(35, returnY(35), Math.toRadians(-90)))
                 .lineToSplineHeading(new Pose2d(60, returnY(35), Math.toRadians(-90)))
                 .addTemporalMarker(8.5, () -> {
-                    slideTarget = 0;
+                    slideTarget = sLow;
                 })
                 .build();
 
