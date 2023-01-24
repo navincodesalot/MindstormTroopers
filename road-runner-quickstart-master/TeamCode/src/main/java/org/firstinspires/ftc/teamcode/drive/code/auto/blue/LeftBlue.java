@@ -134,16 +134,19 @@ public class LeftBlue extends LinearOpMode {
             drive.followTrajectorySequenceAsync(t1);
             drive.followTrajectorySequenceAsync(p1);
             PoseStorage.currentPose = drive.getPoseEstimate(); // Transfer the current pose to PoseStorage so we can use it in TeleOp
+            signalUtil.stopCamera();
         } else if (detection == AprilTagDetectionPipeline.SignalPosition.MIDDLE) {
             //run t2 traj
             drive.followTrajectorySequenceAsync(t2);
             drive.followTrajectorySequenceAsync(p2);
             PoseStorage.currentPose = drive.getPoseEstimate();
+            signalUtil.stopCamera();
         } else if (detection == AprilTagDetectionPipeline.SignalPosition.RIGHT) {
             //run t3 traj
             drive.followTrajectorySequenceAsync(t3);
             drive.followTrajectorySequenceAsync(p3);
             PoseStorage.currentPose = drive.getPoseEstimate();
+            signalUtil.stopCamera();
         }
         while (opModeIsActive() && !isStopRequested()) {
             drive.update();
