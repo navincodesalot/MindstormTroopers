@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.drive.code.util.PoseStorage;
 import org.firstinspires.ftc.teamcode.drive.code.util.pidf.armPIDF;
 import org.firstinspires.ftc.teamcode.drive.code.util.pidf.slidePIDF;
+//import org.firstinspires.ftc.teamcode.drive.code.util.pidf.slidePIDF;
 
 /**
  * This opmode demonstrates how to create a teleop using just the SampleMecanumDrive class without
@@ -25,7 +26,7 @@ import org.firstinspires.ftc.teamcode.drive.code.util.pidf.slidePIDF;
 public class BeamerTeleOpDrive extends LinearOpMode {
     private DcMotorEx arm;
     private DcMotorEx slide;
-    private Servo claw;
+//    private Servo claw;
     private Servo bclaw;
     double targetPosA = -20;
     double target = 0;
@@ -42,7 +43,7 @@ public class BeamerTeleOpDrive extends LinearOpMode {
         drive.setPoseEstimate(PoseStorage.currentPose);
         arm = hardwareMap.get(DcMotorEx.class, "arm");
         slide = hardwareMap.get(DcMotorEx.class, "slide");
-        claw = hardwareMap.get(Servo.class, "claw");
+//        claw = hardwareMap.get(Servo.class, "claw");
         bclaw = hardwareMap.get(Servo.class, "bclaw");
 
         arm.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
@@ -51,24 +52,25 @@ public class BeamerTeleOpDrive extends LinearOpMode {
         arm.setDirection(DcMotorSimple.Direction.REVERSE);
 
         slide.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        slide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        slide.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+//        slide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        slide.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         slide.setDirection(DcMotorSimple.Direction.REVERSE);
+        slide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         waitForStart();
 
         arm.setTargetPosition(0);
         slide.setTargetPosition(0);
-        claw.setPosition(clawClose); //close claw on init
+//        claw.setPosition(clawClose); //close claw on init
 
         if (isStopRequested()) return;
 
         while (opModeIsActive() && !isStopRequested()) {
             drive.setWeightedDrivePower(
                     new Pose2d(
-                            -gamepad1.left_stick_y*0.6,
-                            -gamepad1.left_stick_x*0.6,
-                            -gamepad1.right_stick_x*0.6
+                            -gamepad1.left_stick_y * 0.6,
+                            -gamepad1.left_stick_x * 0.6,
+                            -gamepad1.right_stick_x * 0.6
                     )
             );
             drive.update();
@@ -88,30 +90,32 @@ public class BeamerTeleOpDrive extends LinearOpMode {
 
 
     private void gp2Controller() {
-        slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), target));
+//        slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), target));
         arm.setPower(armPIDF.returnPower(arm.getCurrentPosition(), targetPosA));
 
         if (gamepad2.right_bumper) {
             target = high;
+            slideRTP();
         }
         if (gamepad2.left_bumper) {
             target = low;
+            slideRTP();
         }
 
-        if (gamepad2.b) { //close claw
-            claw.setPosition(clawClose);
-        }
-        if (gamepad2.x) { //open claw
-            claw.setPosition(1);
-        }
-        if(gamepad1.y) { //drop
+//        if (gamepad2.b) { //close claw
+//            claw.setPosition(clawClose);
+//        }
+//        if (gamepad2.x) { //open claw
+//            claw.setPosition(1);
+//        }
+        if (gamepad1.y) { //drop
             bclaw.setPosition(0.92);
         }
-        if(gamepad1.a) { //pickup
+        if (gamepad1.a) { //pickup
             bclaw.setPosition(0);
         }
 
-        if(gamepad2.left_stick_button){
+        if (gamepad2.left_stick_button) {
             targetPosA = -20;
         }
 
@@ -146,13 +150,27 @@ public class BeamerTeleOpDrive extends LinearOpMode {
         if (gamepad1.a && targetPos != 0) {
             // Still have to figure out movement automatically using rr (move forward with inches)
             // Use ASYNC FSM
-            slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), 0));
-            claw.setPosition(1);
+//            slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), 0));
+//            claw.setPosition(1);
             arm.setPower(armPIDF.returnPower(arm.getCurrentPosition(), -130)); //grab cone
-            claw.setPosition(clawClose);
+//            claw.setPosition(clawClose);
             arm.setPower(armPIDF.returnPower(arm.getCurrentPosition(), 20)); //put into bucket
-            slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), targetPos));
-            slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), 0));
+//            slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), targetPos));
+//            slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), 0));
+        }
+    }
+
+    private void slideRTP() {
+        if (target == high) {
+            slide.setTargetPosition(2650);
+            slide.setVelocity(1000);
+            slide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        }
+
+        if(target == low){
+            slide.setTargetPosition(0);
+            slide.setVelocity(-500);
+            slide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
     }
 }
