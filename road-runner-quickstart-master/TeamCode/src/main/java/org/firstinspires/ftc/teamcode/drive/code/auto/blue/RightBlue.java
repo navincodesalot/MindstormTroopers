@@ -2,6 +2,9 @@ package org.firstinspires.ftc.teamcode.drive.code.auto.blue;
 import static org.firstinspires.ftc.teamcode.drive.code.util.returns.returnHead;
 import static org.firstinspires.ftc.teamcode.drive.code.util.returns.returnX;
 import static org.firstinspires.ftc.teamcode.drive.code.util.returns.returnY;
+import static org.firstinspires.ftc.teamcode.drive.code.util.startPoses.pickHead;
+import static org.firstinspires.ftc.teamcode.drive.code.util.startPoses.pickX;
+import static org.firstinspires.ftc.teamcode.drive.code.util.startPoses.pickY;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
@@ -40,8 +43,6 @@ public class RightBlue extends LinearOpMode {
 
     public void runOpMode() {
         PhotonCore.enable();
-        double pickX = 40, pickY = 8, pickHead = -156; //add makes it more clockwise
-        double dropX = 50, dropY = 12, dropHead = 0;
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 //        arm = hardwareMap.get(DcMotorEx.class, "arm");
         slide = hardwareMap.get(DcMotorEx.class, "slide");
@@ -49,7 +50,7 @@ public class RightBlue extends LinearOpMode {
         bclaw = hardwareMap.get(Servo.class, "bclaw");
 
         Pose2d startPose = startPoses.rightBlueStartPose;
-        Pose2d parkPose;
+
 //        arm.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
 //        arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 //        arm.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
@@ -65,32 +66,34 @@ public class RightBlue extends LinearOpMode {
 //        AprilTagDetectionPipeline.SignalPosition detection = signalUtil.getSignalPosition();
         drive.setPoseEstimate(startPose);
 
-        TrajectorySequence t = drive.trajectorySequenceBuilder(startPose)
+        TrajectorySequence cycle = drive.trajectorySequenceBuilder(startPose)
                 .waitSeconds(1) // detect
                 .lineTo(new Vector2d(returnX(35), 3))
                 .lineTo(new Vector2d(returnX(35), 8))
                 .UNSTABLE_addTemporalMarkerOffset(1, () -> {
-//                    slideTarget = sHigh;
+                    slideTarget = sHigh;
                 })
                 .lineToSplineHeading(new Pose2d(returnX(pickX), pickY, Math.toRadians(returnHead(pickHead, 1))))
                 .addSpatialMarker(new Vector2d(returnX(pickX), pickY), () -> {
-//                    bclaw.setPosition(0.92);
+                    if (Math.abs(slide.getCurrentPosition() - slideTarget) < 10) {
+                        bclaw.setPosition(0.92);
+                    }
                 })
                 .waitSeconds(2.5)
                 .addSpatialMarker(new Vector2d(returnX(pickX), pickY), () -> {
-//                    bclaw.setPosition(0); //bucket pickup
+                        bclaw.setPosition(0);
                 })
                 .build();
 
         TrajectorySequence p1 = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                 .lineToSplineHeading(new Pose2d(returnX(12), 12, Math.toRadians(-90)))
-                .UNSTABLE_addTemporalMarkerOffset(12, () -> {
-                    slideTarget =sLow;
+                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
+                    slideTarget = sLow;
                 })
                 .build();
         TrajectorySequence p2 = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                 .lineToSplineHeading(new Pose2d(returnX(35), 12.5, Math.toRadians(-90)))
-                .UNSTABLE_addTemporalMarkerOffset(12, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
                     slideTarget = sLow;
                 })
                 .build();
@@ -99,13 +102,13 @@ public class RightBlue extends LinearOpMode {
                 .lineToSplineHeading(new Pose2d(returnX(35), 12, Math.toRadians(-90)))
                 .lineToSplineHeading(new Pose2d(returnX(35), 35, Math.toRadians(-90)))
                 .lineToSplineHeading(new Pose2d(returnX(60), 35, Math.toRadians(-90)))
-                .UNSTABLE_addTemporalMarkerOffset(12, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
                     slideTarget = sLow;
                 })
                 .build();
 
         waitForStart();
-        drive.followTrajectorySequenceAsync(t);
+        drive.followTrajectorySequenceAsync(cycle);
 //            drive.followTrajectorySequence(p1);
             PoseStorage.currentPose = drive.getPoseEstimate();
 //        if (detection == null || detection == AprilTagDetectionPipeline.SignalPosition.LEFT) {
