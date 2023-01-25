@@ -26,10 +26,11 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 @Autonomous
 public class RightBlue extends LinearOpMode {
-//    public AprilTagsUtil signalUtil = new AprilTagsUtil(hardwareMap, "Webcam 1", telemetry);;
-//    private DcMotorEx arm;
+    public AprilTagsUtil signalUtil = new AprilTagsUtil(hardwareMap, "Webcam 1", telemetry);
+    ;
+    private DcMotorEx arm;
     private DcMotorEx slide;
-//    private Servo claw;
+    private Servo claw;
     private Servo bclaw;
     double slideTarget = 0;
     double sHigh = 2650;
@@ -40,33 +41,32 @@ public class RightBlue extends LinearOpMode {
     double armTarget = 0;
     double clawClose = 0.3;
 
-
     public void runOpMode() {
         PhotonCore.enable();
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
-//        arm = hardwareMap.get(DcMotorEx.class, "arm");
+        arm = hardwareMap.get(DcMotorEx.class, "arm");
         slide = hardwareMap.get(DcMotorEx.class, "slide");
-//        claw = hardwareMap.get(Servo.class, "claw");
+        claw = hardwareMap.get(Servo.class, "claw");
         bclaw = hardwareMap.get(Servo.class, "bclaw");
 
         Pose2d startPose = startPoses.rightBlueStartPose;
 
-//        arm.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-//        arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-//        arm.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-//        arm.setDirection(DcMotorSimple.Direction.REVERSE);
+        arm.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        arm.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        arm.setDirection(DcMotorSimple.Direction.REVERSE);
 
         slide.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         slide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         slide.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         slide.setDirection(DcMotorSimple.Direction.REVERSE);
 
-//        signalUtil.init();
+        signalUtil.init();
 
-//        AprilTagDetectionPipeline.SignalPosition detection = signalUtil.getSignalPosition();
+        AprilTagDetectionPipeline.SignalPosition detection = signalUtil.getSignalPosition();
         drive.setPoseEstimate(startPose);
 
-        TrajectorySequence cycle = drive.trajectorySequenceBuilder(startPose)
+        TrajectorySequence t1 = drive.trajectorySequenceBuilder(startPose)
                 .waitSeconds(1) // detect
                 .lineTo(new Vector2d(returnX(35), 3))
                 .lineTo(new Vector2d(returnX(35), 8))
@@ -81,24 +81,60 @@ public class RightBlue extends LinearOpMode {
                 })
                 .waitSeconds(2.5)
                 .addSpatialMarker(new Vector2d(returnX(pickX), pickY), () -> {
-                        bclaw.setPosition(0);
+                    bclaw.setPosition(0);
                 })
-                .build();
 
-        TrajectorySequence p1 = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
+                // PARK
                 .lineToSplineHeading(new Pose2d(returnX(12), 12, Math.toRadians(-90)))
                 .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
                     slideTarget = sLow;
                 })
                 .build();
-        TrajectorySequence p2 = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
+
+        TrajectorySequence t2 = drive.trajectorySequenceBuilder(startPose)
+                .waitSeconds(1) // detect
+                .lineTo(new Vector2d(returnX(35), 3))
+                .lineTo(new Vector2d(returnX(35), 8))
+                .UNSTABLE_addTemporalMarkerOffset(1, () -> {
+                    slideTarget = sHigh;
+                })
+                .lineToSplineHeading(new Pose2d(returnX(pickX), pickY, Math.toRadians(returnHead(pickHead, 1))))
+                .addSpatialMarker(new Vector2d(returnX(pickX), pickY), () -> {
+                    if (Math.abs(slide.getCurrentPosition() - slideTarget) < 10) {
+                        bclaw.setPosition(0.92);
+                    }
+                })
+                .waitSeconds(2.5)
+                .addSpatialMarker(new Vector2d(returnX(pickX), pickY), () -> {
+                    bclaw.setPosition(0);
+                })
+
+                // PARK
                 .lineToSplineHeading(new Pose2d(returnX(35), 12.5, Math.toRadians(-90)))
                 .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
                     slideTarget = sLow;
                 })
                 .build();
 
-        TrajectorySequence p3 = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
+        TrajectorySequence t3 = drive.trajectorySequenceBuilder(startPose)
+                .waitSeconds(1) // detect
+                .lineTo(new Vector2d(returnX(35), 3))
+                .lineTo(new Vector2d(returnX(35), 8))
+                .UNSTABLE_addTemporalMarkerOffset(1, () -> {
+                    slideTarget = sHigh;
+                })
+                .lineToSplineHeading(new Pose2d(returnX(pickX), pickY, Math.toRadians(returnHead(pickHead, 1))))
+                .addSpatialMarker(new Vector2d(returnX(pickX), pickY), () -> {
+                    if (Math.abs(slide.getCurrentPosition() - slideTarget) < 10) {
+                        bclaw.setPosition(0.92);
+                    }
+                })
+                .waitSeconds(2.5)
+                .addSpatialMarker(new Vector2d(returnX(pickX), pickY), () -> {
+                    bclaw.setPosition(0);
+                })
+
+                // PARK
                 .lineToSplineHeading(new Pose2d(returnX(35), 12, Math.toRadians(-90)))
                 .lineToSplineHeading(new Pose2d(returnX(35), 35, Math.toRadians(-90)))
                 .lineToSplineHeading(new Pose2d(returnX(60), 35, Math.toRadians(-90)))
@@ -108,32 +144,23 @@ public class RightBlue extends LinearOpMode {
                 .build();
 
         waitForStart();
-        drive.followTrajectorySequenceAsync(cycle);
-//            drive.followTrajectorySequence(p1);
+        if (detection == null || detection == AprilTagDetectionPipeline.SignalPosition.LEFT) {
+            drive.followTrajectorySequenceAsync(t1);
             PoseStorage.currentPose = drive.getPoseEstimate();
-//        if (detection == null || detection == AprilTagDetectionPipeline.SignalPosition.LEFT) {
-//            //run t1 traj
-//            drive.followTrajectorySequenceAsync(t);
-//            drive.followTrajectorySequence(p1);
-//            PoseStorage.currentPose = drive.getPoseEstimate(); // Transfer the current pose to PoseStorage so we can use it in TeleOp
-//            signalUtil.stopCamera();
-//        } else if (detection == AprilTagDetectionPipeline.SignalPosition.MIDDLE) {
-//            //run t2 traj
-//            drive.followTrajectorySequenceAsync(t);
-//            drive.followTrajectorySequence(p2);
-//            PoseStorage.currentPose = drive.getPoseEstimate();
-//            signalUtil.stopCamera();
-//        } else if (detection == AprilTagDetectionPipeline.SignalPosition.RIGHT) {
-//            //run traj
-//            drive.followTrajectorySequenceAsync(t);
-//            drive.followTrajectorySequence(p3);
-//            PoseStorage.currentPose = drive.getPoseEstimate();
-//            signalUtil.stopCamera();
-//        }
+            signalUtil.stopCamera();
+        } else if (detection == AprilTagDetectionPipeline.SignalPosition.MIDDLE) {
+            drive.followTrajectorySequenceAsync(t2);
+            PoseStorage.currentPose = drive.getPoseEstimate();
+            signalUtil.stopCamera();
+        } else if (detection == AprilTagDetectionPipeline.SignalPosition.RIGHT) {
+            drive.followTrajectorySequenceAsync(t3);
+            PoseStorage.currentPose = drive.getPoseEstimate();
+            signalUtil.stopCamera();
+        }
         while (opModeIsActive() && !isStopRequested()) {
             drive.update();
             slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), slideTarget));
-//            arm.setPower(armPIDF.returnPower(arm.getCurrentPosition(), armTarget));
+            arm.setPower(armPIDF.returnPower(arm.getCurrentPosition(), armTarget));
         }
     }
 }

@@ -31,7 +31,6 @@ public class RightBlue {
                     .setConstraints(maxVel, maxAccel, 4.1715, Math.toRadians(60), trackWidth)
                     .followTrajectorySequence(drive ->
                                     drive.trajectorySequenceBuilder(rightBlueStartPose)
-                                            .waitSeconds(1) // detect
                                             .lineTo(new Vector2d(returnX(35), 3))
                                             .lineTo(new Vector2d(returnX(35), 8))
                                             .UNSTABLE_addTemporalMarkerOffset(1, () -> {
@@ -67,7 +66,6 @@ public class RightBlue {
                     .setConstraints(maxVel, maxAccel, 4.1715, Math.toRadians(60), trackWidth)
                     .followTrajectorySequence(drive ->
                                     drive.trajectorySequenceBuilder(rightBlueStartPose)
-                                            .waitSeconds(1) // detect
                                             .lineTo(new Vector2d(returnX(35), 3))
                                             .lineTo(new Vector2d(returnX(35), 8))
                                             .UNSTABLE_addTemporalMarkerOffset(1, () -> {
@@ -103,7 +101,6 @@ public class RightBlue {
                     .setConstraints(maxVel, maxAccel, 4.1715, Math.toRadians(60), trackWidth)
                     .followTrajectorySequence(drive ->
                                     drive.trajectorySequenceBuilder(rightBlueStartPose)
-                                            .waitSeconds(1) // detect
                                             .lineTo(new Vector2d(returnX(35), 3))
                                             .lineTo(new Vector2d(returnX(35), 8))
                                             .UNSTABLE_addTemporalMarkerOffset(1, () -> {
