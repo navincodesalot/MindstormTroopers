@@ -38,30 +38,50 @@ public class RightBlue {
                                             .lineTo(new Vector2d(returnX(35), 3))
                                             .lineTo(new Vector2d(returnX(35), 8))
                                             .UNSTABLE_addTemporalMarkerOffset(1, () -> {
-//                                                slideTarget = sHigh;
-//                                                armTarget = aStatic;
+                                                slideTarget = sHigh;
+                                                if (Math.abs(slide.getCurrentPosition() - slideTarget) < 10) {
+                                                        armTarget = aStatic;
+                                                }
                                             })
                                             .lineToSplineHeading(new Pose2d(returnX(pickX), pickY, Math.toRadians(returnHead(pickHead, 1))))
                                             .addSpatialMarker(new Vector2d(returnX(pickX), pickY), () -> {
-//                                                if (Math.abs(slide.getCurrentPosition() - slideTarget) < 10) {
-//                                                    bclaw.setPosition(0.92);
-//                                                }
+                                               if (Math.abs(arm.getCurrentPosition() - armTarget) < 5) {
+                                                   bclaw.setPosition(0.92);
+                                               }
                                             })
                                             .waitSeconds(2.5)
                                             .addSpatialMarker(new Vector2d(returnX(pickX), pickY), () -> {
-//                                                bclaw.setPosition(0);
+                                               bclaw.setPosition(0);
                                             })
                                             .lineToSplineHeading(new Pose2d(returnX(dropX), dropY, Math.toRadians(returnHead(dropHead))))
                                             .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
-//                                                slideTarget = sLow;
-//                                                armTarget = armPick;
+                                                slideTarget = sLow;
+                                                if (Math.abs(slide.getCurrentPosition() - slideTarget) < 10) {
+                                                        armTarget = aPick;
+                                                }
                                             })
                                             .addSpatialMarker(new Vector2d(returnX(dropX), dropY), () -> {
-//                                                claw.setPosition(clawClose);
-//                                                armTarget = armDrop;
-//                                                claw.setPosition(1);
-//                                                armTarget = aStatic;
-//                                                slideTarget = sHigh;
+                                                if (Math.abs(arm.getCurrentPosition() - armTarget) < 5) {
+                                                   claw.setPosition(clawClose);
+                                                   armTarget = armDrop;
+                                                   if (Math.abs(arm.getCurrentPosition() - armTarget) < 5) {
+                                                        claw.setPosition(1);
+                                                        armTarget = aStatic;
+                                                        if (Math.abs(arm.getCurrentPosition() - armTarget) < 5) {
+                                                                slideTarget = sHigh;
+                                                        }
+                                                   }
+                                                }
+                                            })
+                                            .lineToSplineHeading(new Pose2d(returnX(pickX), pickY, Math.toRadians(returnHead(pickHead, 1))))
+                                            .addSpatialMarker(new Vector2d(returnX(pickX), pickY), () -> {
+                                               if (Math.abs(slide.getCurrentPosition() - slideTarget) < 10) {
+                                                   bclaw.setPosition(0.92);
+                                               }
+                                            })
+                                            .waitSeconds(2.5)
+                                            .addSpatialMarker(new Vector2d(returnX(pickX), pickY), () -> {
+                                               bclaw.setPosition(0);
                                             })
                                             // PARK
 //                                            .lineToSplineHeading(new Pose2d(returnX(12), 12, Math.toRadians(-90)))
