@@ -52,10 +52,10 @@ public class RightBlue {
                                             .waitSeconds(2.5)
                                             .addSpatialMarker(new Vector2d(returnX(pickX), pickY), () -> {
                                                bclaw.setPosition(0);
+                                               slideTarget = sLow;
                                             })
                                             .lineToSplineHeading(new Pose2d(returnX(dropX), dropY, Math.toRadians(returnHead(dropHead))))
                                             .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
-                                                slideTarget = sLow;
                                                 if (Math.abs(slide.getCurrentPosition() - slideTarget) < 10) {
                                                         armTarget = aPick;
                                                 }
