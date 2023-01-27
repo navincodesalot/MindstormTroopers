@@ -1,6 +1,12 @@
 package com.example.meepmeeptesting.blue;
 
+import static com.example.meepmeeptesting.BaseMeep.dropHead;
+import static com.example.meepmeeptesting.BaseMeep.dropX;
+import static com.example.meepmeeptesting.BaseMeep.dropY;
 import static com.example.meepmeeptesting.BaseMeep.park;
+import static com.example.meepmeeptesting.BaseMeep.pickHead;
+import static com.example.meepmeeptesting.BaseMeep.pickX;
+import static com.example.meepmeeptesting.BaseMeep.pickY;
 import static com.example.meepmeeptesting.BaseMeep.rightBlueStartPose;
 import static com.example.meepmeeptesting.BaseMeep.maxAccel;
 import static com.example.meepmeeptesting.BaseMeep.maxVel;
@@ -19,8 +25,6 @@ import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
 
 public class RightBlue {
     public static void main(String[] args) {
-        double pickX = 40, pickY = 8, pickHead = -153;
-        double dropX = 50, dropY = 12, dropHead = 0;
         MeepMeep meepMeep = new MeepMeep(600);
 
         RoadRunnerBotEntity b;
@@ -35,6 +39,7 @@ public class RightBlue {
                                             .lineTo(new Vector2d(returnX(35), 8))
                                             .UNSTABLE_addTemporalMarkerOffset(1, () -> {
 //                                                slideTarget = sHigh;
+//                                                armTarget = aStatic;
                                             })
                                             .lineToSplineHeading(new Pose2d(returnX(pickX), pickY, Math.toRadians(returnHead(pickHead, 1))))
                                             .addSpatialMarker(new Vector2d(returnX(pickX), pickY), () -> {
@@ -46,12 +51,23 @@ public class RightBlue {
                                             .addSpatialMarker(new Vector2d(returnX(pickX), pickY), () -> {
 //                                                bclaw.setPosition(0);
                                             })
-
-                                            // PARK
-                                            .lineToSplineHeading(new Pose2d(returnX(12), 12, Math.toRadians(-90)))
+                                            .lineToSplineHeading(new Pose2d(returnX(dropX), dropY, Math.toRadians(returnHead(dropHead))))
                                             .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
 //                                                slideTarget = sLow;
+//                                                armTarget = armPick;
                                             })
+                                            .addSpatialMarker(new Vector2d(returnX(dropX), dropY), () -> {
+//                                                claw.setPosition(clawClose);
+//                                                armTarget = armDrop;
+//                                                claw.setPosition(1);
+//                                                armTarget = aStatic;
+//                                                slideTarget = sHigh;
+                                            })
+                                            // PARK
+//                                            .lineToSplineHeading(new Pose2d(returnX(12), 12, Math.toRadians(-90)))
+//                                            .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
+////                                                slideTarget = sL ow;
+//                                            })
                                             .build()
                     );
             meepMeep.setBackground(MeepMeep.Background.FIELD_POWERPLAY_OFFICIAL)

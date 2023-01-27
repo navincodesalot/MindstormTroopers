@@ -4,6 +4,9 @@ import static com.example.meepmeeptesting.BaseMeep.leftRedStartPose;
 import static com.example.meepmeeptesting.BaseMeep.maxAccel;
 import static com.example.meepmeeptesting.BaseMeep.maxVel;
 import static com.example.meepmeeptesting.BaseMeep.park;
+import static com.example.meepmeeptesting.BaseMeep.pickHead;
+import static com.example.meepmeeptesting.BaseMeep.pickX;
+import static com.example.meepmeeptesting.BaseMeep.pickY;
 import static com.example.meepmeeptesting.BaseMeep.returnHead;
 import static com.example.meepmeeptesting.BaseMeep.returnX;
 import static com.example.meepmeeptesting.BaseMeep.returnY;
@@ -18,8 +21,6 @@ import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
 
 public class LeftRed {
     public static void main(String[] args) {
-        double pickX = 40, pickY = 8, pickHead = -153;
-        double dropX = 50, dropY = 12, dropHead = 0;
         MeepMeep meepMeep = new MeepMeep(600);
 
         RoadRunnerBotEntity b;
