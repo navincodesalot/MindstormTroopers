@@ -12,7 +12,8 @@ public class BaseMeep {
     public static Pose2d leftRedStartPose = new Pose2d(35, returnY(61), Math.toRadians(-270));
     public static Pose2d rightRedStartPose = new Pose2d(returnX(35), returnY(61), Math.toRadians(-270));
 
-    public static double pickX = 40, pickY = 8, pickHead = -156; //subtract value to go more clockwise
+    public static double pickX1 = 40, pickY1 = 8, pickHead1 = -156; //subtract value to go more clockwise
+    public static double pickX = 38, pickY = 10, pickHead = -149;
     public static double dropX = 53, dropY = 12, dropHead = 0;
     public static double returnX(double x) {
         return x * (-1);

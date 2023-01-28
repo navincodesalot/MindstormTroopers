@@ -5,8 +5,11 @@ import static com.example.meepmeeptesting.BaseMeep.dropX;
 import static com.example.meepmeeptesting.BaseMeep.dropY;
 import static com.example.meepmeeptesting.BaseMeep.park;
 import static com.example.meepmeeptesting.BaseMeep.pickHead;
+import static com.example.meepmeeptesting.BaseMeep.pickHead1;
 import static com.example.meepmeeptesting.BaseMeep.pickX;
+import static com.example.meepmeeptesting.BaseMeep.pickX1;
 import static com.example.meepmeeptesting.BaseMeep.pickY;
+import static com.example.meepmeeptesting.BaseMeep.pickY1;
 import static com.example.meepmeeptesting.BaseMeep.rightBlueStartPose;
 import static com.example.meepmeeptesting.BaseMeep.maxAccel;
 import static com.example.meepmeeptesting.BaseMeep.maxVel;
@@ -36,58 +39,146 @@ public class RightBlue {
                     .followTrajectorySequence(drive ->
                                     drive.trajectorySequenceBuilder(rightBlueStartPose)
                                             .lineTo(new Vector2d(returnX(35), 3))
-                                            .lineTo(new Vector2d(returnX(35), 8))
+//                                            .lineTo(new Vector2d(returnX(35), 8))
                                             .UNSTABLE_addTemporalMarkerOffset(1, () -> {
-                                                slideTarget = sHigh;
-                                                if (Math.abs(slide.getCurrentPosition() - slideTarget) < 10) {
-                                                        armTarget = aStatic;
-                                                }
+//                                                slideTarget = sHigh;
+//                                                if (Math.abs(slide.getCurrentPosition() - slideTarget) < 10) {
+//                                                        armTarget = aStatic;
+//                                                }
                                             })
-                                            .lineToSplineHeading(new Pose2d(returnX(pickX), pickY, Math.toRadians(returnHead(pickHead, 1))))
-                                            .addSpatialMarker(new Vector2d(returnX(pickX), pickY), () -> {
-                                               if (Math.abs(arm.getCurrentPosition() - armTarget) < 5) {
-                                                   bclaw.setPosition(0.92);
-                                               }
+                                            .lineToSplineHeading(new Pose2d(returnX(pickX1), pickY1, Math.toRadians(returnHead(pickHead1, 1))))
+                                            .addSpatialMarker(new Vector2d(returnX(pickX1), pickY1), () -> {
+//                                               if (Math.abs(arm.getCurrentPosition() - armTarget) < 5) {
+//                                                   bclaw.setPosition(0.92);
+//                                               }
                                             })
-                                            .waitSeconds(2.5)
+                                            .waitSeconds(1)
                                             .addSpatialMarker(new Vector2d(returnX(pickX), pickY), () -> {
-                                               bclaw.setPosition(0);
-                                               slideTarget = sLow;
+//                                               bclaw.setPosition(0);
+//                                               slideTarget = sLow;
                                             })
                                             .lineToSplineHeading(new Pose2d(returnX(dropX), dropY, Math.toRadians(returnHead(dropHead))))
                                             .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
-                                                if (Math.abs(slide.getCurrentPosition() - slideTarget) < 10) {
-                                                        armTarget = aPick;
-                                                }
+//                                                if (Math.abs(slide.getCurrentPosition() - slideTarget) < 10) {
+//                                                        armTarget = aPick;
+//                                                    if (Math.abs(arm.getCurrentPosition() - armTarget) < 5) {
+//                                                        claw.setPosition(clawClose);
+//                                                        armTarget = armDrop;
+//                                                    }
+//                                                }
                                             })
+                                            .waitSeconds(1)
                                             .addSpatialMarker(new Vector2d(returnX(dropX), dropY), () -> {
-                                                if (Math.abs(arm.getCurrentPosition() - armTarget) < 5) {
-                                                   claw.setPosition(clawClose);
-                                                   armTarget = armDrop;
-                                                   if (Math.abs(arm.getCurrentPosition() - armTarget) < 5) {
-                                                        claw.setPosition(1);
-                                                        armTarget = aStatic;
-                                                        if (Math.abs(arm.getCurrentPosition() - armTarget) < 5) {
-                                                                slideTarget = sHigh;
-                                                        }
-                                                   }
-                                                }
+//                                                   if (Math.abs(arm.getCurrentPosition() - armTarget) < 5) {
+//                                                        claw.setPosition(1);
+//                                                        armTarget = aStatic;
+//                                                        if (Math.abs(arm.getCurrentPosition() - armTarget) < 5) {
+//                                                                slideTarget = sHigh;
+//                                                        }
+//                                                   }
+
                                             })
                                             .lineToSplineHeading(new Pose2d(returnX(pickX), pickY, Math.toRadians(returnHead(pickHead, 1))))
                                             .addSpatialMarker(new Vector2d(returnX(pickX), pickY), () -> {
-                                               if (Math.abs(slide.getCurrentPosition() - slideTarget) < 10) {
-                                                   bclaw.setPosition(0.92);
-                                               }
+//                                               if (Math.abs(slide.getCurrentPosition() - slideTarget) < 10) {
+//                                                   bclaw.setPosition(0.92);
+//                                               }
                                             })
-                                            .waitSeconds(2.5)
+                                            .waitSeconds(1)
                                             .addSpatialMarker(new Vector2d(returnX(pickX), pickY), () -> {
-                                               bclaw.setPosition(0);
+//                                               bclaw.setPosition(0);
+//                                                slideTarget = sLow;
                                             })
-                                            // PARK
-//                                            .lineToSplineHeading(new Pose2d(returnX(12), 12, Math.toRadians(-90)))
-//                                            .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
-////                                                slideTarget = sL ow;
-//                                            })
+                                            .lineToSplineHeading(new Pose2d(returnX(dropX), dropY, Math.toRadians(returnHead(dropHead))))
+                                            .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
+//                                                if (Math.abs(slide.getCurrentPosition() - slideTarget) < 10) {
+//                                                        armTarget = aPick;
+//                                                    if (Math.abs(arm.getCurrentPosition() - armTarget) < 5) {
+//                                                        claw.setPosition(clawClose);
+//                                                        armTarget = armDrop;
+//                                                    }
+//                                                }
+                                            })
+                                            .waitSeconds(1)
+                                            .addSpatialMarker(new Vector2d(returnX(dropX), dropY), () -> {
+//                                                   if (Math.abs(arm.getCurrentPosition() - armTarget) < 5) {
+//                                                        claw.setPosition(1);
+//                                                        armTarget = aStatic;
+//                                                        if (Math.abs(arm.getCurrentPosition() - armTarget) < 5) {
+//                                                                slideTarget = sHigh;
+//                                                        }
+//                                                   }
+
+                                            })
+                                            .lineToSplineHeading(new Pose2d(returnX(pickX), pickY, Math.toRadians(returnHead(pickHead, 1))))
+                                            .addSpatialMarker(new Vector2d(returnX(pickX), pickY), () -> {
+//                                               if (Math.abs(slide.getCurrentPosition() - slideTarget) < 10) {
+//                                                   bclaw.setPosition(0.92);
+//                                               }
+                                            })
+                                            .waitSeconds(1)
+                                            .lineToSplineHeading(new Pose2d(returnX(dropX), dropY, Math.toRadians(returnHead(dropHead))))
+                                            .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
+//                                                if (Math.abs(slide.getCurrentPosition() - slideTarget) < 10) {
+//                                                        armTarget = aPick;
+//                                                    if (Math.abs(arm.getCurrentPosition() - armTarget) < 5) {
+//                                                        claw.setPosition(clawClose);
+//                                                        armTarget = armDrop;
+//                                                    }
+//                                                }
+                                            })
+                                            .waitSeconds(1)
+                                            .addSpatialMarker(new Vector2d(returnX(dropX), dropY), () -> {
+//                                                   if (Math.abs(arm.getCurrentPosition() - armTarget) < 5) {
+//                                                        claw.setPosition(1);
+//                                                        armTarget = aStatic;
+//                                                        if (Math.abs(arm.getCurrentPosition() - armTarget) < 5) {
+//                                                                slideTarget = sHigh;
+//                                                        }
+//                                                   }
+
+                                            })
+                                            .lineToSplineHeading(new Pose2d(returnX(pickX), pickY, Math.toRadians(returnHead(pickHead, 1))))
+                                            .addSpatialMarker(new Vector2d(returnX(pickX), pickY), () -> {
+//                                               if (Math.abs(slide.getCurrentPosition() - slideTarget) < 10) {
+//                                                   bclaw.setPosition(0.92);
+//                                               }
+                                            })
+                                            .waitSeconds(1)
+                                            .lineToSplineHeading(new Pose2d(returnX(dropX), dropY, Math.toRadians(returnHead(dropHead))))
+                                            .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
+//                                                if (Math.abs(slide.getCurrentPosition() - slideTarget) < 10) {
+//                                                        armTarget = aPick;
+//                                                    if (Math.abs(arm.getCurrentPosition() - armTarget) < 5) {
+//                                                        claw.setPosition(clawClose);
+//                                                        armTarget = armDrop;
+//                                                    }
+//                                                }
+                                            })
+                                            .waitSeconds(1)
+                                            .addSpatialMarker(new Vector2d(returnX(dropX), dropY), () -> {
+//                                                   if (Math.abs(arm.getCurrentPosition() - armTarget) < 5) {
+//                                                        claw.setPosition(1);
+//                                                        armTarget = aStatic;
+//                                                        if (Math.abs(arm.getCurrentPosition() - armTarget) < 5) {
+//                                                                slideTarget = sHigh;
+//                                                        }
+//                                                   }
+
+                                            })
+                                            .lineToSplineHeading(new Pose2d(returnX(pickX), pickY, Math.toRadians(returnHead(pickHead, 1))))
+                                            .addSpatialMarker(new Vector2d(returnX(pickX), pickY), () -> {
+//                                               if (Math.abs(slide.getCurrentPosition() - slideTarget) < 10) {
+//                                                   bclaw.setPosition(0.92);
+//                                               }
+                                            })
+                                            .waitSeconds(1)
+
+//                                           PARK
+                                            .lineToSplineHeading(new Pose2d(returnX(12), 13, Math.toRadians(-90)))
+                                            .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
+//                                                slideTarget = sLow;
+                                            })
                                             .build()
                     );
             meepMeep.setBackground(MeepMeep.Background.FIELD_POWERPLAY_OFFICIAL)
@@ -103,20 +194,139 @@ public class RightBlue {
                     .followTrajectorySequence(drive ->
                                     drive.trajectorySequenceBuilder(rightBlueStartPose)
                                             .lineTo(new Vector2d(returnX(35), 3))
-                                            .lineTo(new Vector2d(returnX(35), 8))
                                             .UNSTABLE_addTemporalMarkerOffset(1, () -> {
 //                                                slideTarget = sHigh;
+//                                                if (Math.abs(slide.getCurrentPosition() - slideTarget) < 10) {
+//                                                        armTarget = aStatic;
+//                                                }
+                                            })
+                                            .lineToSplineHeading(new Pose2d(returnX(pickX1), pickY1, Math.toRadians(returnHead(pickHead1, 1))))
+                                            .addSpatialMarker(new Vector2d(returnX(pickX1), pickY1), () -> {
+//                                               if (Math.abs(arm.getCurrentPosition() - armTarget) < 5) {
+//                                                   bclaw.setPosition(0.92);
+//                                               }
+                                            })
+                                            .waitSeconds(1)
+                                            .addSpatialMarker(new Vector2d(returnX(pickX), pickY), () -> {
+//                                               bclaw.setPosition(0);
+//                                               slideTarget = sLow;
+                                            })
+                                            .lineToSplineHeading(new Pose2d(returnX(dropX), dropY, Math.toRadians(returnHead(dropHead))))
+                                            .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
+//                                                if (Math.abs(slide.getCurrentPosition() - slideTarget) < 10) {
+//                                                        armTarget = aPick;
+//                                                    if (Math.abs(arm.getCurrentPosition() - armTarget) < 5) {
+//                                                        claw.setPosition(clawClose);
+//                                                        armTarget = armDrop;
+//                                                    }
+//                                                }
+                                            })
+                                            .waitSeconds(1)
+                                            .addSpatialMarker(new Vector2d(returnX(dropX), dropY), () -> {
+//                                                   if (Math.abs(arm.getCurrentPosition() - armTarget) < 5) {
+//                                                        claw.setPosition(1);
+//                                                        armTarget = aStatic;
+//                                                        if (Math.abs(arm.getCurrentPosition() - armTarget) < 5) {
+//                                                                slideTarget = sHigh;
+//                                                        }
+//                                                   }
+
                                             })
                                             .lineToSplineHeading(new Pose2d(returnX(pickX), pickY, Math.toRadians(returnHead(pickHead, 1))))
                                             .addSpatialMarker(new Vector2d(returnX(pickX), pickY), () -> {
+//                                               if (Math.abs(slide.getCurrentPosition() - slideTarget) < 10) {
+//                                                   bclaw.setPosition(0.92);
+//                                               }
+                                            })
+                                            .waitSeconds(1)
+                                            .addSpatialMarker(new Vector2d(returnX(pickX), pickY), () -> {
+//                                               bclaw.setPosition(0);
+//                                                slideTarget = sLow;
+                                            })
+                                            .lineToSplineHeading(new Pose2d(returnX(dropX), dropY, Math.toRadians(returnHead(dropHead))))
+                                            .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
 //                                                if (Math.abs(slide.getCurrentPosition() - slideTarget) < 10) {
-//                                                    bclaw.setPosition(0.92);
+//                                                        armTarget = aPick;
+//                                                    if (Math.abs(arm.getCurrentPosition() - armTarget) < 5) {
+//                                                        claw.setPosition(clawClose);
+//                                                        armTarget = armDrop;
+//                                                    }
 //                                                }
                                             })
-                                            .waitSeconds(2.5)
-                                            .addSpatialMarker(new Vector2d(returnX(pickX), pickY), () -> {
-//                                                bclaw.setPosition(0);
+                                            .waitSeconds(1)
+                                            .addSpatialMarker(new Vector2d(returnX(dropX), dropY), () -> {
+//                                                   if (Math.abs(arm.getCurrentPosition() - armTarget) < 5) {
+//                                                        claw.setPosition(1);
+//                                                        armTarget = aStatic;
+//                                                        if (Math.abs(arm.getCurrentPosition() - armTarget) < 5) {
+//                                                                slideTarget = sHigh;
+//                                                        }
+//                                                   }
+
                                             })
+                                            .lineToSplineHeading(new Pose2d(returnX(pickX), pickY, Math.toRadians(returnHead(pickHead, 1))))
+                                            .addSpatialMarker(new Vector2d(returnX(pickX), pickY), () -> {
+//                                               if (Math.abs(slide.getCurrentPosition() - slideTarget) < 10) {
+//                                                   bclaw.setPosition(0.92);
+//                                               }
+                                            })
+                                            .waitSeconds(1)
+                                            .lineToSplineHeading(new Pose2d(returnX(dropX), dropY, Math.toRadians(returnHead(dropHead))))
+                                            .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
+//                                                if (Math.abs(slide.getCurrentPosition() - slideTarget) < 10) {
+//                                                        armTarget = aPick;
+//                                                    if (Math.abs(arm.getCurrentPosition() - armTarget) < 5) {
+//                                                        claw.setPosition(clawClose);
+//                                                        armTarget = armDrop;
+//                                                    }
+//                                                }
+                                            })
+                                            .waitSeconds(1)
+                                            .addSpatialMarker(new Vector2d(returnX(dropX), dropY), () -> {
+//                                                   if (Math.abs(arm.getCurrentPosition() - armTarget) < 5) {
+//                                                        claw.setPosition(1);
+//                                                        armTarget = aStatic;
+//                                                        if (Math.abs(arm.getCurrentPosition() - armTarget) < 5) {
+//                                                                slideTarget = sHigh;
+//                                                        }
+//                                                   }
+
+                                            })
+                                            .lineToSplineHeading(new Pose2d(returnX(pickX), pickY, Math.toRadians(returnHead(pickHead, 1))))
+                                            .addSpatialMarker(new Vector2d(returnX(pickX), pickY), () -> {
+//                                               if (Math.abs(slide.getCurrentPosition() - slideTarget) < 10) {
+//                                                   bclaw.setPosition(0.92);
+//                                               }
+                                            })
+                                            .waitSeconds(1)
+                                            .lineToSplineHeading(new Pose2d(returnX(dropX), dropY, Math.toRadians(returnHead(dropHead))))
+                                            .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
+//                                                if (Math.abs(slide.getCurrentPosition() - slideTarget) < 10) {
+//                                                        armTarget = aPick;
+//                                                    if (Math.abs(arm.getCurrentPosition() - armTarget) < 5) {
+//                                                        claw.setPosition(clawClose);
+//                                                        armTarget = armDrop;
+//                                                    }
+//                                                }
+                                            })
+                                            .waitSeconds(1)
+                                            .addSpatialMarker(new Vector2d(returnX(dropX), dropY), () -> {
+//                                                   if (Math.abs(arm.getCurrentPosition() - armTarget) < 5) {
+//                                                        claw.setPosition(1);
+//                                                        armTarget = aStatic;
+//                                                        if (Math.abs(arm.getCurrentPosition() - armTarget) < 5) {
+//                                                                slideTarget = sHigh;
+//                                                        }
+//                                                   }
+
+                                            })
+                                            .lineToSplineHeading(new Pose2d(returnX(pickX), pickY, Math.toRadians(returnHead(pickHead, 1))))
+                                            .addSpatialMarker(new Vector2d(returnX(pickX), pickY), () -> {
+//                                               if (Math.abs(slide.getCurrentPosition() - slideTarget) < 10) {
+//                                                   bclaw.setPosition(0.92);
+//                                               }
+                                            })
+                                            .waitSeconds(1)
 
                                             // PARK
                                             .lineToSplineHeading(new Pose2d(returnX(35), 12.5, Math.toRadians(-90)))
@@ -138,28 +348,147 @@ public class RightBlue {
                     .followTrajectorySequence(drive ->
                                     drive.trajectorySequenceBuilder(rightBlueStartPose)
                                             .lineTo(new Vector2d(returnX(35), 3))
-                                            .lineTo(new Vector2d(returnX(35), 8))
                                             .UNSTABLE_addTemporalMarkerOffset(1, () -> {
 //                                                slideTarget = sHigh;
+//                                                if (Math.abs(slide.getCurrentPosition() - slideTarget) < 10) {
+//                                                        armTarget = aStatic;
+//                                                }
+                                            })
+                                            .lineToSplineHeading(new Pose2d(returnX(pickX1), pickY1, Math.toRadians(returnHead(pickHead1, 1))))
+                                            .addSpatialMarker(new Vector2d(returnX(pickX1), pickY1), () -> {
+//                                               if (Math.abs(arm.getCurrentPosition() - armTarget) < 5) {
+//                                                   bclaw.setPosition(0.92);
+//                                               }
+                                            })
+                                            .waitSeconds(1)
+                                            .addSpatialMarker(new Vector2d(returnX(pickX), pickY), () -> {
+//                                               bclaw.setPosition(0);
+//                                               slideTarget = sLow;
+                                            })
+                                            .lineToSplineHeading(new Pose2d(returnX(dropX), dropY, Math.toRadians(returnHead(dropHead))))
+                                            .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
+//                                                if (Math.abs(slide.getCurrentPosition() - slideTarget) < 10) {
+//                                                        armTarget = aPick;
+//                                                    if (Math.abs(arm.getCurrentPosition() - armTarget) < 5) {
+//                                                        claw.setPosition(clawClose);
+//                                                        armTarget = armDrop;
+//                                                    }
+//                                                }
+                                            })
+                                            .waitSeconds(1)
+                                            .addSpatialMarker(new Vector2d(returnX(dropX), dropY), () -> {
+//                                                   if (Math.abs(arm.getCurrentPosition() - armTarget) < 5) {
+//                                                        claw.setPosition(1);
+//                                                        armTarget = aStatic;
+//                                                        if (Math.abs(arm.getCurrentPosition() - armTarget) < 5) {
+//                                                                slideTarget = sHigh;
+//                                                        }
+//                                                   }
+
                                             })
                                             .lineToSplineHeading(new Pose2d(returnX(pickX), pickY, Math.toRadians(returnHead(pickHead, 1))))
                                             .addSpatialMarker(new Vector2d(returnX(pickX), pickY), () -> {
+//                                               if (Math.abs(slide.getCurrentPosition() - slideTarget) < 10) {
+//                                                   bclaw.setPosition(0.92);
+//                                               }
+                                            })
+                                            .waitSeconds(1)
+                                            .addSpatialMarker(new Vector2d(returnX(pickX), pickY), () -> {
+//                                               bclaw.setPosition(0);
+//                                                slideTarget = sLow;
+                                            })
+                                            .lineToSplineHeading(new Pose2d(returnX(dropX), dropY, Math.toRadians(returnHead(dropHead))))
+                                            .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
 //                                                if (Math.abs(slide.getCurrentPosition() - slideTarget) < 10) {
-//                                                    bclaw.setPosition(0.92);
+//                                                        armTarget = aPick;
+//                                                    if (Math.abs(arm.getCurrentPosition() - armTarget) < 5) {
+//                                                        claw.setPosition(clawClose);
+//                                                        armTarget = armDrop;
+//                                                    }
 //                                                }
                                             })
-                                            .waitSeconds(2.5)
-                                            .addSpatialMarker(new Vector2d(returnX(pickX), pickY), () -> {
-//                                                bclaw.setPosition(0);
+                                            .waitSeconds(1)
+                                            .addSpatialMarker(new Vector2d(returnX(dropX), dropY), () -> {
+//                                                   if (Math.abs(arm.getCurrentPosition() - armTarget) < 5) {
+//                                                        claw.setPosition(1);
+//                                                        armTarget = aStatic;
+//                                                        if (Math.abs(arm.getCurrentPosition() - armTarget) < 5) {
+//                                                                slideTarget = sHigh;
+//                                                        }
+//                                                   }
+
                                             })
+                                            .lineToSplineHeading(new Pose2d(returnX(pickX), pickY, Math.toRadians(returnHead(pickHead, 1))))
+                                            .addSpatialMarker(new Vector2d(returnX(pickX), pickY), () -> {
+//                                               if (Math.abs(slide.getCurrentPosition() - slideTarget) < 10) {
+//                                                   bclaw.setPosition(0.92);
+//                                               }
+                                            })
+                                            .waitSeconds(1)
+                                            .lineToSplineHeading(new Pose2d(returnX(dropX), dropY, Math.toRadians(returnHead(dropHead))))
+                                            .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
+//                                                if (Math.abs(slide.getCurrentPosition() - slideTarget) < 10) {
+//                                                        armTarget = aPick;
+//                                                    if (Math.abs(arm.getCurrentPosition() - armTarget) < 5) {
+//                                                        claw.setPosition(clawClose);
+//                                                        armTarget = armDrop;
+//                                                    }
+//                                                }
+                                            })
+                                            .waitSeconds(1)
+                                            .addSpatialMarker(new Vector2d(returnX(dropX), dropY), () -> {
+//                                                   if (Math.abs(arm.getCurrentPosition() - armTarget) < 5) {
+//                                                        claw.setPosition(1);
+//                                                        armTarget = aStatic;
+//                                                        if (Math.abs(arm.getCurrentPosition() - armTarget) < 5) {
+//                                                                slideTarget = sHigh;
+//                                                        }
+//                                                   }
+
+                                            })
+                                            .lineToSplineHeading(new Pose2d(returnX(pickX), pickY, Math.toRadians(returnHead(pickHead, 1))))
+                                            .addSpatialMarker(new Vector2d(returnX(pickX), pickY), () -> {
+//                                               if (Math.abs(slide.getCurrentPosition() - slideTarget) < 10) {
+//                                                   bclaw.setPosition(0.92);
+//                                               }
+                                            })
+                                            .waitSeconds(1)
+                                            .lineToSplineHeading(new Pose2d(returnX(dropX), dropY, Math.toRadians(returnHead(dropHead))))
+                                            .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
+//                                                if (Math.abs(slide.getCurrentPosition() - slideTarget) < 10) {
+//                                                        armTarget = aPick;
+//                                                    if (Math.abs(arm.getCurrentPosition() - armTarget) < 5) {
+//                                                        claw.setPosition(clawClose);
+//                                                        armTarget = armDrop;
+//                                                    }
+//                                                }
+                                            })
+                                            .waitSeconds(1)
+                                            .addSpatialMarker(new Vector2d(returnX(dropX), dropY), () -> {
+//                                                   if (Math.abs(arm.getCurrentPosition() - armTarget) < 5) {
+//                                                        claw.setPosition(1);
+//                                                        armTarget = aStatic;
+//                                                        if (Math.abs(arm.getCurrentPosition() - armTarget) < 5) {
+//                                                                slideTarget = sHigh;
+//                                                        }
+//                                                   }
+
+                                            })
+                                            .lineToSplineHeading(new Pose2d(returnX(pickX), pickY, Math.toRadians(returnHead(pickHead, 1))))
+                                            .addSpatialMarker(new Vector2d(returnX(pickX), pickY), () -> {
+//                                               if (Math.abs(slide.getCurrentPosition() - slideTarget) < 10) {
+//                                                   bclaw.setPosition(0.92);
+//                                               }
+                                            })
+                                            .waitSeconds(1)
 
                                             // PARK
-                                            .lineToSplineHeading(new Pose2d(returnX(35), 12, Math.toRadians(-90)))
-                                            .lineToSplineHeading(new Pose2d(returnX(35), 35, Math.toRadians(-90)))
-                                            .lineToSplineHeading(new Pose2d(returnX(60), 35, Math.toRadians(-90)))
+                                            .lineToConstantHeading(new Vector2d(returnX(35), 12))
                                             .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
 //                                                slideTarget = sLow;
                                             })
+                                            .lineToConstantHeading(new Vector2d(returnX(35), 35))
+                                            .lineToLinearHeading(new Pose2d(returnX(60), 35, Math.toRadians(90)))
                                             .build()
                     );
             meepMeep.setBackground(MeepMeep.Background.FIELD_POWERPLAY_OFFICIAL)
