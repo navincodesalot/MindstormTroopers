@@ -1,4 +1,5 @@
 package org.firstinspires.ftc.teamcode.drive.code.auto.blue;
+
 import static org.firstinspires.ftc.teamcode.drive.code.util.returns.returnHead;
 import static org.firstinspires.ftc.teamcode.drive.code.util.returns.returnX;
 import static org.firstinspires.ftc.teamcode.drive.code.util.returns.returnY;
@@ -24,10 +25,9 @@ import org.firstinspires.ftc.teamcode.drive.code.util.pidf.slidePIDF;
 import org.firstinspires.ftc.teamcode.drive.code.util.startPoses;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
-@Autonomous
+@Autonomous(name = "➡️RightBlue ➡️")
 public class RightBlue extends LinearOpMode {
     public AprilTagsUtil signalUtil = new AprilTagsUtil(hardwareMap, "Webcam 1", telemetry);
-    ;
     private DcMotorEx arm;
     private DcMotorEx slide;
     private Servo claw;
@@ -40,6 +40,7 @@ public class RightBlue extends LinearOpMode {
     double aStatic = -20;
     double armTarget = 0;
     double clawClose = 0.3;
+    private double loopTime;
 
     public void runOpMode() {
         PhotonCore.enable();
@@ -161,6 +162,12 @@ public class RightBlue extends LinearOpMode {
             drive.update();
             slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), slideTarget));
             arm.setPower(armPIDF.returnPower(arm.getCurrentPosition(), armTarget));
+
+            double loop = System.nanoTime();
+            telemetry.addData("hz ", 1000000000 / (loop - loopTime));
+            loopTime = loop;
+            telemetry.update();
+            PhotonCore.CONTROL_HUB.clearBulkCache();
         }
     }
 }

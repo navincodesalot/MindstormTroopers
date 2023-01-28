@@ -1,4 +1,5 @@
 package org.firstinspires.ftc.teamcode.drive.code.auto.red;
+
 import static org.firstinspires.ftc.teamcode.drive.code.util.returns.returnHead;
 import static org.firstinspires.ftc.teamcode.drive.code.util.returns.returnX;
 import static org.firstinspires.ftc.teamcode.drive.code.util.returns.returnY;
@@ -9,6 +10,7 @@ import static org.firstinspires.ftc.teamcode.drive.code.util.startPoses.pickY;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.outoftheboxrobotics.photoncore.PhotonCore;
+import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -24,7 +26,7 @@ import org.firstinspires.ftc.teamcode.drive.code.util.pidf.slidePIDF;
 import org.firstinspires.ftc.teamcode.drive.code.util.startPoses;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
-@Autonomous
+@Autonomous(name = "⬅️LeftRed ⬅️")
 public class LeftRed extends LinearOpMode {
     public AprilTagsUtil signalUtil = new AprilTagsUtil(hardwareMap, "Webcam 1", telemetry);;
     private DcMotorEx arm;
@@ -39,8 +41,11 @@ public class LeftRed extends LinearOpMode {
     double aStatic = -20;
     double armTarget = 0;
     double clawClose = 0.3;
+    private double loopTime;
 
     public void runOpMode() {
+        PhotonCore.CONTROL_HUB.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
+        PhotonCore.EXPANSION_HUB.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
         PhotonCore.enable();
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         arm = hardwareMap.get(DcMotorEx.class, "arm");
@@ -160,6 +165,11 @@ public class LeftRed extends LinearOpMode {
             drive.update();
             slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), slideTarget));
             arm.setPower(armPIDF.returnPower(arm.getCurrentPosition(), armTarget));
+            double loop = System.nanoTime();
+            telemetry.addData("hz ", 1000000000 / (loop - loopTime));
+            loopTime = loop;
+            telemetry.update();
+            PhotonCore.CONTROL_HUB.clearBulkCache();
         }
     }
 }

@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.drive.code.tele;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.outoftheboxrobotics.photoncore.PhotonCore;
+import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -47,9 +49,13 @@ public class testTele extends LinearOpMode {
     boolean save = false;
 
     int targetPos = 0;
+    private double loopTime;
 
     @Override
     public void runOpMode() {
+        PhotonCore.CONTROL_HUB.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
+        PhotonCore.EXPANSION_HUB.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
+        PhotonCore.enable();
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         drive.setPoseEstimate(PoseStorage.currentPose);
@@ -66,6 +72,12 @@ public class testTele extends LinearOpMode {
             Pose2d poseEstimate = drive.getPoseEstimate();
             slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), slideTarget));
             arm.setPower(armPIDF.returnPower(arm.getCurrentPosition(), armTarget));
+
+            double loop = System.nanoTime();
+            telemetry.addData("hz ", 1000000000 / (loop - loopTime));
+            loopTime = loop;
+            telemetry.update();
+            PhotonCore.CONTROL_HUB.clearBulkCache();
 
             switch (currentMode) {
                 case DRIVER_CONTROL:

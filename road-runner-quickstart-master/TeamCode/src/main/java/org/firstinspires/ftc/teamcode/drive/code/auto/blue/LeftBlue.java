@@ -10,6 +10,7 @@ import static org.firstinspires.ftc.teamcode.drive.code.util.startPoses.pickY;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.outoftheboxrobotics.photoncore.PhotonCore;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -24,6 +25,7 @@ import org.firstinspires.ftc.teamcode.drive.code.util.pidf.slidePIDF;
 import org.firstinspires.ftc.teamcode.drive.code.util.startPoses;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
+@Autonomous(name = "⬅️LeftBlue ⬅️")
 public class LeftBlue extends LinearOpMode {
     public AprilTagsUtil signalUtil = new AprilTagsUtil(hardwareMap, "Webcam 1", telemetry);;
     private DcMotorEx arm;
@@ -38,6 +40,7 @@ public class LeftBlue extends LinearOpMode {
     double aStatic = -20;
     double armTarget = 0;
     double clawClose = 0.3;
+    private double loopTime;
 
     public void runOpMode() {
         PhotonCore.enable();
@@ -156,6 +159,12 @@ public class LeftBlue extends LinearOpMode {
             drive.update();
             slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), slideTarget));
             arm.setPower(armPIDF.returnPower(arm.getCurrentPosition(), armTarget));
+
+            double loop = System.nanoTime();
+            telemetry.addData("hz ", 1000000000 / (loop - loopTime));
+            loopTime = loop;
+            telemetry.update();
+            PhotonCore.CONTROL_HUB.clearBulkCache();
         }
     }
 }
