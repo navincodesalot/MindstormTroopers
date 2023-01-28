@@ -77,7 +77,6 @@ public class testTele extends LinearOpMode {
             telemetry.addData("hz ", 1000000000 / (loop - loopTime));
             loopTime = loop;
             telemetry.update();
-            PhotonCore.CONTROL_HUB.clearBulkCache();
 
             switch (currentMode) {
                 case DRIVER_CONTROL:
