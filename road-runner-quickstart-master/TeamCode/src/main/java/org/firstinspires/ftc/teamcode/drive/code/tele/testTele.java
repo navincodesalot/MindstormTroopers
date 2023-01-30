@@ -176,6 +176,8 @@ public class testTele extends LinearOpMode {
                         case SLIDE_UP:
                             if (Math.abs(arm.getCurrentPosition() - armTarget) < armTresh) {
                                 slideTarget = targetPos;
+                                armTarget = armPickup; //grab cone
+                                claw.setPosition(1); //open claw
                                 autoCurrentMode = AutoMode.DROP_CONE;
                             }
                             break;
@@ -203,7 +205,7 @@ public class testTele extends LinearOpMode {
                                 if (gamepad1.b) {
                                     autoCurrentMode = AutoMode.INIT;
                                 }
-                                autoCurrentMode = AutoMode.PICK_CONE;
+                                autoCurrentMode = AutoMode.LIFT_ARM;
                             }
                             break;
                     }
