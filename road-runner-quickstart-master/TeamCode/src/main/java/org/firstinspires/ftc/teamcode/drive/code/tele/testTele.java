@@ -182,7 +182,8 @@ public class testTele extends LinearOpMode {
                             }
                             break;
                         case DROP_CONE:
-                            if (Math.abs(slide.getCurrentPosition() - slideTarget) < slideTresh) {
+                            if ((Math.abs(slide.getCurrentPosition() - slideTarget) < slideTresh) && (Math.abs(arm.getCurrentPosition() - armTarget) < armTresh)) {
+                                claw.setPosition(clawClose); //close claw
                                 bclaw.setPosition(0.92);
                                 ElapsedTime bclawTimer = new ElapsedTime();
                                 btime = 1; // 1 second wait
