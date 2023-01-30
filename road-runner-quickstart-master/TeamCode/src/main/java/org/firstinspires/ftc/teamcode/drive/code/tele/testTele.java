@@ -33,7 +33,6 @@ public class testTele extends LinearOpMode {
 
     enum AutoMode {
         INIT,
-        ARM_DOWN,
         GRAB_CONE,
         PICK_CONE,
         LIFT_ARM,
@@ -41,7 +40,9 @@ public class testTele extends LinearOpMode {
         BACK_DOWN_ARM,
         SLIDE_UP,
         DROP_CONE,
-        RESET
+        RESET,
+        RESET_SLIDE,
+        AGAIN
     }
 
     Mode currentMode = Mode.DRIVER_CONTROL;
@@ -140,19 +141,13 @@ public class testTele extends LinearOpMode {
                     switch (autoCurrentMode) {
                         case INIT:
                             if (gamepad1.b && targetPos != 0) {
-                                autoCurrentMode = AutoMode.ARM_DOWN;
+                                autoCurrentMode = AutoMode.GRAB_CONE;
                             }
                             break;
-                        case ARM_DOWN:
-                            slideTarget = 0; //reset to 0 in case
-                            autoCurrentMode = AutoMode.GRAB_CONE;
-                            break;
                         case GRAB_CONE:
-                            if (Math.abs(slide.getCurrentPosition() - slideTarget) < slideTresh) {
                                 armTarget = armPickup; //grab cone
                                 claw.setPosition(1); //open claw
                                 autoCurrentMode = AutoMode.PICK_CONE;
-                            }
                             break;
                         case PICK_CONE:
                             if (Math.abs(arm.getCurrentPosition() - armTarget) < armTresh) {
@@ -197,8 +192,18 @@ public class testTele extends LinearOpMode {
                             break;
                         case RESET:
                             bclaw.setPosition(0); //reset
-                            if (gamepad1.b) {
-                                autoCurrentMode = AutoMode.INIT;
+                            autoCurrentMode = AutoMode.RESET_SLIDE;
+                            break;
+                        case RESET_SLIDE:
+                            slideTarget = 0;
+                            autoCurrentMode = AutoMode.AGAIN;
+                            break;
+                        case AGAIN:
+                            if (Math.abs(slide.getCurrentPosition() - slideTarget) < slideTresh) {
+                                if (gamepad1.b) {
+                                    autoCurrentMode = AutoMode.INIT;
+                                }
+                                autoCurrentMode = AutoMode.PICK_CONE;
                             }
                             break;
                     }
