@@ -1,5 +1,12 @@
 package org.firstinspires.ftc.teamcode.drive.code.tele;
 
+import static org.firstinspires.ftc.teamcode.drive.code.util.tele.armPickup;
+import static org.firstinspires.ftc.teamcode.drive.code.util.tele.armStatic;
+import static org.firstinspires.ftc.teamcode.drive.code.util.tele.armTarget;
+import static org.firstinspires.ftc.teamcode.drive.code.util.tele.armTresh;
+import static org.firstinspires.ftc.teamcode.drive.code.util.tele.slideTarget;
+import static org.firstinspires.ftc.teamcode.drive.code.util.tele.slideTresh;
+
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.outoftheboxrobotics.photoncore.PhotonCore;
 import com.qualcomm.hardware.lynx.LynxModule;
@@ -28,7 +35,12 @@ public class testTele extends LinearOpMode {
         INIT,
         ARM_DOWN,
         GRAB_CONE,
+        PICK_CONE,
+        LIFT_ARM,
+        INTO_BUCKET,
+        BACK_DOWN_ARM,
         SLIDE_UP,
+        DROP_CONE,
         RESET
     }
 
@@ -43,9 +55,6 @@ public class testTele extends LinearOpMode {
     double btime;
 
     double clawClose = 0.3;
-    int armTarget = 0;
-    int slideTarget = 0;
-    int armPickup = -100;
     boolean save = false;
 
     int targetPos = 0;
@@ -139,43 +148,55 @@ public class testTele extends LinearOpMode {
                             autoCurrentMode = AutoMode.GRAB_CONE;
                             break;
                         case GRAB_CONE:
-                            if (Math.abs(slide.getCurrentPosition() - slideTarget) < 10) { // our threshold is within 10 encoder ticks of our target
-                                claw.setPosition(1); //open claw
+                            if (Math.abs(slide.getCurrentPosition() - slideTarget) < slideTresh) {
                                 armTarget = armPickup; //grab cone
-                                if (Math.abs(arm.getCurrentPosition() - armTarget) < 5) { // our threshold is within 5 encoder ticks of our target
-                                    claw.setPosition(clawClose); //close claw
-                                    armTarget = 20;
-                                }
-
-                                if (Math.abs(arm.getCurrentPosition() - armTarget) < 5) { // our threshold is within 5 encoder ticks of our target
-                                    claw.setPosition(1); //open claw
-                                    armTarget = -35;
-                                    autoCurrentMode = AutoMode.SLIDE_UP;
-                                }
-
+                                claw.setPosition(1); //open claw
+                                autoCurrentMode = AutoMode.PICK_CONE;
                             }
                             break;
-
-                        case SLIDE_UP:
-                            if (Math.abs(arm.getCurrentPosition() - armTarget) < 5) { // our threshold is within 5 encoder ticks of our target
-                                slideTarget = targetPos;
+                        case PICK_CONE:
+                            if (Math.abs(arm.getCurrentPosition() - armTarget) < armTresh) {
+                                claw.setPosition(clawClose); //close claw
+                                autoCurrentMode = AutoMode.LIFT_ARM;
                             }
-                            if (Math.abs(slide.getCurrentPosition() - slideTarget) < 10) { // our threshold is within 10 encoder ticks of our target
+                            break;
+                        case LIFT_ARM:
+                            if (Math.abs(arm.getCurrentPosition() - armTarget) < armTresh) {
+                                armTarget = 20;
+                                autoCurrentMode = AutoMode.INTO_BUCKET;
+                            }
+                            break;
+                        case INTO_BUCKET:
+                            if (Math.abs(arm.getCurrentPosition() - armTarget) < armTresh) {
+                                claw.setPosition(1); //open claw
+                                autoCurrentMode = AutoMode.BACK_DOWN_ARM;
+                            }
+                            break;
+                        case BACK_DOWN_ARM:
+                            if (Math.abs(arm.getCurrentPosition() - armTarget) < armTresh) {
+                                armTarget = armStatic;
+                                autoCurrentMode = AutoMode.SLIDE_UP;
+                            }
+                            break;
+                        case SLIDE_UP:
+                            if (Math.abs(arm.getCurrentPosition() - armTarget) < armTresh) {
+                                slideTarget = targetPos;
+                                autoCurrentMode = AutoMode.DROP_CONE;
+                            }
+                            break;
+                        case DROP_CONE:
+                            if (Math.abs(slide.getCurrentPosition() - slideTarget) < slideTresh) {
                                 bclaw.setPosition(0.92);
                                 ElapsedTime bclawTimer = new ElapsedTime();
-                                btime = 2; // 2 second wait
+                                btime = 1; // 1 second wait
                                 if (bclawTimer.seconds() >= btime) {
                                     bclawTimer.reset();
                                     autoCurrentMode = AutoMode.RESET;
                                 }
                             }
                             break;
-
                         case RESET:
                             bclaw.setPosition(0); //reset
-//                            if (gamepad1.x && autoCurrentMode != autoCurrentMode.INIT) {
-//                                autoCurrentMode = AutoMode.INIT;
-//                            }
                             if (gamepad1.b) {
                                 autoCurrentMode = AutoMode.INIT;
                             }
