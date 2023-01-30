@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.drive.code.tele;
 
+import static org.firstinspires.ftc.teamcode.drive.code.util.tele.armDrop;
 import static org.firstinspires.ftc.teamcode.drive.code.util.tele.armPickup;
 import static org.firstinspires.ftc.teamcode.drive.code.util.tele.armStatic;
 import static org.firstinspires.ftc.teamcode.drive.code.util.tele.armTarget;
@@ -156,10 +157,8 @@ public class testTele extends LinearOpMode {
                             }
                             break;
                         case LIFT_ARM:
-                            if (Math.abs(arm.getCurrentPosition() - armTarget) < armTresh) {
-                                armTarget = 20;
+                                armTarget = armDrop;
                                 autoCurrentMode = AutoMode.INTO_BUCKET;
-                            }
                             break;
                         case INTO_BUCKET:
                             if (Math.abs(arm.getCurrentPosition() - armTarget) < armTresh) {
@@ -168,22 +167,19 @@ public class testTele extends LinearOpMode {
                             }
                             break;
                         case BACK_DOWN_ARM:
-                            if (Math.abs(arm.getCurrentPosition() - armTarget) < armTresh) {
-                                armTarget = armStatic;
+                                armTarget = armPickup; //grab cone
                                 autoCurrentMode = AutoMode.SLIDE_UP;
-                            }
                             break;
                         case SLIDE_UP:
                             if (Math.abs(arm.getCurrentPosition() - armTarget) < armTresh) {
                                 slideTarget = targetPos;
-                                armTarget = armPickup; //grab cone
-                                claw.setPosition(1); //open claw
+                                claw.setPosition(clawClose); //close claw
                                 autoCurrentMode = AutoMode.DROP_CONE;
                             }
                             break;
                         case DROP_CONE:
-                            if ((Math.abs(slide.getCurrentPosition() - slideTarget) < slideTresh) && (Math.abs(arm.getCurrentPosition() - armTarget) < armTresh)) {
-                                claw.setPosition(clawClose); //close claw
+                            if ((Math.abs(slide.getCurrentPosition() - slideTarget) < slideTresh)) {
+                                armTarget = armStatic; // todo check if we want to stay at pickup or if we can handle the static pos with pidf
                                 bclaw.setPosition(0.92);
                                 ElapsedTime bclawTimer = new ElapsedTime();
                                 btime = 1; // 1 second wait
@@ -194,8 +190,10 @@ public class testTele extends LinearOpMode {
                             }
                             break;
                         case RESET:
-                            bclaw.setPosition(0); //reset
-                            autoCurrentMode = AutoMode.RESET_SLIDE;
+                            if (Math.abs(arm.getCurrentPosition() - armTarget) < armTresh) {
+                                bclaw.setPosition(0); //reset
+                                autoCurrentMode = AutoMode.RESET_SLIDE;
+                            }
                             break;
                         case RESET_SLIDE:
                             slideTarget = 0;
