@@ -5,18 +5,15 @@ import static org.firstinspires.ftc.teamcode.drive.code.util.tele.armPickup;
 import static org.firstinspires.ftc.teamcode.drive.code.util.tele.armStatic;
 import static org.firstinspires.ftc.teamcode.drive.code.util.tele.armTarget;
 import static org.firstinspires.ftc.teamcode.drive.code.util.tele.armTresh;
-import static org.firstinspires.ftc.teamcode.drive.code.util.tele.slideTarget;
 import static org.firstinspires.ftc.teamcode.drive.code.util.tele.slideTresh;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.outoftheboxrobotics.photoncore.PhotonCore;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -25,7 +22,7 @@ import org.firstinspires.ftc.teamcode.drive.code.util.PoseStorage;
 import org.firstinspires.ftc.teamcode.drive.code.util.pidf.armPIDF;
 import org.firstinspires.ftc.teamcode.drive.code.util.pidf.slidePIDF;
 
-@TeleOp
+@TeleOp(name = "W TELE")
 public class testTele extends LinearOpMode {
     enum Mode {
         DRIVER_CONTROL,
@@ -60,6 +57,7 @@ public class testTele extends LinearOpMode {
     boolean save = false;
 
     int targetPos = 0;
+    int slideTarget = 0;
     private double loopTime;
 
     @Override
@@ -125,7 +123,7 @@ public class testTele extends LinearOpMode {
                         armTarget = armPickup;
                     }
                     if (gamepad2.y) {
-                        armTarget = 20;
+                        armTarget = armDrop;
                     }
                     if (gamepad1.x) {
                         save = true;
