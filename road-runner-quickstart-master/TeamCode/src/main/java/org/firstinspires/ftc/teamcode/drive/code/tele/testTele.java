@@ -91,9 +91,9 @@ public class testTele extends LinearOpMode {
                 case DRIVER_CONTROL:
                     drive.setWeightedDrivePower(
                             new Pose2d(
-                                    -gamepad1.left_stick_y * 0.6,
-                                    -gamepad1.left_stick_x * 0.6,
-                                    -gamepad1.right_stick_x * 0.6
+                                    -gamepad1.left_stick_y * 0.75,
+                                    -gamepad1.left_stick_x * 0.75,
+                                    -gamepad1.right_stick_x * 0.75
                             )
                     );
                     drive.update();
