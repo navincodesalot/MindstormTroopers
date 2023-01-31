@@ -39,8 +39,7 @@ public class testTele extends LinearOpMode {
         SLIDE_UP,
         DROP_CONE,
         RESET,
-        RESET_SLIDE,
-        AGAIN
+        RESET_SLIDE
     }
 
     Mode currentMode = Mode.DRIVER_CONTROL;
@@ -137,6 +136,7 @@ public class testTele extends LinearOpMode {
                         save = false;
                         autoCurrentMode = AutoMode.INIT;
                     }
+                    int cone = 5;
                     switch (autoCurrentMode) {
                         case INIT:
                             if (gamepad1.b && targetPos != 0) {
@@ -161,6 +161,7 @@ public class testTele extends LinearOpMode {
                         case INTO_BUCKET:
                             if (Math.abs(arm.getCurrentPosition() - armTarget) < armTresh) {
                                 claw.setPosition(1); //open claw
+                                cone--;
                                 autoCurrentMode = AutoMode.BACK_DOWN_ARM;
                             }
                             break;
@@ -177,7 +178,6 @@ public class testTele extends LinearOpMode {
                             break;
                         case DROP_CONE:
                             if ((Math.abs(slide.getCurrentPosition() - slideTarget) < slideTresh)) {
-                                armTarget = armStatic; // todo check if we want to stay at pickup or if we can handle the static pos with pidf
                                 bclaw.setPosition(0.92);
                                 ElapsedTime bclawTimer = new ElapsedTime();
                                 btime = 1; // 1 second wait
@@ -194,18 +194,11 @@ public class testTele extends LinearOpMode {
                             }
                             break;
                         case RESET_SLIDE:
-                            slideTarget = 0;
-                            autoCurrentMode = AutoMode.AGAIN;
-                            break;
-                        case AGAIN:
-                            if (Math.abs(slide.getCurrentPosition() - slideTarget) < slideTresh) {
-                                if (gamepad1.b) {
-                                    autoCurrentMode = AutoMode.INIT;
-                                }
-                                autoCurrentMode = AutoMode.LIFT_ARM;
-                            }
+                            slideTarget = 0; // todo: look into combining the reset slide and reset bucket for more time
+                            autoCurrentMode = AutoMode.LIFT_ARM;
                             break;
                     }
+
                 if (gamepad1.right_bumper) {
                     currentMode = Mode.DRIVER_CONTROL;
                 }
