@@ -136,7 +136,6 @@ public class testTele extends LinearOpMode {
                         save = false;
                         autoCurrentMode = AutoMode.INIT;
                     }
-                    int cone = 5;
                     switch (autoCurrentMode) {
                         case INIT:
                             if (gamepad1.b && targetPos != 0) {
@@ -161,7 +160,6 @@ public class testTele extends LinearOpMode {
                         case INTO_BUCKET:
                             if (Math.abs(arm.getCurrentPosition() - armTarget) < armTresh) {
                                 claw.setPosition(1); //open claw
-                                cone--;
                                 autoCurrentMode = AutoMode.BACK_DOWN_ARM;
                             }
                             break;
