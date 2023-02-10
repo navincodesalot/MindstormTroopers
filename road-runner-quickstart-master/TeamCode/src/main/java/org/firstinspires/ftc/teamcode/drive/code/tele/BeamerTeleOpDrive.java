@@ -163,13 +163,13 @@ public class BeamerTeleOpDrive extends LinearOpMode {
     private void slideRTP() {
         if (target == high) {
             slide.setTargetPosition(2650);
-            slide.setVelocity(1000);
+            slide.setVelocity(5000);
             slide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
 
         if(target == low){
             slide.setTargetPosition(0);
-            slide.setVelocity(-500);
+            slide.setVelocity(-1200);
             slide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
     }
