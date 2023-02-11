@@ -81,7 +81,7 @@ public class testTele extends LinearOpMode {
         slide.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         slide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         slide.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-        slide.setDirection(DcMotorSimple.Direction.FORWARD);
+        slide.setDirection(DcMotorSimple.Direction.REVERSE);
 
         waitForStart();
         arm.setTargetPosition(0);
