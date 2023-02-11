@@ -21,7 +21,7 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 public class SlidePIDF extends OpMode {
     private PIDController controller;
 
-    public static double p = 0.012, i = 0.001, d = 0.0001, f = 0.02; //g value https://www.ctrlaltftc.com/feedforward-control#slide-gravity-feedforward
+    public static double p = 0.012, i = 0.001, d = 0.000, f = 0.02; //g value https://www.ctrlaltftc.com/feedforward-control#slide-gravity-feedforward
 
     public static int target  = 2750; //todo
 
