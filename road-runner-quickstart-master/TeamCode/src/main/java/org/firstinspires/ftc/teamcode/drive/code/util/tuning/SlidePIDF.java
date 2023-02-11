@@ -40,7 +40,7 @@ public class SlidePIDF extends OpMode {
         slide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         slide.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-        slide.setDirection(DcMotorSimple.Direction.REVERSE);
+        slide.setDirection(DcMotorSimple.Direction.FORWARD);
     }
 
     //this function is used to tune PIDF

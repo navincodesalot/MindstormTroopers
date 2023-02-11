@@ -14,6 +14,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -67,11 +68,25 @@ public class testTele extends LinearOpMode {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         drive.setPoseEstimate(PoseStorage.currentPose);
+        arm = hardwareMap.get(DcMotorEx.class, "arm");
+        slide = hardwareMap.get(DcMotorEx.class, "slide");
+        claw = hardwareMap.get(Servo.class, "claw");
+        bclaw = hardwareMap.get(Servo.class, "bclaw");
+
+        arm.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        arm.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        arm.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        slide.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        slide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        slide.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        slide.setDirection(DcMotorSimple.Direction.FORWARD);
 
         waitForStart();
         arm.setTargetPosition(0);
         slide.setTargetPosition(0);
-        claw.setPosition(clawClose); //close claw on init
+        claw.setPosition(clawClose); //close claw on init++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
         if (isStopRequested()) return;
         while (opModeIsActive() && !isStopRequested()) {
@@ -104,19 +119,19 @@ public class testTele extends LinearOpMode {
                         bclaw.setPosition(0);
                     }
                     if (gamepad2.right_bumper) {
-                        slideTarget = 2650;
+                        slideTarget = 2350;
                     }
                     if (gamepad2.left_bumper) {
-                        slideTarget = 0;
+                        slideTarget = 100;
                     }
-                    if (gamepad2.b) { //close claw
+                    if (gamepad2.x) { //close claw
                         claw.setPosition(clawClose);
                     }
-                    if (gamepad2.x) { //open claw
+                    if (gamepad2.b) { //open claw
                         claw.setPosition(1);
                     }
                     if (gamepad2.left_stick_button) {
-                        armTarget = -20;
+                        armTarget = armStatic;
                     }
                     if (gamepad2.a) {
                         armTarget = armPickup;
@@ -125,20 +140,19 @@ public class testTele extends LinearOpMode {
                         armTarget = armDrop;
                     }
                     if (gamepad1.x) {
-                        save = true;
                         currentMode = Mode.CYCLE;
+                        autoCurrentMode = AutoMode.INIT;
                     }
                     break;
                 case CYCLE:
-                    if (gamepad1.x && save) {
                         telemetry.addData("Saving", targetPos);
-                        targetPos = slide.getCurrentPosition();
-                        save = false;
-                        autoCurrentMode = AutoMode.INIT;
-                    }
+//                        targetPos = slide.getCurrentPosition();
+                    targetPos = 2350;
+
                     switch (autoCurrentMode) {
                         case INIT:
                             if (gamepad1.b && targetPos != 0) {
+                                arm.setPower(armPIDF.returnPower(arm.getCurrentPosition(), armTarget));
                                 autoCurrentMode = AutoMode.GRAB_CONE;
                             }
                             break;
@@ -146,30 +160,40 @@ public class testTele extends LinearOpMode {
                                 armTarget = armPickup; //grab cone
                                 claw.setPosition(1); //open claw
                                 autoCurrentMode = AutoMode.PICK_CONE;
-                            break;
+                            slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), slideTarget));
+                            arm.setPower(armPIDF.returnPower(arm.getCurrentPosition(), armTarget));
+                                break;
                         case PICK_CONE:
                             if (Math.abs(arm.getCurrentPosition() - armTarget) < armTresh) {
                                 claw.setPosition(clawClose); //close claw
                                 autoCurrentMode = AutoMode.LIFT_ARM;
                             }
+                            slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), slideTarget));
+                            arm.setPower(armPIDF.returnPower(arm.getCurrentPosition(), armTarget));
                             break;
                         case LIFT_ARM:
                                 armTarget = armDrop;
-                                autoCurrentMode = AutoMode.INTO_BUCKET;
-                            break;
+                            arm.setPower(armPIDF.returnPower(arm.getCurrentPosition(), armTarget));
+                            autoCurrentMode = AutoMode.INTO_BUCKET;
+                                break;
                         case INTO_BUCKET:
                             if (Math.abs(arm.getCurrentPosition() - armTarget) < armTresh) {
                                 claw.setPosition(1); //open claw
                                 autoCurrentMode = AutoMode.BACK_DOWN_ARM;
+                                arm.setPower(armPIDF.returnPower(arm.getCurrentPosition(), armTarget));
                             }
+                            slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), slideTarget));
                             break;
                         case BACK_DOWN_ARM:
                                 armTarget = armPickup; //grab cone
-                                autoCurrentMode = AutoMode.SLIDE_UP;
-                            break;
+                            arm.setPower(armPIDF.returnPower(arm.getCurrentPosition(), armTarget));
+                            autoCurrentMode = AutoMode.SLIDE_UP;
+                                break;
+
                         case SLIDE_UP:
                             if (Math.abs(arm.getCurrentPosition() - armTarget) < armTresh) {
                                 slideTarget = targetPos;
+                                slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), slideTarget));
                                 claw.setPosition(clawClose); //close claw
                                 autoCurrentMode = AutoMode.DROP_CONE;
                             }
@@ -193,12 +217,13 @@ public class testTele extends LinearOpMode {
                             break;
                         case RESET_SLIDE:
                             slideTarget = 0; // todo: look into combining the reset slide and reset bucket for more time
+                            slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), slideTarget));
                             autoCurrentMode = AutoMode.LIFT_ARM;
                             break;
                     }
-
                 if (gamepad1.right_bumper) {
                     currentMode = Mode.DRIVER_CONTROL;
+                    break;
                 }
             }
         }
