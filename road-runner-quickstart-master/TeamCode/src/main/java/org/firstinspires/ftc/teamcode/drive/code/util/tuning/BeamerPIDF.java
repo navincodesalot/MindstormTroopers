@@ -16,6 +16,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 @Config
+@Disabled
 @TeleOp(name = "PIDF Tuner")
 public class BeamerPIDF extends OpMode {
     private PIDController controller;

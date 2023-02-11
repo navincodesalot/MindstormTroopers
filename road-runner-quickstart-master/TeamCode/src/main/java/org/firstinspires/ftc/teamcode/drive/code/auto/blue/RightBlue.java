@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.drive.code.auto.blue;
 
 import static org.firstinspires.ftc.teamcode.drive.code.util.returns.returnHead;
 import static org.firstinspires.ftc.teamcode.drive.code.util.returns.returnX;
-import static org.firstinspires.ftc.teamcode.drive.code.util.returns.returnY;
 import static org.firstinspires.ftc.teamcode.drive.code.util.startPoses.pickHead;
 import static org.firstinspires.ftc.teamcode.drive.code.util.startPoses.pickX;
 import static org.firstinspires.ftc.teamcode.drive.code.util.startPoses.pickY;
@@ -20,8 +19,8 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.drive.code.util.PoseStorage;
 import org.firstinspires.ftc.teamcode.drive.code.util.detection.AprilTagDetectionPipeline;
 import org.firstinspires.ftc.teamcode.drive.code.util.detection.AprilTagsUtil;
-import org.firstinspires.ftc.teamcode.drive.code.util.pidf.armPIDF;
-import org.firstinspires.ftc.teamcode.drive.code.util.pidf.slidePIDF;
+import org.firstinspires.ftc.teamcode.drive.code.util.detection.pidf.armPIDF;
+import org.firstinspires.ftc.teamcode.drive.code.util.detection.pidf.slidePIDF;
 import org.firstinspires.ftc.teamcode.drive.code.util.startPoses;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 

@@ -13,20 +13,17 @@ import com.outoftheboxrobotics.photoncore.PhotonCore;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.drive.code.util.PoseStorage;
 import org.firstinspires.ftc.teamcode.drive.code.util.detection.AprilTagDetectionPipeline;
 import org.firstinspires.ftc.teamcode.drive.code.util.detection.AprilTagsUtil;
-import org.firstinspires.ftc.teamcode.drive.code.util.pidf.armPIDF;
-import org.firstinspires.ftc.teamcode.drive.code.util.pidf.slidePIDF;
-import org.firstinspires.ftc.teamcode.drive.code.util.startPoses;
+import org.firstinspires.ftc.teamcode.drive.code.util.detection.pidf.armPIDF;
+import org.firstinspires.ftc.teamcode.drive.code.util.detection.pidf.slidePIDF;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 @Autonomous(name = "➡️RightRed ➡️")

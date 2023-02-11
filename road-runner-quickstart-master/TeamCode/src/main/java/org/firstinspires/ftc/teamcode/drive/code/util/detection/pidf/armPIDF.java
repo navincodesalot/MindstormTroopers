@@ -1,6 +1,7 @@
-package org.firstinspires.ftc.teamcode.drive.code.util.pidf;
+package org.firstinspires.ftc.teamcode.drive.code.util.detection.pidf;
 
 import com.arcrobotics.ftclib.controller.PIDController;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 public class armPIDF {
     public static double returnPower(double state, double target) {

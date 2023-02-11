@@ -9,8 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.drive.code.util.PoseStorage;
-import org.firstinspires.ftc.teamcode.drive.code.util.pidf.armPIDF;
-import org.firstinspires.ftc.teamcode.drive.code.util.pidf.slidePIDF;
+import org.firstinspires.ftc.teamcode.drive.code.util.detection.pidf.armPIDF;
 //import org.firstinspires.ftc.teamcode.drive.code.util.pidf.slidePIDF;
 
 /**

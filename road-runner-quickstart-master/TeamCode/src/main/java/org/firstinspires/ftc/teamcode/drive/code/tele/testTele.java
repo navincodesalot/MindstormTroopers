@@ -4,8 +4,6 @@ import static org.firstinspires.ftc.teamcode.drive.code.util.tele.armDrop;
 import static org.firstinspires.ftc.teamcode.drive.code.util.tele.armPickup;
 import static org.firstinspires.ftc.teamcode.drive.code.util.tele.armStatic;
 import static org.firstinspires.ftc.teamcode.drive.code.util.tele.armTarget;
-import static org.firstinspires.ftc.teamcode.drive.code.util.tele.armTresh;
-import static org.firstinspires.ftc.teamcode.drive.code.util.tele.slideTresh;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.outoftheboxrobotics.photoncore.PhotonCore;
@@ -16,12 +14,11 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.drive.code.util.PoseStorage;
-import org.firstinspires.ftc.teamcode.drive.code.util.pidf.armPIDF;
-import org.firstinspires.ftc.teamcode.drive.code.util.pidf.slidePIDF;
+import org.firstinspires.ftc.teamcode.drive.code.util.detection.pidf.armPIDF;
+import org.firstinspires.ftc.teamcode.drive.code.util.detection.pidf.slidePIDF;
 
 @TeleOp(name = "W TELE")
 public class testTele extends LinearOpMode {
@@ -66,7 +63,7 @@ public class testTele extends LinearOpMode {
         waitForStart();
         arm.setTargetPosition(0);
         slide.setTargetPosition(0);
-        claw.setPosition(clawClose); //close claw on init++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        claw.setPosition(clawClose); //close claw on init30.
 
         if (isStopRequested()) return;
         while (opModeIsActive() && !isStopRequested()) {

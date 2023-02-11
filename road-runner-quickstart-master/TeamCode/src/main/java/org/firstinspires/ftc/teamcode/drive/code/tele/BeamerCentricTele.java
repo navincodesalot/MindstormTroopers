@@ -14,8 +14,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.drive.code.util.PoseStorage;
-import org.firstinspires.ftc.teamcode.drive.code.util.pidf.armPIDF;
-import org.firstinspires.ftc.teamcode.drive.code.util.pidf.slidePIDF;
+import org.firstinspires.ftc.teamcode.drive.code.util.detection.pidf.armPIDF;
+import org.firstinspires.ftc.teamcode.drive.code.util.detection.pidf.slidePIDF;
 
 /**
  * This opmode demonstrates how one would implement field centric control using
