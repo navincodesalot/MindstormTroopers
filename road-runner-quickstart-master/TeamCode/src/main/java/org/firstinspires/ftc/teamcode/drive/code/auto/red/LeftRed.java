@@ -72,7 +72,7 @@ public class LeftRed extends LinearOpMode {
     private Servo bclaw;
     OpenCvCamera camera;
     double slideTarget = 0;
-    double sHigh = 2650;
+    double sHigh = 2400;
     double sLow = 0;
     double aDrop = 15;
     double aPick = -90;
@@ -132,11 +132,25 @@ public class LeftRed extends LinearOpMode {
         TrajectorySequence t1 = drive.trajectorySequenceBuilder(leftRedStartPose) // increment y to go further towards blue wall
                 .lineTo(new Vector2d(35, returnY(3)))
                 .lineToSplineHeading(new Pose2d(pickX1, returnY(pickY1), Math.toRadians(returnHead(pickHead1))))
-                .waitSeconds(1)
-                .lineToSplineHeading(new Pose2d(dropX, returnY(dropY), Math.toRadians(dropHead)))
-                .waitSeconds(2)
-                .lineToSplineHeading(new Pose2d(pickX, returnY(pickY), Math.toRadians(returnHead(pickHead1))))
-                .waitSeconds(1)
+                .addTemporalMarker(2.5, () -> {
+                    armTarget = -90;
+                })
+                .waitSeconds(10)
+                .addTemporalMarker(4, () -> {
+                    slideTarget = sHigh;
+                })
+                .addTemporalMarker(5.5, () -> {
+                    bclaw.setPosition(0.92);
+                })
+                .addTemporalMarker(7, () -> {
+                    bclaw.setPosition(0);
+                })
+                .addTemporalMarker(9, () -> {
+                    slideTarget = sLow;
+                })
+                .addTemporalMarker(11, () -> {
+                    armTarget = 0;
+                })
                 //park
                 .lineToSplineHeading(new Pose2d(12, returnY(13), Math.toRadians(-90)))
                 .build();
@@ -144,11 +158,25 @@ public class LeftRed extends LinearOpMode {
         TrajectorySequence t2 = drive.trajectorySequenceBuilder(leftRedStartPose) // increment y to go further towards blue wall
                 .lineTo(new Vector2d(35, returnY(3)))
                 .lineToSplineHeading(new Pose2d(pickX1, returnY(pickY1), Math.toRadians(returnHead(pickHead1))))
-                .waitSeconds(1)
-                .lineToSplineHeading(new Pose2d(dropX, returnY(dropY), Math.toRadians(dropHead)))
-                .waitSeconds(2)
-                .lineToSplineHeading(new Pose2d(pickX, returnY(pickY), Math.toRadians(returnHead(pickHead1))))
-                .waitSeconds(1)
+                .addTemporalMarker(2.5, () -> {
+                    armTarget = -90;
+                })
+                .waitSeconds(10)
+                .addTemporalMarker(4, () -> {
+                    slideTarget = sHigh;
+                })
+                .addTemporalMarker(5.5, () -> {
+                    bclaw.setPosition(0.92);
+                })
+                .addTemporalMarker(7, () -> {
+                    bclaw.setPosition(0);
+                })
+                .addTemporalMarker(9, () -> {
+                    slideTarget = sLow;
+                })
+                .addTemporalMarker(11, () -> {
+                    armTarget = 0;
+                })
                 //park
                 .lineToSplineHeading(new Pose2d(35, returnY(12.5), Math.toRadians(-90)))
                 .build();
@@ -156,11 +184,25 @@ public class LeftRed extends LinearOpMode {
         TrajectorySequence t3 = drive.trajectorySequenceBuilder(leftRedStartPose) // increment y to go further towards blue wall
                 .lineTo(new Vector2d(35, returnY(3)))
                 .lineToSplineHeading(new Pose2d(pickX1, returnY(pickY1), Math.toRadians(returnHead(pickHead1))))
-                .waitSeconds(1)
-                .lineToSplineHeading(new Pose2d(dropX, returnY(dropY), Math.toRadians(dropHead)))
-                .waitSeconds(2)
-                .lineToSplineHeading(new Pose2d(pickX, returnY(pickY), Math.toRadians(returnHead(pickHead1))))
-                .waitSeconds(1)
+                .addTemporalMarker(2.5, () -> {
+                    armTarget = -90;
+                })
+                .waitSeconds(10)
+                .addTemporalMarker(4, () -> {
+                    slideTarget = sHigh;
+                })
+                .addTemporalMarker(5.5, () -> {
+                    bclaw.setPosition(0.92);
+                })
+                .addTemporalMarker(7, () -> {
+                    bclaw.setPosition(0);
+                })
+                .addTemporalMarker(9, () -> {
+                    slideTarget = sLow;
+                })
+                .addTemporalMarker(11, () -> {
+                    armTarget = 0;
+                })
                 //park
                 .lineToConstantHeading(new Vector2d(35, returnY(12)))
                 .lineToConstantHeading(new Vector2d(35, returnY(33)))
@@ -260,15 +302,30 @@ public class LeftRed extends LinearOpMode {
 
         if (tagOfInterest == null || tagOfInterest.id == LEFT) {
             //trajectory
-            drive.followTrajectorySequence(t1);
+            drive.followTrajectorySequenceAsync(t1);
+            while (opModeIsActive()) {
+                slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), slideTarget));
+                arm.setPower(armPIDF.returnPower(arm.getCurrentPosition(), armTarget));
+                drive.update();
+            }
             PoseStorage.currentPose = drive.getPoseEstimate(); // Transfer the current pose to PoseStorage so we can use it in TeleOp
         } else if (tagOfInterest.id == MIDDLE) {
             //trajectory
-            drive.followTrajectorySequence(t2);
+            drive.followTrajectorySequenceAsync(t2);
+            while (opModeIsActive()) {
+                slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), slideTarget));
+                arm.setPower(armPIDF.returnPower(arm.getCurrentPosition(), armTarget));
+                drive.update();
+            }
             PoseStorage.currentPose = drive.getPoseEstimate(); // Transfer the current pose to PoseStorage so we can use it in TeleOp
         } else if (tagOfInterest.id == RIGHT) {
             //trajectory
-            drive.followTrajectorySequence(t3);
+            drive.followTrajectorySequenceAsync(t3);
+            while (opModeIsActive()) {
+                slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), slideTarget));
+                arm.setPower(armPIDF.returnPower(arm.getCurrentPosition(), armTarget));
+                drive.update();
+            }
             PoseStorage.currentPose = drive.getPoseEstimate(); // Transfer the current pose to PoseStorage so we can use it in TeleOp
         }
 

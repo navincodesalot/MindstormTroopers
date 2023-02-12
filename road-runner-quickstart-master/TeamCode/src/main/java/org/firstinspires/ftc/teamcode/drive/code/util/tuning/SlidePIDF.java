@@ -16,7 +16,6 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 @Config
-@Disabled
 @TeleOp(name = "Slide PIDF Tuner")
 public class SlidePIDF extends OpMode {
     private PIDController controller;

@@ -79,9 +79,9 @@ public class testTele extends LinearOpMode {
             telemetry.update();
                     drive.setWeightedDrivePower(
                             new Pose2d(
-                                    -gamepad1.left_stick_y * 0.60,
-                                    -gamepad1.left_stick_x * 0.60,
-                                    -gamepad1.right_stick_x * 0.60
+                                    -gamepad1.left_stick_y * 0.40,
+                                    gamepad1.left_stick_x * 0.40,
+                                    -gamepad1.right_stick_x * 0.40
                             )
                     );
                     drive.update();

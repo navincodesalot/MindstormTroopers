@@ -21,6 +21,8 @@
 
 package org.firstinspires.ftc.teamcode.drive.code.auto.blue;
 
+import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.FORWARD;
+import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.REVERSE;
 import static org.firstinspires.ftc.teamcode.drive.code.util.returns.returnHead;
 import static org.firstinspires.ftc.teamcode.drive.code.util.returns.returnX;
 import static org.firstinspires.ftc.teamcode.drive.code.util.startPoses.dropHead;
@@ -68,11 +70,11 @@ public class RightBlue extends LinearOpMode {
     private Servo bclaw;
     OpenCvCamera camera;
     double slideTarget = 0;
-    double sHigh = 2650;
-    double sLow = 0;
+    double sHigh = 2400;
+    double sLow = 5;
     double aDrop = 15;
     double aPick = -90;
-    double aStatic = -65;
+    double aStatic = -75;
     double armTarget = 0;
     double clawClose = 0.3;
     double loopTime;
@@ -111,12 +113,12 @@ public class RightBlue extends LinearOpMode {
         arm.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         arm.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-        arm.setDirection(DcMotorSimple.Direction.REVERSE);
+        arm.setDirection(REVERSE);
 
         slide.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         slide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         slide.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-        slide.setDirection(DcMotorSimple.Direction.REVERSE);
+        slide.setDirection(REVERSE);
 
         // Set the pose estimate to where you know the bot will start in autonomous
         // Refer to https://www.learnroadrunner.com/trajectories.html#coordinate-system for a map
@@ -128,11 +130,25 @@ public class RightBlue extends LinearOpMode {
         TrajectorySequence t1 = drive.trajectorySequenceBuilder(rightBlueStartPose) // increment y to go further towards blue wall
                 .lineTo(new Vector2d(returnX(35), 3))
                 .lineToSplineHeading(new Pose2d(returnX(pickX1), pickY1, Math.toRadians(returnHead(pickHead1, 1))))
-                .waitSeconds(1)
-                .lineToSplineHeading(new Pose2d(returnX(dropX), dropY, Math.toRadians(returnHead(dropHead))))
-                .waitSeconds(2)
-                .lineToSplineHeading(new Pose2d(returnX(pickX1), pickY1, Math.toRadians(returnHead(pickHead1, 1))))
-                .waitSeconds(1)
+                .addTemporalMarker(2.5, () -> {
+                    armTarget = -90;
+                })
+                .waitSeconds(10)
+                .addTemporalMarker(4, () -> {
+                    slideTarget = sHigh;
+                })
+                .addTemporalMarker(5.5, () -> {
+                    bclaw.setPosition(0.92);
+                })
+                .addTemporalMarker(7, () -> {
+                    bclaw.setPosition(0);
+                })
+                .addTemporalMarker(9, () -> {
+                    slideTarget = sLow;
+                })
+                .addTemporalMarker(11, () -> {
+                    armTarget = 0;
+                })
                 //park
                 .lineToSplineHeading(new Pose2d(returnX(12), 13, Math.toRadians(-90)))
                 .build();
@@ -140,11 +156,22 @@ public class RightBlue extends LinearOpMode {
         TrajectorySequence t2 = drive.trajectorySequenceBuilder(rightBlueStartPose) // increment y to go further towards blue wall
                 .lineTo(new Vector2d(returnX(35), 3))
                 .lineToSplineHeading(new Pose2d(returnX(pickX1), pickY1, Math.toRadians(returnHead(pickHead1, 1))))
-                .waitSeconds(1)
-                .lineToSplineHeading(new Pose2d(returnX(dropX), dropY, Math.toRadians(returnHead(dropHead))))
-                .waitSeconds(2)
-                .lineToSplineHeading(new Pose2d(returnX(pickX1), pickY1, Math.toRadians(returnHead(pickHead1, 1))))
-                .waitSeconds(1)
+                .addTemporalMarker(2.5, () -> {
+                    armTarget = -90;
+                })
+                .waitSeconds(4)
+                .addTemporalMarker(4, () -> {
+                    slideTarget = sHigh;
+                })
+                .addTemporalMarker(5.5, () -> {
+                    bclaw.setPosition(0.92);
+                })
+                .addTemporalMarker(7, () -> {
+                    bclaw.setPosition(0);
+                })
+                .addTemporalMarker(8, () -> {
+                    slideTarget = sLow;
+                })
                 //park
                 .lineToSplineHeading(new Pose2d(returnX(35), 12.5, Math.toRadians(-90)))
                 .build();
@@ -152,11 +179,22 @@ public class RightBlue extends LinearOpMode {
         TrajectorySequence t3 = drive.trajectorySequenceBuilder(rightBlueStartPose) // increment y to go further towards blue wall
                 .lineTo(new Vector2d(returnX(35), 3))
                 .lineToSplineHeading(new Pose2d(returnX(pickX1), pickY1, Math.toRadians(returnHead(pickHead1, 1))))
-                .waitSeconds(1)
-                .lineToSplineHeading(new Pose2d(returnX(dropX), dropY, Math.toRadians(returnHead(dropHead))))
-                .waitSeconds(2)
-                .lineToSplineHeading(new Pose2d(returnX(pickX1), pickY1, Math.toRadians(returnHead(pickHead1, 1))))
-                .waitSeconds(1)
+                .addTemporalMarker(2.5, () -> {
+                    armTarget = -90;
+                })
+                .waitSeconds(4)
+                .addTemporalMarker(4, () -> {
+                    slideTarget = sHigh;
+                })
+                .addTemporalMarker(5.5, () -> {
+                    bclaw.setPosition(0.92);
+                })
+                .addTemporalMarker(7, () -> {
+                    bclaw.setPosition(0);
+                })
+                .addTemporalMarker(8, () -> {
+                    slideTarget = sLow;
+                })
                 //park
                 .lineToConstantHeading(new Vector2d(returnX(35), 12))
                 .lineToConstantHeading(new Vector2d(returnX(35), 35))
@@ -192,8 +230,7 @@ public class RightBlue extends LinearOpMode {
             arm.setTargetPosition(0);
             slide.setTargetPosition(0);
             claw.setPosition(clawClose);
-            slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), slideTarget));
-            arm.setPower(armPIDF.returnPower(arm.getCurrentPosition(), armTarget));
+//            arm.setPower(armPIDF.returnPower(arm.getCurrentPosition(), aStatic));
             if(currentDetections.size() != 0) {
                 boolean tagFound = false;
 
@@ -251,22 +288,38 @@ public class RightBlue extends LinearOpMode {
             telemetry.update();
         }
 
-        /* Actual autonomous*/
-        // need to import rr and trajectories todo
-
         if (tagOfInterest == null || tagOfInterest.id == LEFT) {
             //trajectory
-            drive.followTrajectorySequence(t1);
+            drive.followTrajectorySequenceAsync(t1);
+            while (opModeIsActive()) {
+                slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), slideTarget));
+                arm.setPower(armPIDF.returnPower(arm.getCurrentPosition(), armTarget));
+                drive.update();
+            }
             PoseStorage.currentPose = drive.getPoseEstimate(); // Transfer the current pose to PoseStorage so we can use it in TeleOp
         } else if (tagOfInterest.id == MIDDLE) {
             //trajectory
-            drive.followTrajectorySequence(t2);
+            drive.followTrajectorySequenceAsync(t2);
+            while (opModeIsActive()) {
+                slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), slideTarget));
+                arm.setPower(armPIDF.returnPower(arm.getCurrentPosition(), armTarget));
+                drive.update();
+            }
             PoseStorage.currentPose = drive.getPoseEstimate(); // Transfer the current pose to PoseStorage so we can use it in TeleOp
         } else if (tagOfInterest.id == RIGHT) {
             //trajectory
-            drive.followTrajectorySequence(t3);
+            drive.followTrajectorySequenceAsync(t3);
+            while (opModeIsActive()) {
+                slide.setPower(slidePIDF.returnPower(slide.getCurrentPosition(), slideTarget));
+                arm.setPower(armPIDF.returnPower(arm.getCurrentPosition(), armTarget));
+                drive.update();
+            }
             PoseStorage.currentPose = drive.getPoseEstimate(); // Transfer the current pose to PoseStorage so we can use it in TeleOp
         }
+
+        /* Actual autonomous*/
+        // need to import rr and trajectories todo
+
 
         /* You wouldn't have this in your autonomous, this is just to prevent the sample from ending */
         //     while (opModeIsActive()) {sleep(20);}
