@@ -20,7 +20,7 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 public class BeamerPIDF extends OpMode {
     private PIDController controller;
 
-    public static double p = 0.0032, i = 0.0, d = 0.0001, f = 0.14; // when going down to 130 its 5 off
+    public static double p = 0.0037, i = 0.09, d = 0.0001, f = 0.08; // when going down to 130 its 5 off
 
     public static int target  = 130; // change to see effect
     final static double ticks_in_degrees = 537.7 / 360.0; // for 360 degree rotation
