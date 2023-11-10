@@ -1,12 +1,11 @@
 package org.firstinspires.ftc.teamcode.tuning;
 
 import com.acmerobotics.roadrunner.Pose2d;
-// TODO: remove Actions from the core module?
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.MecanumDrive;
-import org.firstinspires.ftc.teamcode.TankDrive;
+import org.firstinspires.ftc.teamcode.common.rr.MecanumDrive;
+import org.firstinspires.ftc.teamcode.common.rr.TankDrive;
 
 public final class ManualFeedbackTuner extends LinearOpMode {
     public static double DISTANCE = 64;
@@ -20,7 +19,7 @@ public final class ManualFeedbackTuner extends LinearOpMode {
 
             while (opModeIsActive()) {
                 Actions.runBlocking(
-                    drive.actionBuilder(drive.pose)
+                    drive.actionBuilder(new Pose2d(0, 0, 0))
                             .lineToX(DISTANCE)
                             .lineToX(0)
                             .build());
@@ -32,7 +31,7 @@ public final class ManualFeedbackTuner extends LinearOpMode {
 
             while (opModeIsActive()) {
                 Actions.runBlocking(
-                    drive.actionBuilder(drive.pose)
+                    drive.actionBuilder(new Pose2d(0, 0, 0))
                             .lineToX(DISTANCE)
                             .lineToX(0)
                             .build());
