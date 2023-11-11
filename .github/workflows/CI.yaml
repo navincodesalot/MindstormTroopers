@@ -15,7 +15,8 @@ jobs:
         with:
           java-version: 18
       - name: Make gradlew executable
-          run: chmod +x ./gradlew
+        run: |
+          chmod +x ./gradlew
       - name: Run Build
         run: |
           ./gradlew build -x lint
