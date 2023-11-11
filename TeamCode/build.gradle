@@ -23,14 +23,13 @@ android {
     }
 }
 
-repositories {
-    mavenCentral()
-}
-
 dependencies {
     implementation project(':FtcRobotController')
     annotationProcessor files('lib/OpModeAnnotationProcessor.jar')
 
-    implementation "com.acmerobotics.roadrunner:ftc:0.1.8"
-    implementation 'org.ftclib.ftclib:core:2.1.1' //FTC Lib core
+    implementation 'org.apache.commons:commons-math3:3.6.1'
+
+    implementation 'com.acmerobotics.roadrunner:core:0.5.6'
+
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.7'
 }
