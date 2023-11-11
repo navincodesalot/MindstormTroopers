@@ -3,9 +3,6 @@ repositories {
     maven { url = 'https://maven.brott.dev/' }
     maven { url = 'https://jitpack.io' }
     google() // Needed for androidx
-    flatDir {
-        dirs rootProject.file('libs')
-    }
 }
 
 dependencies {
@@ -21,8 +18,9 @@ dependencies {
     implementation 'org.firstinspires.ftc:gameAssets-CenterStage:1.0.0'
     implementation 'org.tensorflow:tensorflow-lite-task-vision:0.4.3'
     runtimeOnly 'org.tensorflow:tensorflow-lite:2.12.0'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
 
-    implementation 'androidx.appcompat:appcompat:1.2.0' //Dashboard
+    implementation 'com.acmerobotics.dashboard:dashboard:0.4.14' //Dashboard
     implementation 'com.github.Eeshwar-Krishnan:PhotonFTC:v3.0.0-ALPHA' //Photon
-    implementation 'com.github.toptobes:robot-code-v2:1.0.2' //Blacksmith
+//    implementation 'com.github.toptobes:robot-code-v2:1.0.2' //Blacksmith
 }
