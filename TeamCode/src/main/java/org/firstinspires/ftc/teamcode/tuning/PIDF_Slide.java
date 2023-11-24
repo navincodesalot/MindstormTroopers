@@ -18,8 +18,6 @@ public class PIDF_Slide extends OpMode {
 
     public static int target = 0;
 
-    private final double ticks_in_degree = 145.091 / 360.0; // todo
-
     private DcMotorEx rightSlide;
     private DcMotorEx leftSlide;
 
@@ -34,18 +32,25 @@ public class PIDF_Slide extends OpMode {
 
     @Override
     public void loop() {
-        controller.setPID(p, i, d);
         int leftSlidePos = leftSlide.getCurrentPosition();
-        double pid = controller.calculate(leftSlidePos, target);
+        double power = returnPower(leftSlidePos, target);
 
-        double ff = Math.cos(Math.toRadians(target / ticks_in_degree)) * f;
-
-        double power = pid + f;
         leftSlide.setPower(power);
         rightSlide.setPower(power);
 
         telemetry.addData("leftSlide Pos", leftSlidePos);
+        telemetry.addData("rightSlide Pos", rightSlide.getCurrentPosition());
         telemetry.addData("target", target);
         telemetry.update();
+    }
+
+    public double returnPower(int pos, int target) {
+        controller.setPID(p, i, d);
+        double pid = controller.calculate(pos, target);
+        double ff = target * f;
+
+        double power = pid + ff;
+
+        return power;
     }
 }

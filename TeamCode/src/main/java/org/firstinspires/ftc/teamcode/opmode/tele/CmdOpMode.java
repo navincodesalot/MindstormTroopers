@@ -16,10 +16,10 @@ public class CmdOpMode extends BaseOpMode {
 
         //Keybinds
         gb1(LEFT_BUMPER).whenActive(
-                intake.grab()
+            intake.grab()
         );
         gb1(RIGHT_BUMPER).whenActive(
-                intake.push()
+            intake.push()
         );
     }
 
