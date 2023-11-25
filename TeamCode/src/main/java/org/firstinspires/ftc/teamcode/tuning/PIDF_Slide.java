@@ -12,7 +12,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 @Config
-@TeleOp
+@TeleOp(name = "Tune Slide PIDF")
 public class PIDF_Slide extends OpMode {
     private PIDController controller;
 
@@ -31,17 +31,15 @@ public class PIDF_Slide extends OpMode {
 
         rightSlide = hardwareMap.get(DcMotorEx.class, "rightSlide");
         leftSlide = hardwareMap.get(DcMotorEx.class, "leftSlide");
+
         leftSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
         leftSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        rightSlide.setDirection(DcMotorEx.Direction.REVERSE);
         rightSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
         rightSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        rightSlide.setDirection(DcMotorEx.Direction.REVERSE);
     }
 
     @Override
@@ -61,10 +59,7 @@ public class PIDF_Slide extends OpMode {
     public double returnPower(int pos, int target) {
         controller.setPID(p, i, d);
         double pid = controller.calculate(pos, target);
-        double ff = f;
 
-        double power = pid + ff;
-
-        return power;
+        return pid + f;
     }
 }

@@ -1,9 +1,9 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.arcrobotics.ftclib.command.InstantCommand;
+import com.arcrobotics.ftclib.command.RunCommand;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.command.Command;
-import com.arcrobotics.ftclib.command.WaitCommand;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 public class IntakeSubsystem extends SubsystemBase {
@@ -28,8 +28,8 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public Command stop() {
-        return new InstantCommand(()-> {
+        return new RunCommand(()-> {
             intake.setPower(0);
-        });
+        }, this);
     }
 }
