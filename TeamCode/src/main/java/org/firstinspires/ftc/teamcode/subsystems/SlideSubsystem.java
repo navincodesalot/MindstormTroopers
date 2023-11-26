@@ -28,13 +28,19 @@ public class SlideSubsystem extends SubsystemBase {
 
     public Command lift() {
         return new InstantCommand(()-> {
-            this.target = 600;
+            this.target = 1165;
         });
     }
 
-    public Command drop() {
+    public Command middle() {
         return new InstantCommand(()-> {
-            this.target = 150;
+            this.target = 700;
+        });
+    }
+
+    public Command idle() {
+        return new InstantCommand(()-> {
+            this.target = 0;
         });
     }
 

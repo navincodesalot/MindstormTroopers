@@ -16,14 +16,14 @@ public class IntakeSubsystem extends SubsystemBase {
     public Command grab() {
         return new InstantCommand(()-> {
             intake.setDirection(DcMotor.Direction.REVERSE);
-            intake.setPower(0.8);
+            intake.setPower(1);
         });
     }
 
     public Command push() {
         return new InstantCommand(()-> {
             intake.setDirection(DcMotor.Direction.FORWARD);
-            intake.setPower(0.8);
+            intake.setPower(1);
         });
     }
 
