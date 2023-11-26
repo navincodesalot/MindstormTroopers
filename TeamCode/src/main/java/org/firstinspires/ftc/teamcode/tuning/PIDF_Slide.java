@@ -51,6 +51,7 @@ public class PIDF_Slide extends OpMode {
 
         telemetry.addData("leftSlide Pos", leftSlidePos);
         telemetry.addData("rightSlide Pos", rightSlide.getCurrentPosition());
+        telemetry.addData("error", Math.abs(target - leftSlidePos));
         telemetry.addData("target", target);
         telemetry.update();
     }
