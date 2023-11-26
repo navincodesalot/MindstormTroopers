@@ -3,18 +3,18 @@ package org.firstinspires.ftc.teamcode.subsystems;
 import com.arcrobotics.ftclib.command.Command;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SubsystemBase;
-import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.firstinspires.ftc.teamcode.util.PIDFController;
 
 public class SlideSubsystem extends SubsystemBase {
-    private final DcMotor leftSlide;
-    private final DcMotor rightSlide;
+    private final DcMotorEx leftSlide;
+    private final DcMotorEx rightSlide;
     private int target = 0;
 
     //import global heights here todo
 
-    public SlideSubsystem(DcMotor leftSlide, DcMotor rightSlide) {
+    public SlideSubsystem(DcMotorEx leftSlide, DcMotorEx rightSlide) {
         this.leftSlide = leftSlide;
         this.rightSlide = rightSlide;
     }

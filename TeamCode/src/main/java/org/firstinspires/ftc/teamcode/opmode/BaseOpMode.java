@@ -7,7 +7,6 @@ import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.hardware.RevIMU;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
@@ -17,7 +16,7 @@ import org.firstinspires.ftc.teamcode.util.GamepadTrigger;
 import org.firstinspires.ftc.teamcode.util.TriggerGamepadEx;
 
 public class BaseOpMode extends CommandOpMode {
-    protected DcMotor intakeMotor, leftSlideMotor, rightSlideMotor;
+    protected DcMotorEx intakeMotor, leftSlideMotor, rightSlideMotor;
     protected IntakeSubsystem intake;
     protected SlideSubsystem slide;
     protected MecanumDriveSubsystem drive;
@@ -70,14 +69,14 @@ public class BaseOpMode extends CommandOpMode {
         fR.setInverted(true);
         bL.setInverted(true);
         //set modes and reset encoders here
-        leftSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftSlideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        leftSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftSlideMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        leftSlideMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        leftSlideMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
 
         rightSlideMotor.setDirection(DcMotorEx.Direction.REVERSE);
-        rightSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightSlideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightSlideMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        rightSlideMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        rightSlideMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
     }
 
     public GamepadButton gb1(GamepadKeys.Button button) {

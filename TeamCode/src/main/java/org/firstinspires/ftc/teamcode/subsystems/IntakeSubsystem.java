@@ -4,25 +4,25 @@ import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.RunCommand;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.command.Command;
-import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 public class IntakeSubsystem extends SubsystemBase {
-    private final DcMotor intake;
+    private final DcMotorEx intake;
 
-    public IntakeSubsystem(DcMotor intake) {
+    public IntakeSubsystem(DcMotorEx intake) {
         this.intake = intake;
     }
 
     public Command grab() {
         return new InstantCommand(()-> {
-            intake.setDirection(DcMotor.Direction.REVERSE);
+            intake.setDirection(DcMotorEx.Direction.REVERSE);
             intake.setPower(1);
         });
     }
 
     public Command push() {
         return new InstantCommand(()-> {
-            intake.setDirection(DcMotor.Direction.FORWARD);
+            intake.setDirection(DcMotorEx.Direction.FORWARD);
             intake.setPower(1);
         });
     }

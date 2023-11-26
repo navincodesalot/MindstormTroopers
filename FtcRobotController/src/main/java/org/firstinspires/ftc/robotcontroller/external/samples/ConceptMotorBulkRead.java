@@ -80,7 +80,6 @@ import java.util.List;
  * the bulk-read AUTO mode to streamline your cycle timing.
  */
 @TeleOp (name = "Motor Bulk Reads", group = "Tests")
-@Disabled
 public class ConceptMotorBulkRead extends LinearOpMode {
 
     final int       TEST_CYCLES    = 500;   // Number of control cycles to run to determine cycle times.
@@ -100,10 +99,10 @@ public class ConceptMotorBulkRead extends LinearOpMode {
         int cycles;
 
         // Important Step 1:  Make sure you use DcMotorEx when you instantiate your motors.
-        m1 = hardwareMap.get(DcMotorEx.class, "m1");  // Configure the robot to use these 4 motor names,
-        m2 = hardwareMap.get(DcMotorEx.class, "m2");  // or change these strings to match your existing Robot Configuration.
-        m3 = hardwareMap.get(DcMotorEx.class, "m3");
-        m4 = hardwareMap.get(DcMotorEx.class, "m4");
+        m1 = hardwareMap.get(DcMotorEx.class, "leftFront");  // Configure the robot to use these 4 motor names,
+        m2 = hardwareMap.get(DcMotorEx.class, "leftRear");  // or change these strings to match your existing Robot Configuration.
+        m3 = hardwareMap.get(DcMotorEx.class, "rightRear");
+        m4 = hardwareMap.get(DcMotorEx.class, "rightFront");
 
         // Important Step 2: Get access to a list of Expansion Hub Modules to enable changing caching methods.
         List<LynxModule> allHubs = hardwareMap.getAll(LynxModule.class);
