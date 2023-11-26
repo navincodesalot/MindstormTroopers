@@ -30,6 +30,6 @@ public class IntakeSubsystem extends SubsystemBase {
     public Command stop() {
         return new RunCommand(()-> {
             intake.setPower(0);
-        }, this);
+        }, this); // the `this` is the intake subsystem as the requirements (only for run commands)
     }
 }

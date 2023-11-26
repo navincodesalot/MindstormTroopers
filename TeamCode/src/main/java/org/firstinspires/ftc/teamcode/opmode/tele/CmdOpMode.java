@@ -15,11 +15,12 @@ public class CmdOpMode extends BaseOpMode {
     @Override
     public void initialize() {
         super.initialize();
-        //Set Default Commands for each op mode (more intuitive)
+        // Set Default Commands for each op mode (more intuitive)
+        register(intake, slide, drive); // runs the peridoics (idk)
         intake.setDefaultCommand(intake.stop());
+        drive.setDefaultCommand(drive.fieldCentric(gamepadEx1::getLeftX, gamepadEx1::getLeftY, gamepadEx1::getRightX, imu::getHeading)); // by default we're in field centric, we can add slowed modes as well
 
         tad("Status", "OpMode Initialized");
-
         //Keybinds
         gb1(LEFT_BUMPER).whileHeld(
                 intake.grab()
@@ -42,6 +43,6 @@ public class CmdOpMode extends BaseOpMode {
     public void run() {
         super.run();
         tad("pos", leftSlideMotor.getCurrentPosition());
-        // rr drive.update would go here
+        // rrDrive.update() would go here
     }
 }

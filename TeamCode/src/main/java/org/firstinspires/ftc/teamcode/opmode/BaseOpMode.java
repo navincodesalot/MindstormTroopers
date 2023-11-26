@@ -5,9 +5,13 @@ import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.button.GamepadButton;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.arcrobotics.ftclib.hardware.RevIMU;
+import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.MecanumDriveSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.SlideSubsystem;
 import org.firstinspires.ftc.teamcode.util.GamepadTrigger;
 import org.firstinspires.ftc.teamcode.util.TriggerGamepadEx;
@@ -16,11 +20,14 @@ public class BaseOpMode extends CommandOpMode {
     protected DcMotor intakeMotor, leftSlideMotor, rightSlideMotor;
     protected IntakeSubsystem intake;
     protected SlideSubsystem slide;
+    protected MecanumDriveSubsystem drive;
+    protected SampleMecanumDrive rrDrive;
     protected GamepadEx gamepadEx1;
     protected GamepadEx gamepadEx2;
     protected TriggerGamepadEx triggerGamepadEx1;
     protected TriggerGamepadEx triggerGamepadEx2;
-
+    protected RevIMU imu;
+    protected MotorEx fL, fR, bL, bR;
     @Override
     public void initialize() {
         CommandScheduler.getInstance().reset();
@@ -35,6 +42,13 @@ public class BaseOpMode extends CommandOpMode {
         initHardware();
         setupHardware();
 
+        imu = new RevIMU(hardwareMap);
+        imu.init(); //todo: if we switch hub positioning change here
+
+        drive = new MecanumDriveSubsystem(fL, fR, bL, bR, imu);
+//        rrDrive = new SampleMecanumDrive(hardwareMap); todo: rr drive here if needed
+//        rrDrive.setPoseEstimate(new Pose2d(-36, -63, Math.toRadians(-90))); todo
+
         //Subsystems go here
         intake = new IntakeSubsystem(intakeMotor);
         slide = new SlideSubsystem(leftSlideMotor, rightSlideMotor);
@@ -46,9 +60,15 @@ public class BaseOpMode extends CommandOpMode {
         intakeMotor = hardwareMap.get(DcMotorEx.class, "intake");
         leftSlideMotor = hardwareMap.get(DcMotorEx.class, "leftSlide");
         rightSlideMotor = hardwareMap.get(DcMotorEx.class, "rightSlide");
+        fL = new MotorEx(hardwareMap, "leftFront");
+        fR = new MotorEx(hardwareMap, "rightFront");
+        bL = new MotorEx(hardwareMap, "leftRear");
+        bR = new MotorEx(hardwareMap, "rightRear");
     }
 
     protected void setupHardware() {
+        fR.setInverted(true);
+        bL.setInverted(true);
         //set modes and reset encoders here
         leftSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftSlideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
