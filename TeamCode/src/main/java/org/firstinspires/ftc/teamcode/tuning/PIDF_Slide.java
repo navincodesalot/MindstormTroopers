@@ -16,7 +16,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 public class PIDF_Slide extends OpMode {
     private PIDController controller;
 
-    public static double p = 0.006, i = 0.0, d = 0.0, f = 0.001;
+    public static double p = 0.0044, i = 0.0, d = 0.0, f = 0.02;
 
     public static int target = 0;
 
@@ -49,7 +49,7 @@ public class PIDF_Slide extends OpMode {
         leftSlide.setPower(power);
         rightSlide.setPower(power);
 
-        telemetry.addData("leftSlide Pos", leftSlidePos);
+        telemetry.addData("leftSlide Pos", leftSlide.getCurrentPosition());
         telemetry.addData("rightSlide Pos", rightSlide.getCurrentPosition());
         telemetry.addData("error", Math.abs(target - leftSlidePos));
         telemetry.addData("target", target);
@@ -59,7 +59,7 @@ public class PIDF_Slide extends OpMode {
     public double returnPower(int pos, int target) {
         controller.setPID(p, i, d);
         double pid = controller.calculate(pos, target);
-        if (Math.abs(target - pos) < 50) { // if we say go to 1000 ticks, its at 995-1005, it will brake (to save voltage)
+        if (Math.abs(target - pos) <= 50 && Math.abs(target - pos) >= 30) { // if we say go to 1000 ticks, its at 995-1005, it will brake (to save voltage)
             return 0; // set to brake
         }
         return pid + f;

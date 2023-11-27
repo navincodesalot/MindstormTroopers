@@ -221,6 +221,7 @@ public class ConceptMotorBulkRead extends LinearOpMode {
         telemetry.addData("Cache = OFF",    "%5.1f mS/cycle", t1);
         telemetry.addData("Cache = AUTO",   "%5.1f mS/cycle", t2);
         telemetry.addData("Cache = MANUAL", "%5.1f mS/cycle", t3);
+        telemetry.addData("Cache = MANUAL hz", "%5.1f mS/cycle", 1000/t3);
         telemetry.update();
     }
 }
