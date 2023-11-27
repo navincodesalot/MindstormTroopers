@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.CRServo;
 
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.roadrunner.drive.TwoWheelTrackingLocalizer;
 
 
 @TeleOp(name = "W TELE")
@@ -31,7 +32,7 @@ public class tele extends LinearOpMode {
 //        PhotonCore.CONTROL_HUB.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
 //        PhotonCore.EXPANSION_HUB.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
 //        PhotonCore.enable();
-        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+        SampleMecanumDrive drive = new SampleMecanumDrive(true, hardwareMap);
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 //        drive.setPoseEstimate(PoseStorage.currentPose);
         intake = hardwareMap.get(DcMotorEx.class, "intake");
@@ -61,13 +62,6 @@ public class tele extends LinearOpMode {
                     )
             );
 
-            drive.setWeightedDrivePower(
-                    new Pose2d(
-                            -gamepad1.left_stick_y,
-                            gamepad1.left_stick_x,
-                            -gamepad1.right_stick_x
-                    )
-            );
             drive.update();
 
 

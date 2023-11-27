@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmode;
 
-import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.ZYX;
+import static com.google.blocks.ftcrobotcontroller.hardware.HardwareType.IMU;
 
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.CommandScheduler;
@@ -46,7 +46,7 @@ public class BaseOpMode extends CommandOpMode {
         setupHardware();
 
         imu = new RevIMU(hardwareMap);
-//        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters(
+//        IMU.Parameters parameters = new IMU.Parameters(
 //                new RevHubOrientationOnRobot(
 //                        RevHubOrientationOnRobot.LogoFacingDirection.LEFT,
 //                        RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD
@@ -56,9 +56,9 @@ public class BaseOpMode extends CommandOpMode {
 //        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
 //        parameters.loggingEnabled = true;
 //        parameters.loggingTag = "IMU";
-//        parameters.
 
-        imu.init(); //todo: if we switch hub positioning change here
+
+//        imu.init(parameters); //todo: if we switch hub positioning change here
 
         drive = new MecanumDriveSubsystem(fL, fR, bL, bR, imu);
 //        rrDrive = new SampleMecanumDrive(hardwareMap); todo: rr drive here if needed
