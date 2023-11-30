@@ -177,6 +177,14 @@ public class ConceptTensorFlowObjectDetection extends LinearOpMode {
         // Disable or re-enable the TFOD processor at any time.
         visionPortal.setProcessorEnabled(tfod, true);
 
+        //Zoom into right at beginning: 2.5 maginification, 4:5 aspect ratio
+        tfod.setZoom(3, 4.0/5.0);
+
+        //Can choose to add an elapsed time loop for now im doing a for loop 
+        for(int i = 0; i < 7; i++){
+        tfod.getRecognitions();
+        }
+
     }   // end method initTfod()
 
     /**
@@ -187,7 +195,7 @@ public class ConceptTensorFlowObjectDetection extends LinearOpMode {
         List<Recognition> currentRecognitions = tfod.getRecognitions();
 
         telemetry.addData("# Objects Detected", currentRecognitions.size());
-        String detectedPosition = "middle";
+        String detectedPosition = "null";
 
         // Step through the list of recognitions and display info for each one.
         for (Recognition recognition : currentRecognitions) {
@@ -198,29 +206,30 @@ public class ConceptTensorFlowObjectDetection extends LinearOpMode {
             telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100);
             telemetry.addData("- Position", "%.0f / %.0f", x, y);
             telemetry.addData("- Size", "%.0f x %.0f", recognition.getWidth(), recognition.getHeight());
-
-            if ("left".equals(recognition.getLabel())) {
-                detectedPosition = "left";
-            } else if ("right".equals(recognition.getLabel())) {
-                detectedPosition = "right";
-            }
         }   // end for() loop
         telemetry.addData("Detected Position", detectedPosition);
     }   // end method telemetryTfod()
 
     public static String getPosition(List<Recognition> recognitions) {
         // Initialize the detected position as "Middle" by default.
-        String detectedPosition = "middle";
+        String detectedPosition = "null";
 
-        // Step through the list of recognitions and update the detected position.
-        for (Recognition recognition : recognitions) {
-            // Check if the detected label is either "left" or "right".
-            if ("left".equals(recognition.getLabel())) {
-                detectedPosition = "left";
-            } else if ("right".equals(recognition.getLabel())) {
+        if ("right".equals(recognition.getLabel())) {
                 detectedPosition = "right";
+            } else{
+                tfod.setZoom(1.75, 4.0/5.0);
+                tfod.getRecognitions();
+                if("middle".equals(recognition.getLabel())){
+                    detectedPosition = "middle";
+                } else{
+                    detectedPosition = "left";
+                }
             }
-        }
+        // Step through the list of recognitions and update the detected position.
+       // for (Recognition recognition : recognitions) {
+            // Check if the detected label is either "left" or "right".
+            
+       // }
         return detectedPosition;
     }
 }   // end class
