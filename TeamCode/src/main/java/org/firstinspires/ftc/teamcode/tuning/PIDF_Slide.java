@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 
 @Config
 @TeleOp(name = "Tune Slide PIDF")
@@ -22,6 +23,8 @@ public class PIDF_Slide extends OpMode {
 
     private DcMotorEx rightSlide;
     private DcMotorEx leftSlide;
+    private Servo leftServo;
+    private Servo rightServo;
 
     @Override
     public void init() {
@@ -30,6 +33,8 @@ public class PIDF_Slide extends OpMode {
 
         rightSlide = hardwareMap.get(DcMotorEx.class, "rightSlide");
         leftSlide = hardwareMap.get(DcMotorEx.class, "leftSlide");
+        leftServo = hardwareMap.get(Servo.class, "leftServo");
+        rightServo = hardwareMap.get(Servo.class, "rightServo");
 
         leftSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -39,6 +44,9 @@ public class PIDF_Slide extends OpMode {
         rightSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        // lift servos TODO
+
     }
 
     @Override
