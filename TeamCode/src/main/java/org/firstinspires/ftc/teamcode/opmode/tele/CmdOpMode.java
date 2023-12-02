@@ -4,11 +4,14 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.A;
+import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.B;
 import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.DPAD_DOWN;
 import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.DPAD_LEFT;
 import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.DPAD_UP;
 import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.LEFT_BUMPER;
 import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.RIGHT_BUMPER;
+import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.X;
+
 import org.firstinspires.ftc.teamcode.opmode.BaseOpMode;
 
 @TeleOp(name = "CmdTele Test")
@@ -17,9 +20,9 @@ public class CmdOpMode extends BaseOpMode {
     public void initialize() {
         super.initialize();
         // Set Default Commands for each op mode (more intuitive)
-        register(intake, drop); // runs the peridoics (idk)
+        register(intake, drop, drive); // runs the peridoics (idk)
         intake.setDefaultCommand(intake.stop());
-//        drive.setDefaultCommand(drive.fieldCentric(gamepadEx1::getLeftX, gamepadEx1::getLeftY, gamepadEx1::getRightX, imu::getHeading)); // by default we're in field centric, we can add slowed modes as well
+        drive.setDefaultCommand(drive.fieldCentric(gamepadEx1::getLeftX, gamepadEx1::getLeftY, gamepadEx1::getRightX, imu::getHeading)); // by default we're in field centric, we can add slowed modes as well
 
         tad("Status", "OpMode Initialized");
         telemetry.update();
@@ -41,6 +44,12 @@ public class CmdOpMode extends BaseOpMode {
         );
         gb1(A).whenActive(
                 drop.pickupPixel()
+        );
+        gb1(X).whenActive(
+                drop.liftServo()
+        );
+        gb1(B).whenActive(
+                drop.dropPixels()
         );
     }
 

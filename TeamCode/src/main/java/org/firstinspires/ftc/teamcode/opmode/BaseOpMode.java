@@ -44,7 +44,7 @@ public class BaseOpMode extends CommandOpMode {
         initHardware();
         setupHardware();
 
-//        imu = new RevIMU(hardwareMap);
+        imu = new RevIMU(hardwareMap);
 //        IMU.Parameters parameters = new IMU.Parameters(
 //                new RevHubOrientationOnRobot(
 //                        RevHubOrientationOnRobot.LogoFacingDirection.LEFT,
@@ -58,8 +58,10 @@ public class BaseOpMode extends CommandOpMode {
 
 
 //        imu.init(parameters); //todo: if we switch hub positioning change here
+        imu.init();
 
-//        drive = new MecanumDriveSubsystem(fL, fR, bL, bR, imu);
+
+        drive = new MecanumDriveSubsystem(fL, fR, bL, bR, imu);
 //        rrDrive = new SampleMecanumDrive(hardwareMap); todo: rr drive here if needed
 //        rrDrive.setPoseEstimate(new Pose2d(-36, -63, Math.toRadians(-90))); todo
 

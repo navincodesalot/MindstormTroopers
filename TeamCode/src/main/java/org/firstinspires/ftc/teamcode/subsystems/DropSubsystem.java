@@ -11,8 +11,8 @@ import org.firstinspires.ftc.teamcode.util.PIDFController;
 public class DropSubsystem extends SubsystemBase {
     private final DcMotorEx leftSlide;
     private final DcMotorEx rightSlide;
-    private Servo leftServo;
-    private Servo rightServo;
+    private final Servo leftServo;
+    private final Servo rightServo;
 
     private int target = 0;
 
@@ -47,22 +47,22 @@ public class DropSubsystem extends SubsystemBase {
         // for all of this, make dedicated command files with sequentials and as many parallel groups I can
 
         return new InstantCommand(()-> {
-            leftServo.setPosition(0.05);
-            rightServo.setPosition(0.05);
+            leftServo.setPosition(0.472);
+            rightServo.setPosition(0.1);
         });
     }
 
     public Command pickupPixel() {
         return new InstantCommand(()-> {
-            leftServo.setPosition(0.5); // seems to work for left
-            rightServo.setPosition(0.5);
+            leftServo.setPosition(0.5);
+            rightServo.setPosition(0.125);
         });
     }
 
     public Command dropPixels() { // drop pixels
         return new InstantCommand(()-> {
-            leftServo.setPosition(0);
-            rightServo.setPosition(0);
+            leftServo.setPosition(0.9);
+            rightServo.setPosition(0.53);
         });
     }
 
