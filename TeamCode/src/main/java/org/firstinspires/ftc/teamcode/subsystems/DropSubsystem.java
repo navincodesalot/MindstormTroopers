@@ -13,7 +13,6 @@ public class DropSubsystem extends SubsystemBase {
     private final DcMotorEx rightSlide;
     private final Servo leftServo;
     private final Servo rightServo;
-
     private int target = 0;
 
     //import global heights here todo
@@ -59,10 +58,15 @@ public class DropSubsystem extends SubsystemBase {
         });
     }
 
-    public Command dropPixels() { // drop pixels
+    public Command dropLeftPixel() { // drop pixels
+        return new InstantCommand(()-> {
+            rightServo.setPosition(0.53);
+        });
+    }
+
+    public Command dropRightPixel() { // drop pixels
         return new InstantCommand(()-> {
             leftServo.setPosition(0.9);
-            rightServo.setPosition(0.53);
         });
     }
 

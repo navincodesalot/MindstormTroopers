@@ -6,7 +6,9 @@ import com.arcrobotics.ftclib.command.button.GamepadButton;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.hardware.RevIMU;
+import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
@@ -99,6 +101,11 @@ public class BaseOpMode extends CommandOpMode {
         rightSlideMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         rightSlideMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         rightSlideMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+
+        fR.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+        fL.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+        bR.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+        bL.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
     }
 
     public GamepadButton gb1(GamepadKeys.Button button) {
