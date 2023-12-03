@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
@@ -34,6 +35,12 @@ public class FollowerPIDTuner extends LinearOpMode {
 
         drive.setPoseEstimate(startPose);
 
+        Servo leftServo = hardwareMap.get(Servo.class, "leftServo");
+        Servo rightServo = hardwareMap.get(Servo.class, "rightServo");
+        leftServo.setDirection(Servo.Direction.FORWARD);
+        rightServo.setDirection(Servo.Direction.REVERSE);
+        leftServo.setPosition(0.5);
+        rightServo.setPosition(0.125);
         waitForStart();
 
         if (isStopRequested()) return;

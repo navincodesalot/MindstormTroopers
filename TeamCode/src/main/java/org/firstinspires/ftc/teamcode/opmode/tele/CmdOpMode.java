@@ -27,9 +27,10 @@ public class CmdOpMode extends BaseOpMode {
         drive.setDefaultCommand(drive.fieldCentric(gamepadEx1::getLeftX, gamepadEx1::getLeftY, gamepadEx1::getRightX, imu::getHeading)); // by default we're in field centric, we can add slowed modes as well
 
         drop.liftServo();
-        tad("Status", "OpMode Initialized");
 
+        tad("Status", "OpMode Initialized");
         telemetry.update();
+
         //Keybinds
         gb1(LEFT_BUMPER).whileHeld(
                 new IntakePixel(intake, drop)
