@@ -46,7 +46,10 @@ public class PIDF_Slide extends OpMode {
         rightSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // lift servos TODO
-
+        leftServo.setDirection(Servo.Direction.FORWARD);
+        rightServo.setDirection(Servo.Direction.REVERSE);
+        leftServo.setPosition(0.5);
+        rightServo.setPosition(0.125);
     }
 
     @Override
