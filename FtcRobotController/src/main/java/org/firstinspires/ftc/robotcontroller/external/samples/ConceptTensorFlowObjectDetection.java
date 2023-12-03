@@ -177,8 +177,6 @@ public class ConceptTensorFlowObjectDetection extends LinearOpMode {
         // Disable or re-enable the TFOD processor at any time.
         visionPortal.setProcessorEnabled(tfod, true);
 
-        //clipped to right
-        tfod.setClippingMargins(350, 150, 0, 0);
     }   // end method initTfod()
 
 
@@ -186,33 +184,25 @@ public class ConceptTensorFlowObjectDetection extends LinearOpMode {
      * Add telemetry about TensorFlow Object Detection (TFOD) recognitions.
      */
     private void telemetryTfod() {
-
+        String detectedPosition = null;
+        tfod.setClippingMargins(350, 150, 0, 0); // clip to right
         List<Recognition> currentRecognitions = tfod.getRecognitions();
-
-        telemetry.addData("# Objects Detected", currentRecognitions.size());
-        String detectedPosition = "null";
-
-        // Step through the list of recognitions and display info for each one.
-        for (Recognition recognition : currentRecognitions) {
-            double x = (recognition.getLeft() + recognition.getRight()) / 2 ;
-            double y = (recognition.getTop()  + recognition.getBottom()) / 2 ;
-
-            if ("right".equals(recognition.getLabel()) || "left".equals(recognition.getLabel()) || "null".equals(recognition.getLabel())) {
-                detectedPosition = "right";
-            } else{
-                tfod.setClippingMargins(0, 150, 410, 0);
-                if("right".equals(recognition.getLabel()) || "left".equals(recognition.getLabel())|| "null".equals(recognition.getLabel())) {
-                    detectedPosition = "left";
-                } else {
-                    detectedPosition = "middle";
-                }
+        Recognition recognition = currentRecognitions.get(currentRecognitions.size() - 1); // todo bug
+        if (recognition.getLabel().equals(null)) {
+            tfod.setClippingMargins(0, 150, 410, 0); // clip to left
+            currentRecognitions = tfod.getRecognitions(); // refresh
+            recognition = currentRecognitions.get(currentRecognitions.size() - 1);
+            if (recognition.getLabel().equals(null)) {
+                detectedPosition = "middle";
+            } else {
+                detectedPosition = "left";
             }
+        } else {
+            detectedPosition = "right";
+        }
 
-            telemetry.addData(""," ");
-            telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100);
-            telemetry.addData("- Position", "%.0f / %.0f", x, y);
-            telemetry.addData("- Size", "%.0f x %.0f", recognition.getWidth(), recognition.getHeight());
-        }   // end for() loop
+        telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100);
+        telemetry.addData("- Size", "%.0f x %.0f", recognition.getWidth(), recognition.getHeight());
         telemetry.addData("Detected Position", detectedPosition);
     }   // end method telemetryTfod()
 
