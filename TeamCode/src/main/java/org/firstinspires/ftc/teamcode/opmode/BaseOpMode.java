@@ -8,7 +8,6 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.hardware.RevIMU;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
@@ -31,6 +30,14 @@ public class BaseOpMode extends CommandOpMode {
     protected RevIMU imu;
     protected MotorEx fL, fR, bL, bR;
     protected Servo lS, rS;
+    //protected String TFOD_MODEL_FILE = "/sdcard/FIRST/tflitemodels/blueprop.tflite";
+//    protected  TfodProcessor tfod;
+//    protected VisionPortal visionPortal;
+    protected String[] LABELS = {
+            "left",
+            "right"
+    };
+
     @Override
     public void initialize() {
         CommandScheduler.getInstance().reset();
@@ -47,6 +54,7 @@ public class BaseOpMode extends CommandOpMode {
         setupHardware();
 
         imu = new RevIMU(hardwareMap);
+        
 //        IMU.Parameters parameters = new IMU.Parameters(
 //                new RevHubOrientationOnRobot(
 //                        RevHubOrientationOnRobot.LogoFacingDirection.LEFT,
@@ -62,18 +70,46 @@ public class BaseOpMode extends CommandOpMode {
 //        imu.init(parameters); //todo: if we switch hub positioning change here
         imu.init();
 
-
-        drive = new MecanumDriveSubsystem(fL, fR, bL, bR, imu);
 //        rrDrive = new SampleMecanumDrive(hardwareMap); todo: rr drive here if needed
 //        rrDrive.setPoseEstimate(new Pose2d(-36, -63, Math.toRadians(-90))); todo
 
-        //Subsystems go here
+        // Subsystems go here
         intake = new IntakeSubsystem(intakeMotor);
         drop = new DropSubsystem(leftSlideMotor, rightSlideMotor, lS, rS);
+        drive = new MecanumDriveSubsystem(fL, fR, bL, bR, imu);
+
+//        initTfod(); // Init Camera
 
         tad("Status", "BaseOpMode Initialized");
         telemetry.update();
     }
+
+//    protected void initTfod() {
+//        tfod = new TfodProcessor.Builder()
+//                .setModelFileName(TFOD_MODEL_FILE)
+//                .setModelLabels(LABELS)
+//                .setIsModelTensorFlow2(true)
+//                .setIsModelQuantized(true)
+//                .setModelInputSize(300)
+//                .setModelAspectRatio(16.0 / 9.0)
+//                .build();
+//
+//        VisionPortal.Builder builder = new VisionPortal.Builder();
+//        builder.setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"));
+//        builder.setCameraResolution(new Size(640, 480));
+//        builder.enableLiveView(true);
+//        // Set the stream format; MJPEG uses less bandwidth than default YUY2.
+//        builder.setStreamFormat(VisionPortal.StreamFormat.MJPEG);
+//        // Choose whether or not LiveView stops if no processors are enabled.
+//        // If set "true", monitor shows solid orange screen if no processors enabled.
+//        // If set "false", monitor shows camera view without annotations.
+//        builder.setAutoStopLiveView(true);
+//        builder.addProcessor(tfod);
+//
+//        visionPortal = builder.build();
+//        tfod.setMinResultConfidence(0.75f);
+//        visionPortal.setProcessorEnabled(tfod, true);
+//    }
 
     protected void initHardware() {
         intakeMotor = hardwareMap.get(DcMotorEx.class, "intake");
