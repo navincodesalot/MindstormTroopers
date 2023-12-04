@@ -8,6 +8,8 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.hardware.RevIMU;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
@@ -55,16 +57,16 @@ public class BaseOpMode extends CommandOpMode {
 
         imu = new RevIMU(hardwareMap);
         
-//        IMU.Parameters parameters = new IMU.Parameters(
-//                new RevHubOrientationOnRobot(
-//                        RevHubOrientationOnRobot.LogoFacingDirection.LEFT,
-//                        RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD
-//                )
-//        );
+//        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters(new RevHubOrientationOnRobot(
+//                RevHubOrientationOnRobot.LogoFacingDirection.LEFT,
+//                RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD
+//        ));
 //        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
 //        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
 //        parameters.loggingEnabled = true;
 //        parameters.loggingTag = "IMU";
+//
+//        imu.init(parameters);
 
 
 //        imu.init(parameters); //todo: if we switch hub positioning change here

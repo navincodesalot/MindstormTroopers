@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmode.auto;
 
+import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
@@ -46,9 +47,10 @@ public class AutoTest extends BaseOpMode {
         // rrDrive.setPoseEstimate(); todo
 
         waitForStart();
-//        schedule(new SequentialCommandGroup( todo (look at powercube's auto)
-//
-//        ));
+
+        schedule(new SequentialCommandGroup( // todo (look at powercube's auto)
+            new InstantCommand(tensorflow::shutdown)
+        ));
     }
     private enum PropLocations {
         LEFT,

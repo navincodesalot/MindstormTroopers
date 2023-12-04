@@ -8,9 +8,11 @@ import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.DPAD_LEFT;
 import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.DPAD_UP;
 import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.LEFT_BUMPER;
 import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.RIGHT_BUMPER;
+import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Trigger.LEFT_TRIGGER;
 import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.X;
 import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.Y;
 
+import org.firstinspires.ftc.teamcode.commands.DriveFieldCommand;
 import org.firstinspires.ftc.teamcode.commands.DropSlide;
 import org.firstinspires.ftc.teamcode.commands.IntakePixel;
 import org.firstinspires.ftc.teamcode.commands.LiftSlide;
@@ -26,14 +28,28 @@ public class CmdOpMode extends BaseOpMode {
         register(intake, drop, drive); // runs the peridoics? (idk)
 
         intake.setDefaultCommand(intake.stop());
-        drive.setDefaultCommand(drive.fieldCentric(gamepadEx1::getLeftX, gamepadEx1::getLeftY, gamepadEx1::getRightX, imu::getHeading)); // by default we're in field centric, we can add slowed modes as well
+
+        DriveFieldCommand DriveFieldCommand = new DriveFieldCommand(
+                drive,
+                drop,
+                () -> gamepadEx1.getLeftX(),
+                () -> gamepadEx1.getLeftY(),
+                () -> gamepadEx1.getRightX(),
+                imu::getHeading,
+                true
+        );
+
+        drive.setDefaultCommand(DriveFieldCommand);
 
         drop.liftServo();
 
         tad("Status", "OpMode Initialized");
         telemetry.update();
 
-        //Keybinds
+        // Keybinds
+        gb1(LEFT_TRIGGER).whileActiveContinuous(
+                drive.slowMode(gamepadEx1::getLeftX, gamepadEx1::getLeftY, gamepadEx1::getRightX)
+        );
         gb1(LEFT_BUMPER).whileHeld(
                 new IntakePixel(intake, drop)
         );
@@ -52,14 +68,26 @@ public class CmdOpMode extends BaseOpMode {
         gb1(B).whenActive(
                 drop.dropRightPixel()
         );
+
+        // Manual commands
+        gb1(A).whenActive(
+                drop.pickupPixel()
+        );
+        gb1(Y).whenActive(
+                drop.liftServo()
+        );
         gb1(DPAD_LEFT).whenActive(
                 drop.slideIdle()
         );
-        gb1(A).whenActive( // incase
+        // Backup commands
+        gb2(A).whenActive(
                 drop.pickupPixel()
         );
-        gb1(Y).whenActive( // incase
+        gb2(Y).whenActive(
                 drop.liftServo()
+        );
+        gb2(DPAD_LEFT).whenActive(
+                drop.slideIdle()
         );
     }
 

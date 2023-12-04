@@ -5,8 +5,8 @@ import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
-
 import org.firstinspires.ftc.teamcode.util.PIDFController;
+import org.firstinspires.ftc.teamcode.util.ServoLocation;
 
 public class DropSubsystem extends SubsystemBase {
     private final DcMotorEx leftSlide;
@@ -48,6 +48,7 @@ public class DropSubsystem extends SubsystemBase {
         return new InstantCommand(()-> {
             leftServo.setPosition(0.455);
             rightServo.setPosition(0.085);
+            ServoLocation.setServoLocation(ServoLocation.ServoLocationState.LIFTED);
         });
     }
 
@@ -55,18 +56,21 @@ public class DropSubsystem extends SubsystemBase {
         return new InstantCommand(()-> {
             leftServo.setPosition(0.5);
             rightServo.setPosition(0.125);
+            ServoLocation.setServoLocation(ServoLocation.ServoLocationState.PICKUP);
         });
     }
 
     public Command dropLeftPixel() { // drop pixels
         return new InstantCommand(()-> {
             rightServo.setPosition(0.53);
+            ServoLocation.setServoLocation(ServoLocation.ServoLocationState.DROP_LEFT);
         });
     }
 
     public Command dropRightPixel() { // drop pixels
         return new InstantCommand(()-> {
             leftServo.setPosition(0.9);
+            ServoLocation.setServoLocation(ServoLocation.ServoLocationState.DROP_RIGHT);
         });
     }
 
