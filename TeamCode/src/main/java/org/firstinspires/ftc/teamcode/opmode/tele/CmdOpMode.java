@@ -9,6 +9,8 @@ import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.DPAD_UP;
 import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.LEFT_BUMPER;
 import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.RIGHT_BUMPER;
 import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.X;
+import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.Y;
+
 import org.firstinspires.ftc.teamcode.commands.DropSlide;
 import org.firstinspires.ftc.teamcode.commands.IntakePixel;
 import org.firstinspires.ftc.teamcode.commands.LiftSlide;
@@ -55,6 +57,9 @@ public class CmdOpMode extends BaseOpMode {
         );
         gb1(A).whenActive( // incase
                 drop.pickupPixel()
+        );
+        gb1(Y).whenActive( // incase
+                drop.liftServo()
         );
     }
 

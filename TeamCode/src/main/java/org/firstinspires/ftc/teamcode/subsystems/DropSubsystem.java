@@ -46,8 +46,8 @@ public class DropSubsystem extends SubsystemBase {
         // for all of this, make dedicated command files with sequentials and as many parallel groups I can
 
         return new InstantCommand(()-> {
-            leftServo.setPosition(0.472);
-            rightServo.setPosition(0.1);
+            leftServo.setPosition(0.455);
+            rightServo.setPosition(0.085);
         });
     }
 

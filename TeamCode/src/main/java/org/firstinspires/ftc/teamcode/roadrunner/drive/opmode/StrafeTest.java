@@ -34,8 +34,8 @@ public class StrafeTest extends LinearOpMode {
         Servo rightServo = hardwareMap.get(Servo.class, "rightServo");
         leftServo.setDirection(Servo.Direction.FORWARD);
         rightServo.setDirection(Servo.Direction.REVERSE);
-        leftServo.setPosition(0.5);
-        rightServo.setPosition(0.125);
+        leftServo.setPosition(0.455);
+        rightServo.setPosition(0.085);
 
         waitForStart();
 
