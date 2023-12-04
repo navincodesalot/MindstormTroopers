@@ -22,17 +22,21 @@ public class AutoTest extends BaseOpMode {
 
         while (opModeInInit()) {
             Recognition bestDetection = tensorflow.getBestDetection();
-            location = PropLocations.RIGHT;
+            location = PropLocations.MIDDLE;
 
             if (bestDetection != null) {
                 double x = (bestDetection.getLeft() + bestDetection.getRight()) / 2;
 
-                if (x < 450) // todo find value
+                if (x < 150) {
+                    location = PropLocations.LEFT;
+                } else if (x > 150 && x < 440) {
                     location = PropLocations.MIDDLE;
-                else location = PropLocations.LEFT;
+                } else {
+                    location = PropLocations.RIGHT;
+                }
             }
 
-            telemetry.addData("FPS", tensorflow.portal.getFps());
+            telemetry.addData("FPS", tensorflow.portal.getFps()); //todo remove tele except loco
             telemetry.addData("Current Location", location.toString());
             telemetry.addData("Confidence", String.format("%.2f%%", bestDetection != null ? bestDetection.getConfidence() * 100 : 0));
             telemetry.update();
