@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.opmode.BaseOpMode;
 import org.firstinspires.ftc.teamcode.subsystems.TensorflowSubsystem;
 
 @Autonomous
-public class AutoTest extends BaseOpMode {
+public class RedAutoTest extends BaseOpMode {
     private PropLocations location;
 
     @Override

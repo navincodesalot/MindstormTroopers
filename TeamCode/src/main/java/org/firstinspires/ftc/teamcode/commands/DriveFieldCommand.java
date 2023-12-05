@@ -30,8 +30,8 @@ public class DriveFieldCommand extends CommandBase {
     @Override
     public void execute() {
         new ConditionalCommand(
-                drive.fieldCentric(strafeSpeed, forwardSpeed, turnSpeed, gyroAngle, clip),
-                new ScheduleCommand(
+                drive.fieldCentric(strafeSpeed, forwardSpeed, turnSpeed, gyroAngle, clip), //if true run this
+                new ScheduleCommand( // else false, run this
                         drop.liftServo(),
                         new WaitCommand(500),
                         drive.fieldCentric(strafeSpeed, forwardSpeed, turnSpeed, gyroAngle, clip)

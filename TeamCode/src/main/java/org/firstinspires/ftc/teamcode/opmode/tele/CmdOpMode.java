@@ -35,7 +35,7 @@ public class CmdOpMode extends BaseOpMode {
                 () -> gamepadEx1.getLeftX(),
                 () -> gamepadEx1.getLeftY(),
                 () -> gamepadEx1.getRightX(),
-                imu::getHeading,
+                imu::getRobotAngularVelocity,
                 true
         );
 

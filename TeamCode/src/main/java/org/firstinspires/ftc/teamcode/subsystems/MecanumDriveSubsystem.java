@@ -6,15 +6,19 @@ import com.arcrobotics.ftclib.drivebase.MecanumDrive;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.hardware.RevIMU;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
+import com.qualcomm.robotcore.hardware.IMU;
+
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.teamcode.roadrunner.rrUtil.AxesSigns;
 
 import java.util.function.DoubleSupplier;
 
 public class MecanumDriveSubsystem extends SubsystemBase {
-    private final RevIMU imu;
+    private final IMU imu;
     private final MecanumDrive drive;
     public double slowFactor = 3; // todo
 
-    public MecanumDriveSubsystem(MotorEx fL, MotorEx fR, MotorEx bL, MotorEx bR, RevIMU imu) {
+    public MecanumDriveSubsystem(MotorEx fL, MotorEx fR, MotorEx bL, MotorEx bR, IMU imu) {
         this.imu = imu;
         fR.setInverted(true);
         bL.setInverted(true);
@@ -36,9 +40,5 @@ public class MecanumDriveSubsystem extends SubsystemBase {
                         turnSpeed.getAsDouble() / slowFactor),
                 this
         );
-    }
-
-    private double getYaw() {
-        return imu.getHeading();
     }
 }

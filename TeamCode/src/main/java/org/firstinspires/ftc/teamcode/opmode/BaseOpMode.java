@@ -8,10 +8,12 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.hardware.RevIMU;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
-import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
+
+import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.MecanumDriveSubsystem;
@@ -29,13 +31,10 @@ public class BaseOpMode extends CommandOpMode {
     protected GamepadEx gamepadEx2;
     protected TriggerGamepadEx triggerGamepadEx1;
     protected TriggerGamepadEx triggerGamepadEx2;
-    protected RevIMU imu;
+    protected IMU imu;
     protected MotorEx fL, fR, bL, bR;
     protected Servo lS, rS;
-    //protected String TFOD_MODEL_FILE = "/sdcard/FIRST/tflitemodels/blueprop.tflite";
-//    protected  TfodProcessor tfod;
-//    protected VisionPortal visionPortal;
-    protected String[] LABELS = {
+    protected String[] LABELS = { // todo: when we train new model
             "left",
             "right"
     };
@@ -55,22 +54,9 @@ public class BaseOpMode extends CommandOpMode {
         initHardware();
         setupHardware();
 
-        imu = new RevIMU(hardwareMap);
-        
-//        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters(new RevHubOrientationOnRobot(
-//                RevHubOrientationOnRobot.LogoFacingDirection.LEFT,
-//                RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD
-//        ));
-//        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-//        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
-//        parameters.loggingEnabled = true;
-//        parameters.loggingTag = "IMU";
-//
-//        imu.init(parameters);
-
-
-//        imu.init(parameters); //todo: if we switch hub positioning change here
-        imu.init();
+        IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
+                DriveConstants.LOGO_FACING_DIR, DriveConstants.USB_FACING_DIR));
+        imu.initialize(parameters);
 
 //        rrDrive = new SampleMecanumDrive(hardwareMap); todo: rr drive here if needed
 //        rrDrive.setPoseEstimate(new Pose2d(-36, -63, Math.toRadians(-90))); todo
@@ -114,6 +100,7 @@ public class BaseOpMode extends CommandOpMode {
 //    }
 
     protected void initHardware() {
+        imu = hardwareMap.get(IMU.class, "imu");
         intakeMotor = hardwareMap.get(DcMotorEx.class, "intake");
         leftSlideMotor = hardwareMap.get(DcMotorEx.class, "leftSlide");
         rightSlideMotor = hardwareMap.get(DcMotorEx.class, "rightSlide");
