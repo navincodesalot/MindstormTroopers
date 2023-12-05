@@ -43,7 +43,7 @@ public class RedAutoTest extends BaseOpMode {
             telemetry.update();
         }
 
-        imu.reset();
+//        imu.reset();
         // rrDrive.setPoseEstimate(); todo
 
         waitForStart();

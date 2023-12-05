@@ -29,17 +29,17 @@ public class CmdOpMode extends BaseOpMode {
 
         intake.setDefaultCommand(intake.stop());
 
-        DriveFieldCommand DriveFieldCommand = new DriveFieldCommand(
-                drive,
-                drop,
-                () -> gamepadEx1.getLeftX(),
-                () -> gamepadEx1.getLeftY(),
-                () -> gamepadEx1.getRightX(),
-                imu::getRobotAngularVelocity,
-                true
-        );
-
-        drive.setDefaultCommand(DriveFieldCommand);
+//        DriveFieldCommand DriveFieldCommand = new DriveFieldCommand(
+//                drive,
+//                drop,
+//                () -> gamepadEx1.getLeftX(),
+//                () -> gamepadEx1.getLeftY(),
+//                () -> gamepadEx1.getRightX(),
+//                imu::getRobotAngularVelocity,
+//                true
+//        );
+//
+//        drive.setDefaultCommand(DriveFieldCommand);
 
         drop.liftServo();
 
