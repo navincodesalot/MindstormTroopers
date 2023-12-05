@@ -11,13 +11,15 @@ import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.RIGHT_BUMPER;
 import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Trigger.LEFT_TRIGGER;
 import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.X;
 import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.Y;
-
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.commands.DriveFieldCommand;
 import org.firstinspires.ftc.teamcode.commands.DropSlide;
 import org.firstinspires.ftc.teamcode.commands.IntakePixel;
 import org.firstinspires.ftc.teamcode.commands.LiftSlide;
 import org.firstinspires.ftc.teamcode.commands.PushPixel;
 import org.firstinspires.ftc.teamcode.opmode.BaseOpMode;
+
+import java.util.function.DoubleSupplier;
 
 @TeleOp(name = "CmdTele Test")
 public class CmdOpMode extends BaseOpMode {
@@ -29,17 +31,17 @@ public class CmdOpMode extends BaseOpMode {
 
         intake.setDefaultCommand(intake.stop());
 
-//        DriveFieldCommand DriveFieldCommand = new DriveFieldCommand(
-//                drive,
-//                drop,
-//                () -> gamepadEx1.getLeftX(),
-//                () -> gamepadEx1.getLeftY(),
-//                () -> gamepadEx1.getRightX(),
-//                imu::getRobotAngularVelocity,
-//                true
-//        );
-//
-//        drive.setDefaultCommand(DriveFieldCommand);
+        DriveFieldCommand DriveFieldCommand = new DriveFieldCommand(
+                drive,
+                drop,
+                () -> gamepadEx1.getLeftX(),
+                () -> gamepadEx1.getLeftY(),
+                () -> gamepadEx1.getRightX(),
+                () -> (double) imu.getRobotAngularVelocity(AngleUnit.RADIANS).yRotationRate,
+                true
+        );
+
+        drive.setDefaultCommand(DriveFieldCommand);
 
         drop.liftServo();
 
