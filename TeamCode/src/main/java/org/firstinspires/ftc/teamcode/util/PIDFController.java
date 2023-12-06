@@ -17,9 +17,9 @@ public class PIDFController {
 
         double pid = controller.calculate(pos, target);
 
-        if (Math.abs(target - pos) < 50) { // todo: if we say go to 1000 ticks, its at 995-1005, it will brake (to save voltage)
-            return 0; // set to brake
-        }
+        // if (Math.abs(target - pos) < 50) { // todo: if we say go to 1000 ticks, its at 995-1005, it will brake (to save voltage)
+            // return 0; // set to brake
+        // }
 
         return pid + f;
     }
