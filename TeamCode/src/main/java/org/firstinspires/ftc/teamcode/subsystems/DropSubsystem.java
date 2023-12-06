@@ -89,7 +89,7 @@ public class DropSubsystem extends SubsystemBase {
 
     public Command slideIdle() {
         return new InstantCommand(()-> {
-            this.target = 0;
+            this.target = 10;
         });
     }
 

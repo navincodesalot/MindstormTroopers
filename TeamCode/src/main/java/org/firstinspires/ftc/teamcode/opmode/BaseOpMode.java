@@ -42,7 +42,6 @@ public class BaseOpMode extends CommandOpMode {
     @Override
     public void initialize() {
         CommandScheduler.getInstance().reset();
-
         tad("Status", "BaseOpMode Initializing");
         telemetry.update();
         gamepadEx1 = new GamepadEx(gamepad1);
@@ -66,38 +65,9 @@ public class BaseOpMode extends CommandOpMode {
         drop = new DropSubsystem(leftSlideMotor, rightSlideMotor, lS, rS);
         drive = new MecanumDriveSubsystem(fL, fR, bL, bR, imu);
 
-//        initTfod(); // Init Camera
-
         tad("Status", "BaseOpMode Initialized");
         telemetry.update();
     }
-
-//    protected void initTfod() {
-//        tfod = new TfodProcessor.Builder()
-//                .setModelFileName(TFOD_MODEL_FILE)
-//                .setModelLabels(LABELS)
-//                .setIsModelTensorFlow2(true)
-//                .setIsModelQuantized(true)
-//                .setModelInputSize(300)
-//                .setModelAspectRatio(16.0 / 9.0)
-//                .build();
-//
-//        VisionPortal.Builder builder = new VisionPortal.Builder();
-//        builder.setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"));
-//        builder.setCameraResolution(new Size(640, 480));
-//        builder.enableLiveView(true);
-//        // Set the stream format; MJPEG uses less bandwidth than default YUY2.
-//        builder.setStreamFormat(VisionPortal.StreamFormat.MJPEG);
-//        // Choose whether or not LiveView stops if no processors are enabled.
-//        // If set "true", monitor shows solid orange screen if no processors enabled.
-//        // If set "false", monitor shows camera view without annotations.
-//        builder.setAutoStopLiveView(true);
-//        builder.addProcessor(tfod);
-//
-//        visionPortal = builder.build();
-//        tfod.setMinResultConfidence(0.75f);
-//        visionPortal.setProcessorEnabled(tfod, true);
-//    }
 
     protected void initHardware() {
         imu = hardwareMap.get(IMU.class, "imu");

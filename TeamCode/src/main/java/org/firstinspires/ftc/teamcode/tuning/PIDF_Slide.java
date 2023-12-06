@@ -17,7 +17,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class PIDF_Slide extends OpMode {
     private PIDController controller;
 
-    public static double p = 0.0044, i = 0.0, d = 0.0, f = 0.02;
+    public static double p = 0.0035, i = 0.0, d = 0.000001, f = 0;
 
     public static int target = 0;
 
@@ -49,7 +49,7 @@ public class PIDF_Slide extends OpMode {
         leftServo.setDirection(Servo.Direction.FORWARD);
         rightServo.setDirection(Servo.Direction.REVERSE);
         leftServo.setPosition(0.5);
-        rightServo.setPosition(0.125);
+        rightServo.setPosition(0.12);
     }
 
     @Override
@@ -70,7 +70,7 @@ public class PIDF_Slide extends OpMode {
     public double returnPower(int pos, int target) {
         controller.setPID(p, i, d);
         double pid = controller.calculate(pos, target);
-        if (Math.abs(target - pos) <= 50 && Math.abs(target - pos) >= 30) { // if we say go to 1000 ticks, its at 995-1005, it will brake (to save voltage)
+        if (Math.abs(target - pos) <= 90 && Math.abs(target - pos) >= 50) { // if we say go to 1000 ticks, its at 995-1005, it will brake (to save voltage)
             return 0; // set to brake
         }
         return pid + f;

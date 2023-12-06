@@ -18,7 +18,7 @@ public class RightRed {
                 .setConstraints(Constraints.MAX_VEL, Constraints.MAX_ACCEL, Constraints.MAX_ANG_VEL,
                         Constraints.MAX_ANG_ACCEL, Constraints.TRACK_WIDTH)
                 .followTrajectorySequence(drive ->
-                        // middle
+                        // middle todo: (12, -70)
                         drive.trajectorySequenceBuilder(new Pose2d(12, -62, Math.toRadians(90)))
                                 .splineTo(new Vector2d(0, -40), Math.toRadians(180))
                                 .waitSeconds(0.3)

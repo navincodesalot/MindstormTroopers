@@ -1,5 +1,9 @@
 package org.firstinspires.ftc.teamcode.opmode.tele;
 
+import com.arcrobotics.ftclib.command.CommandScheduler;
+import com.arcrobotics.ftclib.command.InstantCommand;
+import com.arcrobotics.ftclib.command.SequentialCommandGroup;
+import com.arcrobotics.ftclib.command.WaitCommand;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.A;
 import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.B;
@@ -41,11 +45,11 @@ public class CmdOpMode extends BaseOpMode {
                 true
         );
 
-        drive.setDefaultCommand(DriveFieldCommand);
+        DoubleSupplier imuHead = (() -> (double) imu.getRobotAngularVelocity(AngleUnit.RADIANS).yRotationRate);
 
-        drop.liftServo();
-
+        drive.setDefaultCommand(drive.fieldCentric(gamepadEx1::getLeftX, gamepadEx1::getLeftY, gamepadEx1::getRightX, imuHead, true));
         tad("Status", "OpMode Initialized");
+        tad("imu", imuHead);
         telemetry.update();
 
         // Keybinds
@@ -53,21 +57,25 @@ public class CmdOpMode extends BaseOpMode {
                 drive.slowMode(gamepadEx1::getLeftX, gamepadEx1::getLeftY, gamepadEx1::getRightX)
         );
         gb1(LEFT_BUMPER).whileHeld(
-                new IntakePixel(intake, drop)
+                intake.grab()
         );
         gb1(RIGHT_BUMPER).whileHeld(
-                new PushPixel(intake, drop)
+                intake.push()
         );
-        gb1(DPAD_UP).whenActive(
-                new LiftSlide(drop)
+        gb1(DPAD_UP).whenPressed(
+                new SequentialCommandGroup(
+                        new InstantCommand(drop::pickupPixel),
+                        new WaitCommand(400),
+                        new InstantCommand(drop::slideIdle)
+                )
         );
-        gb1(DPAD_DOWN).whenActive(
-                new DropSlide(drop)
+        gb1(DPAD_DOWN).whenPressed(
+                drop.slideIdle()
         );
-        gb1(X).whenActive(
+        gb1(X).whenPressed(
                 drop.dropLeftPixel()
         );
-        gb1(B).whenActive(
+        gb1(B).whenPressed(
                 drop.dropRightPixel()
         );
 
@@ -91,6 +99,9 @@ public class CmdOpMode extends BaseOpMode {
         gb2(DPAD_LEFT).whenActive(
                 drop.slideIdle()
         );
+        while (opModeInInit()) {
+            drop.liftServo();
+        }
     }
 
     @Override
