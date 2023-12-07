@@ -8,6 +8,7 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -37,17 +38,18 @@ public class BaseOpMode extends CommandOpMode {
             "left",
             "right"
     };
+    private double loopTime = 0.0;
 
     @Override
     public void initialize() {
-        CommandScheduler.getInstance().reset();
-        tad("Status", "BaseOpMode Initializing");
         telemetry.update();
         gamepadEx1 = new GamepadEx(gamepad1);
         gamepadEx2 = new GamepadEx(gamepad2);
 
         triggerGamepadEx1 = new TriggerGamepadEx(gamepad1, gamepadEx1);
         triggerGamepadEx2 = new TriggerGamepadEx(gamepad2, gamepadEx2);
+
+        rrDrive = new SampleMecanumDrive(hardwareMap);
 
         initHardware();
         setupHardware();
@@ -56,14 +58,20 @@ public class BaseOpMode extends CommandOpMode {
                 DriveConstants.LOGO_FACING_DIR, DriveConstants.USB_FACING_DIR));
         imu.initialize(parameters);
 
-        rrDrive = new SampleMecanumDrive(hardwareMap); //todo: rr drive here if needed
-
         // Subsystems go here
         intake = new IntakeSubsystem(intakeMotor);
         drop = new DropSubsystem(leftSlideMotor, rightSlideMotor, lS, rS);
         drive = new MecanumDriveSubsystem(fL, fR, bL, bR, imu);
 
         tad("Status", "BaseOpMode Initialized");
+        telemetry.update();
+    }
+
+    @Override
+    public void run() {
+        double loop = System.nanoTime();
+        tad("hz ", 1000000000 / (loop - loopTime));
+        loopTime = loop;
         telemetry.update();
     }
 
@@ -100,7 +108,7 @@ public class BaseOpMode extends CommandOpMode {
         bR.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         bL.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
 
-//        rrDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rrDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     public GamepadButton gb1(GamepadKeys.Button button) {

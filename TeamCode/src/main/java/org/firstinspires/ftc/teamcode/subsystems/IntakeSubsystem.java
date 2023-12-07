@@ -13,23 +13,17 @@ public class IntakeSubsystem extends SubsystemBase {
         this.intake = intake;
     }
 
-    public Command grab() {
-        return new InstantCommand(()-> {
-            intake.setDirection(DcMotorEx.Direction.REVERSE);
-            intake.setPower(1);
-        });
+    public void grab() {
+        intake.setDirection(DcMotorEx.Direction.REVERSE);
+        intake.setPower(1);
     }
 
-    public Command push() {
-        return new InstantCommand(()-> {
-            intake.setDirection(DcMotorEx.Direction.FORWARD);
-            intake.setPower(1);
-        });
+    public void push() {
+        intake.setDirection(DcMotorEx.Direction.FORWARD);
+        intake.setPower(1);
     }
 
-    public Command stop() {
-        return new RunCommand(()-> {
-            intake.setPower(0);
-        }, this); // the `this` is the intake subsystem as the requirements (only for run commands)
+    public void stop() {
+        intake.setPower(0);
     }
 }

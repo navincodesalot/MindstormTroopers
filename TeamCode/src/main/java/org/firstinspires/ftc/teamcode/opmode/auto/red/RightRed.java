@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmode.auto;
+package org.firstinspires.ftc.teamcode.opmode.auto.red;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.opmode.BaseOpMode;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.TensorflowSubsystem;
+import org.firstinspires.ftc.teamcode.util.PoseStorage;
 
 @Autonomous
 public class RightRed extends BaseOpMode {
@@ -21,11 +22,11 @@ public class RightRed extends BaseOpMode {
 
     @Override
     public void initialize() {
+        CommandScheduler.getInstance().reset();
         super.initialize();
         TensorflowSubsystem tensorflow = new TensorflowSubsystem(hardwareMap, "Webcam 1",
                 "redprop.tflite", LABELS);
 
-        //visionPortal.stopLiveView(); // todo: when in comp
         tensorflow.setMinConfidence(0.75);
 
         while (opModeInInit()) {
@@ -43,16 +44,14 @@ public class RightRed extends BaseOpMode {
                 }
             }
 
-            telemetry.addData("FPS", tensorflow.portal.getFps()); //todo remove tele except loco
+//            telemetry.addData("FPS", tensorflow.portal.getFps()); // remove tele except loco
             telemetry.addData("Current Location", location.toString());
-            telemetry.addData("Confidence", String.format("%.2f%%", bestDetection != null ? bestDetection.getConfidence() * 100 : 0));
+//            telemetry.addData("Confidence", String.format("%.2f%%", bestDetection != null ? bestDetection.getConfidence() * 100 : 0));
             telemetry.update();
         }
 
 //        imu.reset(); todo
         // TODO: trajs go here
-        drop.liftServo();
-
         Pose2d rightRedStartPos = new Pose2d(12, -70, Math.toRadians(90));
         rrDrive.setPoseEstimate(rightRedStartPos);
 
@@ -60,19 +59,21 @@ public class RightRed extends BaseOpMode {
                 .lineToSplineHeading(new Pose2d(12, -35.5, Math.toRadians(90)),
                         SampleMecanumDrive.getVelocityConstraint(17, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
-// todo: strafe 1 inch over before park before spline curve
+                // todo: strafe 1 inch over before park before spline curve
                 .build();
 
-//        drop.liftServo();
+        drop.liftServo();
 
         waitForStart();
-
         CommandScheduler.getInstance().schedule(new SequentialCommandGroup(
             new InstantCommand(tensorflow::shutdown),
             new InstantCommand(() -> rrDrive.followTrajectory(dropMiddle))
+
         ));
 
+        PoseStorage.currentPose = rrDrive.getPoseEstimate(); //send pose to tele
     }
+
     private enum PropLocations {
         LEFT,
         MIDDLE,

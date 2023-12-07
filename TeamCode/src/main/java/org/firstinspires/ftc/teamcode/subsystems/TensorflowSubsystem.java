@@ -35,7 +35,7 @@ public class TensorflowSubsystem extends SubsystemBase {
         portal = new VisionPortal.Builder()
                 .setCamera(hardwareMap.get(WebcamName.class, cameraName))
                 .setCameraResolution(new Size(640, 480))
-                .enableLiveView(true) // todo: for now
+                .enableLiveView(false) // todo: for now
                 .addProcessor(tensorflowProcessor)
                 .setAutoStopLiveView(true)
                 .build();

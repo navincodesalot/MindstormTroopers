@@ -13,6 +13,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
 
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.TwoWheelTrackingLocalizer;
+import org.firstinspires.ftc.teamcode.util.PoseStorage;
 
 
 @TeleOp(name = "W TELE")
@@ -34,7 +35,7 @@ public class tele extends LinearOpMode {
 //        PhotonCore.enable();
         SampleMecanumDrive drive = new SampleMecanumDrive(true, hardwareMap);
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-//        drive.setPoseEstimate(PoseStorage.currentPose);
+        drive.setPoseEstimate(PoseStorage.currentPose);
         intake = hardwareMap.get(DcMotorEx.class, "intake");
 
         waitForStart();

@@ -25,20 +25,14 @@ public class MecanumDriveSubsystem extends SubsystemBase {
         drive = new MecanumDrive(false, fL, fR, bL, bR);
     }
 
-    public Command fieldCentric(DoubleSupplier strafeSpeed, DoubleSupplier forwardSpeed, DoubleSupplier turnSpeed, DoubleSupplier gyroAngle, boolean clip) {
-        return new RunCommand(
-                () -> drive.driveFieldCentric(strafeSpeed.getAsDouble(), forwardSpeed.getAsDouble(),
-                        turnSpeed.getAsDouble(), gyroAngle.getAsDouble(), clip),
-                this
-        );
+    public void fieldCentric(DoubleSupplier strafeSpeed, DoubleSupplier forwardSpeed, DoubleSupplier turnSpeed, DoubleSupplier gyroAngle, boolean clip) {
+        drive.driveFieldCentric(strafeSpeed.getAsDouble(), forwardSpeed.getAsDouble(),
+                turnSpeed.getAsDouble(), gyroAngle.getAsDouble(), clip);
     }
 
-    public Command slowMode(DoubleSupplier strafeSpeed, DoubleSupplier forwardSpeed, DoubleSupplier turnSpeed) {
-        return new RunCommand(
-                () -> drive.driveRobotCentric(strafeSpeed.getAsDouble() / slowFactor,
-                        forwardSpeed.getAsDouble() / slowFactor,
-                        turnSpeed.getAsDouble() / slowFactor),
-                this
-        );
+    public void slowMode(DoubleSupplier strafeSpeed, DoubleSupplier forwardSpeed, DoubleSupplier turnSpeed) {
+        drive.driveRobotCentric(strafeSpeed.getAsDouble() / slowFactor,
+                forwardSpeed.getAsDouble() / slowFactor,
+                turnSpeed.getAsDouble() / slowFactor);
     }
 }
