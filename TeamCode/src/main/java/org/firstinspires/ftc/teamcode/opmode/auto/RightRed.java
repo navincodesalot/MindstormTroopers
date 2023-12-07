@@ -51,7 +51,7 @@ public class RightRed extends BaseOpMode {
 
 //        imu.reset(); todo
         // TODO: trajs go here
-        servos.liftServo();
+        drop.liftServo();
 
         Pose2d rightRedStartPos = new Pose2d(12, -70, Math.toRadians(90));
         rrDrive.setPoseEstimate(rightRedStartPos);

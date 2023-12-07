@@ -14,20 +14,18 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.subsystems.DropSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.MecanumDriveSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.ServoSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.SlideSubsystem;
 import org.firstinspires.ftc.teamcode.util.GamepadTrigger;
 import org.firstinspires.ftc.teamcode.util.TriggerGamepadEx;
 
 public class BaseOpMode extends CommandOpMode {
     protected DcMotorEx intakeMotor, leftSlideMotor, rightSlideMotor;
     protected IntakeSubsystem intake;
-    protected SlideSubsystem slide;
+    protected DropSubsystem drop;
     protected MecanumDriveSubsystem drive;
     protected SampleMecanumDrive rrDrive;
-    protected ServoSubsystem servos;
     protected GamepadEx gamepadEx1;
     protected GamepadEx gamepadEx2;
     protected TriggerGamepadEx triggerGamepadEx1;
@@ -62,8 +60,7 @@ public class BaseOpMode extends CommandOpMode {
 
         // Subsystems go here
         intake = new IntakeSubsystem(intakeMotor);
-        slide = new SlideSubsystem(leftSlideMotor, rightSlideMotor);
-        servos = new ServoSubsystem(lS, rS);
+        drop = new DropSubsystem(leftSlideMotor, rightSlideMotor, lS, rS);
         drive = new MecanumDriveSubsystem(fL, fR, bL, bR, imu);
 
         tad("Status", "BaseOpMode Initialized");
