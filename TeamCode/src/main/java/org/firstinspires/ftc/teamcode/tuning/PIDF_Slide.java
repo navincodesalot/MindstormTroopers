@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.tuning;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.arcrobotics.ftclib.controller.PDController;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.arcrobotics.ftclib.controller.PIDFController;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -15,9 +16,9 @@ import com.qualcomm.robotcore.hardware.Servo;
 @Config
 @TeleOp(name = "Tune Slide PIDF")
 public class PIDF_Slide extends OpMode {
-    private PIDController controller;
+    private PDController controller;
 
-    public static double p = 0.0035, i = 0.0, d = 0.000001, f = 0;
+    public static double p = 0.005, i = 0.0, d = 0.000001, f = 0;
 
     public static int target = 0;
 
@@ -28,7 +29,7 @@ public class PIDF_Slide extends OpMode {
 
     @Override
     public void init() {
-        controller = new PIDController(p, i , d);
+        controller = new PDController(p , d);
         telemetry = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
 
         rightSlide = hardwareMap.get(DcMotorEx.class, "rightSlide");

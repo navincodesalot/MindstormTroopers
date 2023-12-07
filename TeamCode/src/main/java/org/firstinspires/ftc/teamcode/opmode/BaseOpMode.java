@@ -5,7 +5,6 @@ import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.button.GamepadButton;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
-import com.arcrobotics.ftclib.hardware.RevIMU;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
@@ -17,16 +16,18 @@ import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.MecanumDriveSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.DropSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.ServoSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.SlideSubsystem;
 import org.firstinspires.ftc.teamcode.util.GamepadTrigger;
 import org.firstinspires.ftc.teamcode.util.TriggerGamepadEx;
 
 public class BaseOpMode extends CommandOpMode {
     protected DcMotorEx intakeMotor, leftSlideMotor, rightSlideMotor;
     protected IntakeSubsystem intake;
-    protected DropSubsystem drop;
+    protected SlideSubsystem slide;
     protected MecanumDriveSubsystem drive;
     protected SampleMecanumDrive rrDrive;
+    protected ServoSubsystem servos;
     protected GamepadEx gamepadEx1;
     protected GamepadEx gamepadEx2;
     protected TriggerGamepadEx triggerGamepadEx1;
@@ -57,12 +58,12 @@ public class BaseOpMode extends CommandOpMode {
                 DriveConstants.LOGO_FACING_DIR, DriveConstants.USB_FACING_DIR));
         imu.initialize(parameters);
 
-//        rrDrive = new SampleMecanumDrive(hardwareMap); todo: rr drive here if needed
-//        rrDrive.setPoseEstimate(new Pose2d(-36, -63, Math.toRadians(-90))); todo
+        rrDrive = new SampleMecanumDrive(hardwareMap); //todo: rr drive here if needed
 
         // Subsystems go here
         intake = new IntakeSubsystem(intakeMotor);
-        drop = new DropSubsystem(leftSlideMotor, rightSlideMotor, lS, rS);
+        slide = new SlideSubsystem(leftSlideMotor, rightSlideMotor);
+        servos = new ServoSubsystem(lS, rS);
         drive = new MecanumDriveSubsystem(fL, fR, bL, bR, imu);
 
         tad("Status", "BaseOpMode Initialized");
@@ -101,6 +102,8 @@ public class BaseOpMode extends CommandOpMode {
         fL.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         bR.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         bL.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+
+//        rrDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     public GamepadButton gb1(GamepadKeys.Button button) {
