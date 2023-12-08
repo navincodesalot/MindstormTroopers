@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.opmode.auto.red;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.arcrobotics.ftclib.command.Command;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.InstantCommand;
@@ -32,6 +33,7 @@ public class RightRed extends BaseOpMode {
                 "redprop.tflite", LABELS);
 
         tensorflow.setMinConfidence(0.75);
+        register(drop, intake);
 
         while (opModeInInit()) {
             Recognition bestDetection = tensorflow.getBestDetection();
@@ -52,10 +54,13 @@ public class RightRed extends BaseOpMode {
             telemetry.addData("Current Location", location.toString());
 //            telemetry.addData("Confidence", String.format("%.2f%%", bestDetection != null ? bestDetection.getConfidence() * 100 : 0));
             telemetry.update();
+
+            // On init
+            drop.liftServo();
         }
 
 //        imu.reset(); todo
-        Pose2d rightRedStartPos = new Pose2d(12, -70, Math.toRadians(90));
+        Pose2d rightRedStartPos = new Pose2d(12, -66, Math.toRadians(90));
         rrDrive.setPoseEstimate(rightRedStartPos);
 
         // Drop ground pixel (todo: wait 0.3 after)
@@ -65,7 +70,7 @@ public class RightRed extends BaseOpMode {
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
         TrajectorySequence dropMiddle = rrDrive.trajectorySequenceBuilder(rightRedStartPos) // what does reversed do
-                .lineToSplineHeading(new Pose2d(12, -35.5, Math.toRadians(90)),
+                .lineToSplineHeading(new Pose2d(12, -32, Math.toRadians(90)),
                         SampleMecanumDrive.getVelocityConstraint(17, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
@@ -112,90 +117,87 @@ public class RightRed extends BaseOpMode {
                 .splineToLinearHeading(new Pose2d(59, -60, Math.toRadians(180)), Math.toRadians(0))
                 .build();
 
-        // On init
-        drop.liftServo();
-
         waitForStart();
 
         CommandScheduler.getInstance().schedule(new SequentialCommandGroup(
                 // todo: do i need to make all async as im always updating slides? (or only when they lift)?
-                new InstantCommand(tensorflow::shutdown),
-                // drop ground pixel
-                new SelectCommand(
-                        new HashMap<Object, Command>() {{
-                            put(PropLocations.LEFT, new InstantCommand(() -> rrDrive.followTrajectorySequence(dropLeft)));
-                            put(PropLocations.MIDDLE, new InstantCommand(() -> rrDrive.followTrajectorySequence(dropMiddle)));
-                            put(PropLocations.RIGHT, new InstantCommand(() -> rrDrive.followTrajectorySequence(dropRight)));
-                        }},
-                        () -> location
-                ),
-
-                // reset
+//                new InstantCommand(tensorflow::shutdown), todo
+//                 drop ground pixel
+//                new SelectCommand(
+//                        new HashMap<Object, Command>() {{
+//                            put(PropLocations.LEFT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropLeft)));
+//                            put(PropLocations.MIDDLE, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropMiddle)));
+//                            put(PropLocations.RIGHT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropRight)));
+//                        }},
+//                        () -> location
+//                ),
+//
+//                // reset
                 new InstantCommand(drop::pickupPixel),
                 new WaitCommand(500),
-                new RunCommand(intake::push).raceWith(new WaitCommand(750)), // run for 1 sec
-                new InstantCommand(drop::liftServo),
-                new WaitCommand(500),
-
-                // move away (not for left)
-                new SelectCommand(
-                        new HashMap<Object, Command>() {{
-                            put(PropLocations.MIDDLE, new InstantCommand(() -> rrDrive.followTrajectorySequence(moveAwayMiddle)));
-                            put(PropLocations.RIGHT, new InstantCommand(() -> rrDrive.followTrajectorySequence(moveAwayRight)));
-                        }},
-                        () -> location
-                ),
-
-                // lift servos at right time
-                new InstantCommand(() -> drop.slideGoTo(150)), // lift slides a little bit so servos don't hit
-                new WaitCommand(500),
-                new InstantCommand(drop::pickupPixel),
-                new WaitCommand(500), // wait before driving again
-
-                // go to backdrop and lift slides
-                new ParallelCommandGroup(
-                        // go to backdrop
-                        new SelectCommand(
-                                new HashMap<Object, Command>() {{
-                                    put(PropLocations.LEFT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropToBackdropLeft)));
-                                    put(PropLocations.MIDDLE, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropToBackdropMiddle)));
-                                    put(PropLocations.RIGHT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropToBackdropRight)));
-                                }},
-                                () -> location
-                        ),
-
-                        // lift slides
-                        new InstantCommand(drop::slideLift)
-                ),// slides should be up by the time the traj ends
-
-                // drop pixel
-                new ParallelCommandGroup(
-                        new InstantCommand(drop::dropLeftPixel),
-                        new InstantCommand(drop::dropRightPixel)
-                ),
-                new WaitCommand(750),
-                // reset servos and stagger the slide down
-                new InstantCommand(drop::pickupPixel),
-                new WaitCommand(500),
-                new InstantCommand(() -> drop.slideGoTo(500)),
-                new WaitCommand(1000),
-                new InstantCommand(drop::slideIdle),
-                new WaitCommand(750),
-
-                // lift for drive
-                new InstantCommand(drop::liftServo),
-                new WaitCommand(500),
-
-                // park
-                new SelectCommand(
-                        new HashMap<Object, Command>() {{
-                            put(PropLocations.LEFT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(parkLeft)));
-                            put(PropLocations.MIDDLE, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(parkMiddle)));
-                            put(PropLocations.RIGHT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(parkRight)));
-                        }},
-                        () -> location
-                )
-
+                new InstantCommand(drop::slideLift)
+//                new RunCommand(intake::pushSlow, intake).raceWith(new WaitCommand(2000)) // run for 1 sec
+//                new InstantCommand(drop::liftServo),
+//                new WaitCommand(500),
+//
+//                // move away (not for left)
+//                new SelectCommand(
+//                        new HashMap<Object, Command>() {{
+//                            put(PropLocations.MIDDLE, new InstantCommand(() -> rrDrive.followTrajectorySequence(moveAwayMiddle)));
+//                            put(PropLocations.RIGHT, new InstantCommand(() -> rrDrive.followTrajectorySequence(moveAwayRight)));
+//                        }},
+//                        () -> location
+//                ),
+//
+//                // lift servos at right time
+//                new InstantCommand(() -> drop.slideGoTo(150)), // lift slides a little bit so servos don't hit
+//                new WaitCommand(500),
+//                new InstantCommand(drop::pickupPixel),
+//                new WaitCommand(500), // wait before driving again
+//
+//                // go to backdrop and lift slides
+//                new ParallelCommandGroup(
+//                        // go to backdrop
+//                        new SelectCommand(
+//                                new HashMap<Object, Command>() {{
+//                                    put(PropLocations.LEFT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropToBackdropLeft)));
+//                                    put(PropLocations.MIDDLE, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropToBackdropMiddle)));
+//                                    put(PropLocations.RIGHT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropToBackdropRight)));
+//                                }},
+//                                () -> location
+//                        ),
+//
+//                        // lift slides
+//                        new InstantCommand(drop::slideLift)
+//                ),// slides should be up by the time the traj ends
+//
+//                // drop pixel
+//                new ParallelCommandGroup(
+//                        new InstantCommand(drop::dropLeftPixel),
+//                        new InstantCommand(drop::dropRightPixel)
+//                ),
+//                new WaitCommand(750),
+//                // reset servos and stagger the slide down
+//                new InstantCommand(drop::pickupPixel),
+//                new WaitCommand(500),
+//                new InstantCommand(() -> drop.slideGoTo(500)),
+//                new WaitCommand(1000),
+//                new InstantCommand(drop::slideIdle),
+//                new WaitCommand(750),
+//
+//                // lift for drive
+//                new InstantCommand(drop::liftServo),
+//                new WaitCommand(500),
+//
+//                // park
+//                new SelectCommand(
+//                        new HashMap<Object, Command>() {{
+//                            put(PropLocations.LEFT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(parkLeft)));
+//                            put(PropLocations.MIDDLE, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(parkMiddle)));
+//                            put(PropLocations.RIGHT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(parkRight)));
+//                        }},
+//                        () -> location
+//                )
         ));
 
         PoseStorage.currentPose = rrDrive.getPoseEstimate(); //send pose to tele
