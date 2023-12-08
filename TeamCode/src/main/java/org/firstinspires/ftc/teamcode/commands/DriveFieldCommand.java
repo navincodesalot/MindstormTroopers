@@ -39,5 +39,6 @@ public class DriveFieldCommand extends SequentialCommandGroup {
                     () -> (ServoLocation.getServoLocation() == ServoLocation.ServoLocationState.LIFTED)
             )
         );
+        addRequirements(drive, drop);
     }
 }

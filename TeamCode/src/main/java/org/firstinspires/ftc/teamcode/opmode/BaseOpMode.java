@@ -43,12 +43,6 @@ public class BaseOpMode extends CommandOpMode {
     @Override
     public void initialize() {
         telemetry.update();
-        gamepadEx1 = new GamepadEx(gamepad1);
-        gamepadEx2 = new GamepadEx(gamepad2);
-
-        triggerGamepadEx1 = new TriggerGamepadEx(gamepad1, gamepadEx1);
-        triggerGamepadEx2 = new TriggerGamepadEx(gamepad2, gamepadEx2);
-
         rrDrive = new SampleMecanumDrive(hardwareMap);
 
         initHardware();
@@ -72,7 +66,6 @@ public class BaseOpMode extends CommandOpMode {
         double loop = System.nanoTime();
         tad("hz ", 1000000000 / (loop - loopTime));
         loopTime = loop;
-        telemetry.update();
     }
 
     protected void initHardware() {

@@ -37,47 +37,48 @@ public class CmdOpMode extends BaseOpMode {
         DoubleSupplier imuHead = (() -> (double) imu.getRobotAngularVelocity(AngleUnit.RADIANS).yRotationRate);
 
         intake.setDefaultCommand(new RunCommand(intake::stop, intake)); // pass intake subsystem as the requirements (only for run commands??? i think)
-        drive.setDefaultCommand(new DriveFieldCommand( // todo: do we need to schedule() it?
-                drive,
-                drop,
-                gamepadEx1::getLeftX,
-                gamepadEx1::getLeftY,
-                gamepadEx1::getRightX,
-                imuHead,
-                true
-        ));
+//        DriveFieldCommand d = new DriveFieldCommand( // todo: do we need to schedule() it?
+//                drive,
+//                drop,
+//                gamepadEx1::getLeftX,
+//                gamepadEx1::getLeftY,
+//                gamepadEx1::getRightX,
+//                imuHead,
+//                true
+//        );
+//        drive.setDefaultCommand(d);
 
         tad("Status", "OpMode Initialized");
         tad("imu", imuHead);
         telemetry.update();
 
         // Keybinds
-        gb1(LEFT_TRIGGER).whileActiveContinuous(
-                () -> schedule(new RunCommand(
-                        () -> drive.slowMode(
-                                gamepadEx1::getLeftX,
-                                gamepadEx1::getLeftY,
-                                gamepadEx1::getRightX
-                        )
-                )
-        ));
-        gb1(LEFT_BUMPER).whileHeld(
-                () -> schedule(new InstantCommand(intake::grab)) //todo: check with kookys, if this doesn't work
+//        gb1(LEFT_TRIGGER).whileActiveContinuous(
+//                () -> schedule(new RunCommand(
+//                        () -> drive.slowMode(
+//                                gamepadEx1::getLeftX,
+//                                gamepadEx1::getLeftY,
+//                                gamepadEx1::getRightX
+//                        )
+//                )
+//        ));
+        gb1(LEFT_BUMPER).whenPressed(
+                () -> schedule(new RunCommand(intake::grab)) //todo: check with kookys, if this doesn't work
         );
         gb1(RIGHT_BUMPER).whileHeld(
-                () -> schedule(new InstantCommand(intake::push))
+                () -> schedule(new RunCommand(intake::push))
         );
-        gb1(DPAD_UP).whenActive(
-                () -> schedule(new InstantCommand(drop::slideLift))
+        gb1(DPAD_UP).whenPressed(
+                drop::slideLift
         );
-        gb1(DPAD_DOWN).whenActive(
-                () -> schedule(new InstantCommand(drop::slideIdle))
+        gb1(DPAD_DOWN).whenPressed(
+                drop::slideIdle
         );
-        gb1(DPAD_LEFT).whenActive(
-                () -> schedule(new InstantCommand(drop::slideMiddle))
+        gb1(DPAD_LEFT).whenPressed(
+                drop::slideMiddle
         );
         gb1(X).whenPressed(
-                () -> schedule(new InstantCommand(drop::dropLeftPixel))
+                new InstantCommand(drop::dropLeftPixel)
         );
         gb1(B).whenPressed(
                 () -> schedule(new InstantCommand(drop::dropRightPixel))
@@ -107,6 +108,6 @@ public class CmdOpMode extends BaseOpMode {
         super.run();
         tad("left slide pos", leftSlideMotor.getCurrentPosition());
         telemetry.update();
-        // rrDrive.update() would go here
+        // rrDrive.update() would go here with tele automation
     }
 }
