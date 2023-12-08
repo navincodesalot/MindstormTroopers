@@ -34,7 +34,7 @@ public class CmdOpMode extends BaseOpMode {
         TriggerGamepadEx t1 = new TriggerGamepadEx(gamepad1, driver1);
 
         // Set Default Commands for each op mode (more intuitive)
-        register(intake, drop, drive); // runs the peridoics? (idk)
+        register(intake, drop, drive); // runs the periodics? (idk)
 
         rrDrive.setPoseEstimate(PoseStorage.currentPose); // grab pose from auto
         intake.setDefaultCommand(new RunCommand(intake::stop, intake)); // pass intake subsystem as the requirements (only for run commands??? i think)
