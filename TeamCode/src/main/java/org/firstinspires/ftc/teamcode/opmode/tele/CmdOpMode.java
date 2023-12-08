@@ -4,6 +4,7 @@ import com.acmerobotics.roadrunner.drive.Drive;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.arcrobotics.ftclib.command.CommandScheduler;
+import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.RunCommand;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -12,6 +13,7 @@ import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.B;
 import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.DPAD_DOWN;
 import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.DPAD_LEFT;
 import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.DPAD_UP;
+import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.LEFT_BUMPER;
 import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.RIGHT_BUMPER;
 import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Trigger.LEFT_TRIGGER;
 import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.X;
@@ -48,44 +50,44 @@ public class CmdOpMode extends BaseOpMode {
         t1.getGamepadTrigger(LEFT_TRIGGER).whileActiveContinuous(
                 new DriveSlowCommand(drive, rrDrive, driver1, rrDrive.getPoseEstimate())
         );
-        driver1.getGamepadButton(DPAD_UP).whenPressed(
+        driver1.getGamepadButton(LEFT_BUMPER).whileHeld(
                 new RunCommand(intake::grab, intake) //todo: check with kookys, if this doesn't work
         );
         driver1.getGamepadButton(RIGHT_BUMPER).whileHeld(
                 new RunCommand(intake::push, intake)
         );
         driver1.getGamepadButton(DPAD_UP).whenPressed(
-                drop::slideLift
+                new InstantCommand(drop::slideLift)
         );
         driver1.getGamepadButton(DPAD_DOWN).whenPressed(
-                drop::slideIdle
+                new InstantCommand(drop::slideIdle)
         );
         driver1.getGamepadButton(DPAD_LEFT).whenPressed(
-                drop::slideMiddle
+                new InstantCommand(drop::slideMiddle)
         );
         driver1.getGamepadButton(X).whenPressed(
-                drop::dropLeftPixel
+                new InstantCommand(drop::dropLeftPixel)
         );
         driver1.getGamepadButton(B).whenPressed(
-                drop::dropRightPixel
+                new InstantCommand(drop::dropRightPixel)
         );
 
         //todo make a drop for both?
 
         // Manual commands
         driver1.getGamepadButton(A).whenPressed(
-                drop::pickupPixel
+                new InstantCommand(drop::pickupPixel)
         );
         driver1.getGamepadButton(Y).whenPressed(
-               drop::liftServo
+                new InstantCommand(drop::liftServo)
         );
 
         // Backup commands
         driver2.getGamepadButton(A).whenPressed(
-                drop::pickupPixel
+                new InstantCommand(drop::pickupPixel)
         );
         driver2.getGamepadButton(Y).whenPressed(
-                drop::liftServo
+                new InstantCommand(drop::liftServo)
         );
     }
 

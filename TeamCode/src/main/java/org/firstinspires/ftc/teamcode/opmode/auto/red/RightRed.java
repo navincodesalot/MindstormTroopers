@@ -33,7 +33,7 @@ public class RightRed extends BaseOpMode {
                 "redprop.tflite", LABELS);
 
         tensorflow.setMinConfidence(0.75);
-        register(drop, intake);
+//        register(drop, intake);
 
         while (opModeInInit()) {
             Recognition bestDetection = tensorflow.getBestDetection();
@@ -56,7 +56,12 @@ public class RightRed extends BaseOpMode {
             telemetry.update();
 
             // On init
-            drop.liftServo();
+//            drop.liftServo();
+
+        }
+
+        if (opModeInInit()) {
+            drop.liftServo(); // should be working in init
         }
 
 //        imu.reset(); todo
@@ -154,7 +159,7 @@ public class RightRed extends BaseOpMode {
 //                new WaitCommand(500), // wait before driving again
 //
 //                // go to backdrop and lift slides
-//                new ParallelCommandGroup(
+                new ParallelCommandGroup(
                         // go to backdrop
                         new SelectCommand(
                                 new HashMap<Object, Command>() {{
@@ -163,11 +168,11 @@ public class RightRed extends BaseOpMode {
                                     put(PropLocations.RIGHT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropToBackdropRight)));
                                 }},
                                 () -> location
-                        )
+                        ),
 
                         // lift slides
-//                        new InstantCommand(drop::slideLift)
-                //)// slides should be up by the time the traj ends
+                        new InstantCommand(drop::slideLift)
+                )// slides should be up by the time the traj ends
 //
 //                // drop pixel
 //                new ParallelCommandGroup(
