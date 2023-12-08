@@ -82,7 +82,7 @@ public class RightRed extends BaseOpMode {
 
         // Move away (not needed for left)
         TrajectorySequence moveAwayMiddle = rrDrive.trajectorySequenceBuilder(dropMiddle.end())
-                .lineTo(new Vector2d(12, -40))
+                .lineTo(new Vector2d(12, -43))
                 .build();
         TrajectorySequence moveAwayRight = rrDrive.trajectorySequenceBuilder(dropRight.end())
                 .back(2)
@@ -123,31 +123,29 @@ public class RightRed extends BaseOpMode {
                 // todo: do i need to make all async as im always updating slides? (or only when they lift)?
 //                new InstantCommand(tensorflow::shutdown), todo
 //                 drop ground pixel
-//                new SelectCommand(
-//                        new HashMap<Object, Command>() {{
-//                            put(PropLocations.LEFT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropLeft)));
-//                            put(PropLocations.MIDDLE, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropMiddle)));
-//                            put(PropLocations.RIGHT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropRight)));
-//                        }},
-//                        () -> location
-//                ),
+                new SelectCommand(
+                        new HashMap<Object, Command>() {{
+                            put(PropLocations.LEFT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropLeft)));
+                            put(PropLocations.MIDDLE, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropMiddle)));
+                            put(PropLocations.RIGHT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropRight)));
+                        }},
+                        () -> location
+                ),
 //
 //                // reset
-                new InstantCommand(drop::pickupPixel),
-                new WaitCommand(500),
-                new InstantCommand(drop::slideLift)
+//                new InstantCommand(drop::pickupPixel),
 //                new RunCommand(intake::pushSlow, intake).raceWith(new WaitCommand(2000)) // run for 1 sec
 //                new InstantCommand(drop::liftServo),
 //                new WaitCommand(500),
 //
 //                // move away (not for left)
-//                new SelectCommand(
-//                        new HashMap<Object, Command>() {{
-//                            put(PropLocations.MIDDLE, new InstantCommand(() -> rrDrive.followTrajectorySequence(moveAwayMiddle)));
-//                            put(PropLocations.RIGHT, new InstantCommand(() -> rrDrive.followTrajectorySequence(moveAwayRight)));
-//                        }},
-//                        () -> location
-//                ),
+                new SelectCommand(
+                        new HashMap<Object, Command>() {{
+                            put(PropLocations.MIDDLE, new InstantCommand(() -> rrDrive.followTrajectorySequence(moveAwayMiddle)));
+                            put(PropLocations.RIGHT, new InstantCommand(() -> rrDrive.followTrajectorySequence(moveAwayRight)));
+                        }},
+                        () -> location
+                ),
 //
 //                // lift servos at right time
 //                new InstantCommand(() -> drop.slideGoTo(150)), // lift slides a little bit so servos don't hit
@@ -157,19 +155,19 @@ public class RightRed extends BaseOpMode {
 //
 //                // go to backdrop and lift slides
 //                new ParallelCommandGroup(
-//                        // go to backdrop
-//                        new SelectCommand(
-//                                new HashMap<Object, Command>() {{
-//                                    put(PropLocations.LEFT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropToBackdropLeft)));
-//                                    put(PropLocations.MIDDLE, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropToBackdropMiddle)));
-//                                    put(PropLocations.RIGHT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropToBackdropRight)));
-//                                }},
-//                                () -> location
-//                        ),
-//
-//                        // lift slides
+                        // go to backdrop
+                        new SelectCommand(
+                                new HashMap<Object, Command>() {{
+                                    put(PropLocations.LEFT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropToBackdropLeft)));
+                                    put(PropLocations.MIDDLE, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropToBackdropMiddle)));
+                                    put(PropLocations.RIGHT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropToBackdropRight)));
+                                }},
+                                () -> location
+                        )
+
+                        // lift slides
 //                        new InstantCommand(drop::slideLift)
-//                ),// slides should be up by the time the traj ends
+                //)// slides should be up by the time the traj ends
 //
 //                // drop pixel
 //                new ParallelCommandGroup(
