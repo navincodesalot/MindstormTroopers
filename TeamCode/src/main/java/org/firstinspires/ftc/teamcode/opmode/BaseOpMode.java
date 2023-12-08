@@ -27,10 +27,6 @@ public class BaseOpMode extends CommandOpMode {
     protected DropSubsystem drop;
     protected MecanumDriveSubsystem drive;
     protected SampleMecanumDrive rrDrive;
-    protected GamepadEx gamepadEx1;
-    protected GamepadEx gamepadEx2;
-    protected TriggerGamepadEx triggerGamepadEx1;
-    protected TriggerGamepadEx triggerGamepadEx2;
     protected IMU imu;
     protected MotorEx fL, fR, bL, bR;
     protected Servo lS, rS;
@@ -102,22 +98,6 @@ public class BaseOpMode extends CommandOpMode {
         bL.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
 
         rrDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-    }
-
-    public GamepadButton gb1(GamepadKeys.Button button) {
-        return gamepadEx1.getGamepadButton(button);
-    }
-
-    public GamepadButton gb2(GamepadKeys.Button button) {
-        return gamepadEx2.getGamepadButton(button);
-    }
-
-    public GamepadTrigger gb1(GamepadKeys.Trigger trigger) {
-        return triggerGamepadEx1.getGamepadTrigger(trigger);
-    }
-
-    public GamepadTrigger gb2(GamepadKeys.Trigger trigger) {
-        return triggerGamepadEx1.getGamepadTrigger(trigger);
     }
 
     // telemetry add data = tad

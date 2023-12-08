@@ -1,27 +1,27 @@
 package org.firstinspires.ftc.teamcode.opmode.tele;
 
+import com.acmerobotics.roadrunner.drive.Drive;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.arcrobotics.ftclib.command.CommandScheduler;
-import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.RunCommand;
-import com.arcrobotics.ftclib.command.SequentialCommandGroup;
-import com.arcrobotics.ftclib.command.WaitCommand;
+import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.A;
 import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.B;
 import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.DPAD_DOWN;
 import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.DPAD_LEFT;
 import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.DPAD_UP;
-import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.LEFT_BUMPER;
 import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.RIGHT_BUMPER;
 import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Trigger.LEFT_TRIGGER;
 import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.X;
 import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.Y;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.teamcode.commands.DriveFieldCommand;
+
+import org.firstinspires.ftc.teamcode.commands.DriveCommand;
+import org.firstinspires.ftc.teamcode.commands.DriveSlowCommand;
 import org.firstinspires.ftc.teamcode.opmode.BaseOpMode;
 import org.firstinspires.ftc.teamcode.util.PoseStorage;
-
-import java.util.function.DoubleSupplier;
+import org.firstinspires.ftc.teamcode.util.TriggerGamepadEx;
 
 @TeleOp(name = "CmdTele Test")
 public class CmdOpMode extends BaseOpMode {
@@ -29,77 +29,63 @@ public class CmdOpMode extends BaseOpMode {
     public void initialize() {
         CommandScheduler.getInstance().reset();
         super.initialize();
+        GamepadEx driver1 = new GamepadEx(gamepad1);
+        GamepadEx driver2 = new GamepadEx(gamepad2);
+        TriggerGamepadEx t1 = new TriggerGamepadEx(gamepad1, driver1);
+
         // Set Default Commands for each op mode (more intuitive)
         register(intake, drop, drive); // runs the peridoics? (idk)
 
         rrDrive.setPoseEstimate(PoseStorage.currentPose); // grab pose from auto
-
-        DoubleSupplier imuHead = (() -> (double) imu.getRobotAngularVelocity(AngleUnit.RADIANS).yRotationRate);
-
         intake.setDefaultCommand(new RunCommand(intake::stop, intake)); // pass intake subsystem as the requirements (only for run commands??? i think)
-//        DriveFieldCommand d = new DriveFieldCommand( // todo: do we need to schedule() it?
-//                drive,
-//                drop,
-//                gamepadEx1::getLeftX,
-//                gamepadEx1::getLeftY,
-//                gamepadEx1::getRightX,
-//                imuHead,
-//                true
-//        );
-//        drive.setDefaultCommand(d);
+
+        DriveCommand driveCommand = new DriveCommand(drive, rrDrive, driver1, rrDrive.getPoseEstimate());
+        drive.setDefaultCommand(driveCommand);
 
         tad("Status", "OpMode Initialized");
-        tad("imu", imuHead);
-        telemetry.update();
 
         // Keybinds
-//        gb1(LEFT_TRIGGER).whileActiveContinuous(
-//                () -> schedule(new RunCommand(
-//                        () -> drive.slowMode(
-//                                gamepadEx1::getLeftX,
-//                                gamepadEx1::getLeftY,
-//                                gamepadEx1::getRightX
-//                        )
-//                )
-//        ));
-        gb1(LEFT_BUMPER).whenPressed(
-                () -> schedule(new RunCommand(intake::grab)) //todo: check with kookys, if this doesn't work
+        t1.getGamepadTrigger(LEFT_TRIGGER).whileActiveContinuous(
+                new DriveSlowCommand(drive, rrDrive, driver1, rrDrive.getPoseEstimate())
         );
-        gb1(RIGHT_BUMPER).whileHeld(
-                () -> schedule(new RunCommand(intake::push))
+        driver1.getGamepadButton(DPAD_UP).whenPressed(
+                new RunCommand(intake::grab, intake) //todo: check with kookys, if this doesn't work
         );
-        gb1(DPAD_UP).whenPressed(
+        driver1.getGamepadButton(RIGHT_BUMPER).whileHeld(
+                new RunCommand(intake::push, intake)
+        );
+        driver1.getGamepadButton(DPAD_UP).whenPressed(
                 drop::slideLift
         );
-        gb1(DPAD_DOWN).whenPressed(
+        driver1.getGamepadButton(DPAD_DOWN).whenPressed(
                 drop::slideIdle
         );
-        gb1(DPAD_LEFT).whenPressed(
+        driver1.getGamepadButton(DPAD_LEFT).whenPressed(
                 drop::slideMiddle
         );
-        gb1(X).whenPressed(
-                new InstantCommand(drop::dropLeftPixel)
+        driver1.getGamepadButton(X).whenPressed(
+                drop::dropLeftPixel
         );
-        gb1(B).whenPressed(
-                () -> schedule(new InstantCommand(drop::dropRightPixel))
+        driver1.getGamepadButton(B).whenPressed(
+                drop::dropRightPixel
         );
 
         //todo make a drop for both?
 
         // Manual commands
-        gb1(A).whenPressed(
-                () -> schedule(new InstantCommand(drop::pickupPixel))
+        driver1.getGamepadButton(A).whenPressed(
+                drop::pickupPixel
         );
-        gb1(Y).whenPressed(
-                () -> schedule(new InstantCommand(drop::liftServo))
+        driver1.getGamepadButton(Y).whenPressed(
+               drop::liftServo
         );
 
         // Backup commands
-        gb2(A).whenPressed(
-                () -> schedule(new InstantCommand(drop::pickupPixel))
+        driver2.getGamepadButton(A).whenPressed(
+                drop::pickupPixel
         );
-        gb2(Y).whenPressed(
-                () -> schedule(new InstantCommand(drop::liftServo))
+        driver2.getGamepadButton(Y).whenPressed(
+                drop::liftServo
         );
     }
 
@@ -108,6 +94,23 @@ public class CmdOpMode extends BaseOpMode {
         super.run();
         tad("left slide pos", leftSlideMotor.getCurrentPosition());
         telemetry.update();
-        // rrDrive.update() would go here with tele automation
+
+        rrDrive.update();
+//        Pose2d poseEstimate = rrDrive.getPoseEstimate();
+//
+//        Vector2d input = new Vector2d(
+//                -gamepad1.left_stick_y,
+//                -gamepad1.left_stick_x
+//        ).rotated(-poseEstimate.getHeading());
+//
+//        rrDrive.setWeightedDrivePower(
+//                new Pose2d(
+//                        input.getX(),
+//                        input.getY(),
+//                        -gamepad1.right_stick_x
+//                )
+//        );
+//
+//        rrDrive.update();
     }
 }
