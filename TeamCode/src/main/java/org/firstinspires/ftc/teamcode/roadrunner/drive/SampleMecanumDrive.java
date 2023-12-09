@@ -330,8 +330,8 @@ public class SampleMecanumDrive extends MecanumDrive {
                     + OMEGA_WEIGHT * Math.abs(drivePower.getHeading());
 
             vel = new Pose2d(
-                    VX_WEIGHT * drivePower.getX() / slowFactor,
-                    VY_WEIGHT * drivePower.getY() / slowFactor,
+                    (VX_WEIGHT * drivePower.getX()) / slowFactor,
+                    (VY_WEIGHT * drivePower.getY()) / slowFactor,
                     OMEGA_WEIGHT * drivePower.getHeading()
             ).div(denom);
         }

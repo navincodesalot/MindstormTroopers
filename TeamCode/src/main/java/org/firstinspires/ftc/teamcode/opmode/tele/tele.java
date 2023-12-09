@@ -84,16 +84,12 @@ public class tele extends LinearOpMode {
             telemetry.addData("hz ", 1000000000 / (loop - loopTime));
             loopTime = loop;
             telemetry.update();
-            Vector2d input = new Vector2d(
-                    -gamepad1.left_stick_y,
-                    -gamepad1.left_stick_x
-            ).rotated(-poseEstimate.getHeading());
 
             if (slowMode) {
                 drive.setWeightedSlowDrivePower(
                         new Pose2d(
-                                input.getX(),
-                                input.getY(),
+                                -gamepad1.left_stick_y,
+                                -gamepad1.left_stick_x,
                                 -gamepad1.right_stick_x
                         ),
                         3
