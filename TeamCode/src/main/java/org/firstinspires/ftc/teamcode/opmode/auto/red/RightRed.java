@@ -124,7 +124,7 @@ public class RightRed extends BaseOpMode {
 
         schedule(new SequentialCommandGroup(
                 // todo: do i need to make all async as im always updating slides? (or only when they lift)?
-//                new InstantCommand(tensorflow::shutdown), todo
+                new InstantCommand(tensorflow::shutdown)
 //                 drop ground pixel
 //                new SelectCommand(
 //                        new HashMap<Object, Command>() {{
@@ -133,8 +133,8 @@ public class RightRed extends BaseOpMode {
 //                            put(PropLocations.RIGHT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropRight)));
 //                        }},
 //                        () -> location
-//                ),
-//
+//                )
+
 //                // reset
 //                new InstantCommand(drop::pickupPixel),
 //                new WaitUntilCommand(drop::isFinished),
@@ -145,13 +145,13 @@ public class RightRed extends BaseOpMode {
 //                new WaitCommand(500)
 //
 //                // move away (not for left)
-                new SelectCommand(
-                        new HashMap<Object, Command>() {{
-                            put(PropLocations.MIDDLE, new InstantCommand(() -> rrDrive.followTrajectorySequence(moveAwayMiddle)));
-                            put(PropLocations.RIGHT, new InstantCommand(() -> rrDrive.followTrajectorySequence(moveAwayRight)));
-                        }},
-                        () -> location
-                )
+//                new SelectCommand(
+//                        new HashMap<Object, Command>() {{
+//                            put(PropLocations.MIDDLE, new InstantCommand(() -> rrDrive.followTrajectorySequence(moveAwayMiddle)));
+//                            put(PropLocations.RIGHT, new InstantCommand(() -> rrDrive.followTrajectorySequence(moveAwayRight)));
+//                        }},
+//                        () -> location
+//                )
 //
 //                // lift servos at right time
 //                new InstantCommand(() -> drop.slideGoTo(150)), // lift slides a little bit so servos don't hit
