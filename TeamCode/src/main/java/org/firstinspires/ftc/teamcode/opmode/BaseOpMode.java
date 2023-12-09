@@ -10,6 +10,7 @@ import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -26,6 +27,10 @@ public class BaseOpMode extends CommandOpMode {
     protected IntakeSubsystem intake;
     protected DropSubsystem drop;
     protected MecanumDriveSubsystem drive;
+    protected GamepadEx driver1;
+    protected GamepadEx driver2;
+    protected TriggerGamepadEx t1;
+    protected TriggerGamepadEx t2;
     protected SampleMecanumDrive rrDrive;
     protected IMU imu;
     protected MotorEx fL, fR, bL, bR;
@@ -47,6 +52,12 @@ public class BaseOpMode extends CommandOpMode {
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
                 DriveConstants.LOGO_FACING_DIR, DriveConstants.USB_FACING_DIR));
         imu.initialize(parameters);
+
+        driver1 = new GamepadEx(gamepad1);
+        driver2 = new GamepadEx(gamepad2);
+
+        t1 = new TriggerGamepadEx(gamepad1, driver1);
+        t2 = new TriggerGamepadEx(gamepad2, driver2);
 
         // Subsystems go here
         intake = new IntakeSubsystem(intakeMotor);
@@ -97,6 +108,7 @@ public class BaseOpMode extends CommandOpMode {
         bR.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         bL.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
 
+        intakeMotor.setDirection(DcMotorEx.Direction.FORWARD);
         rrDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 

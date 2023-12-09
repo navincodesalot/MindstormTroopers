@@ -31,9 +31,6 @@ public class CmdOpMode extends BaseOpMode {
     public void initialize() {
         CommandScheduler.getInstance().reset();
         super.initialize();
-        GamepadEx driver1 = new GamepadEx(gamepad1);
-        GamepadEx driver2 = new GamepadEx(gamepad2);
-        TriggerGamepadEx t1 = new TriggerGamepadEx(gamepad1, driver1);
 
         // Set Default Commands for each op mode (more intuitive)
         register(intake, drop, drive); // runs the periodics? (idk)

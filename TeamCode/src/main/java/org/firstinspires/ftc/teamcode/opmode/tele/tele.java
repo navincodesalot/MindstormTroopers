@@ -24,7 +24,7 @@ import org.firstinspires.ftc.teamcode.util.PoseStorage;
 import org.firstinspires.ftc.teamcode.util.TriggerGamepadEx;
 
 
-@TeleOp(name = "W TELE")
+@TeleOp(name = "cooked ahh tele")
 public class tele extends LinearOpMode {
     public DcMotorEx intake, leftSlideMotor, rightSlideMotor;
     public Servo lS, rS;
@@ -32,9 +32,9 @@ public class tele extends LinearOpMode {
     private int target = 0;
     private boolean slowMode = false;
 
-    GamepadEx driver1 = new GamepadEx(gamepad1);
-    GamepadEx driver2 = new GamepadEx(gamepad2);
-    TriggerGamepadEx t1 = new TriggerGamepadEx(gamepad1, driver1);
+    GamepadEx driver1;
+    GamepadEx driver2;
+    TriggerGamepadEx t1;
 
     @Override
     public void runOpMode() {
@@ -44,6 +44,10 @@ public class tele extends LinearOpMode {
         SampleMecanumDrive drive = new SampleMecanumDrive(true, hardwareMap);
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         drive.setPoseEstimate(PoseStorage.currentPose);
+
+        driver1 = new GamepadEx(gamepad1);
+        driver2 = new GamepadEx(gamepad2);
+        t1 = new TriggerGamepadEx(gamepad1, driver1);
 
         intake = hardwareMap.get(DcMotorEx.class, "intake");
         leftSlideMotor = hardwareMap.get(DcMotorEx.class, "leftSlide");
@@ -109,7 +113,7 @@ public class tele extends LinearOpMode {
             // Slow mode
             if (t1.isDown(GamepadKeys.Trigger.LEFT_TRIGGER)) {
                 slowMode = true;
-            } else if (t1.wasJustReleased(GamepadKeys.Trigger.LEFT_TRIGGER)) {
+            } else if (!t1.isDown(GamepadKeys.Trigger.LEFT_TRIGGER)) {
                 slowMode = false;
             }
 
@@ -117,40 +121,40 @@ public class tele extends LinearOpMode {
             if (driver1.isDown(RIGHT_BUMPER)) { //push
                 intake.setDirection(DcMotorEx.Direction.FORWARD);
                 intake.setPower(1);
-            } else if (driver1.wasJustReleased(RIGHT_BUMPER)) {
+            } else if (!driver1.isDown(RIGHT_BUMPER)) {
                 intake.setPower(0);
             }
             if (driver1.isDown(LEFT_BUMPER)) { //grab
                 intake.setDirection(DcMotorEx.Direction.REVERSE);
                 intake.setPower(1);
-            } else if (driver1.wasJustReleased(RIGHT_BUMPER)) {
+            } else if (!driver1.isDown(RIGHT_BUMPER)) {
                 intake.setPower(0);
             }
 
             //servos
-            if (driver1.wasJustPressed(Y) || driver2.wasJustPressed(Y)) { // lift
+            if (driver1.isDown(Y) || driver2.isDown(Y)) { // lift
                 lS.setPosition(0.455);
                 rS.setPosition(0.085);
             }
-            if (driver1.wasJustPressed(A) || driver2.wasJustPressed(A)) { //pickup Pixel
+            if (driver1.isDown(A) || driver2.isDown(A)) { //pickup Pixel
                 lS.setPosition(0.5);
                 rS.setPosition(0.125);
             }
-            if (driver1.wasJustPressed(X)) { // drop left pixel
+            if (driver1.isDown(X)) { // drop left pixel
                 rS.setPosition(0.53);
             }
-            if (driver1.wasJustPressed(B)) { // drop right pixel
+            if (driver1.isDown(B)) { // drop right pixel
                 lS.setPosition(0.9);
             }
 
             //slides
-            if (driver1.wasJustPressed(DPAD_UP)) {
+            if (driver1.isDown(DPAD_UP)) {
                 target = 1165;
             }
-            if (driver1.wasJustPressed(DPAD_RIGHT)) {
+            if (driver1.isDown(DPAD_RIGHT)) {
                 target = 500;
             }
-            if (driver1.wasJustPressed(DPAD_DOWN)) {
+            if (driver1.isDown(DPAD_DOWN)) {
                 target = 0;
             }
 
