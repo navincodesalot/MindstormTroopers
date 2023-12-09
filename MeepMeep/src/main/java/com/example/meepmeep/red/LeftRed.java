@@ -8,7 +8,7 @@ import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder;
 import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
 import com.example.meepmeep.Constraints;
 
-public class RightRed {
+public class LeftRed {
     public static void main(String[] args) {
         MeepMeep meepMeep = new MeepMeep(650);
 
@@ -18,7 +18,7 @@ public class RightRed {
                 .setConstraints(Constraints.MAX_VEL, Constraints.MAX_ACCEL, Constraints.MAX_ANG_VEL,
                         Constraints.MAX_ANG_ACCEL, Constraints.TRACK_WIDTH)
                 .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(new Pose2d(12, -66, Math.toRadians(90)))
+                        drive.trajectorySequenceBuilder(new Pose2d(-36, -66, Math.toRadians(90)))
                                 .splineToSplineHeading(new Pose2d(10.5, -26.5, Math.toRadians(180)), Math.toRadians(90))
                                 .waitSeconds(0.3)
                                 // move away from pixel
@@ -40,20 +40,21 @@ public class RightRed {
                         Constraints.MAX_ANG_ACCEL, Constraints.TRACK_WIDTH)
                 .followTrajectorySequence(drive ->
                         // middle
-                        drive.trajectorySequenceBuilder(new Pose2d(12, -66, Math.toRadians(90)))
-                                .lineToSplineHeading(new Pose2d(12, -32, Math.toRadians(90)))
-                                // intake push and drop pixel
-                                .waitSeconds(0.3)
-                                // move away from pixel
-                                .lineTo(new Vector2d(12, -43))
-                                // bring slides up here
-                                .lineToSplineHeading(new Pose2d(45, -37, Math.toRadians(180)))
-                                // drop
-                                .waitSeconds(2)
-                                // park
-                                .forward(4)
-                                .strafeLeft(4)
-                                .splineToLinearHeading(new Pose2d(59, -60, Math.toRadians(180)), Math.toRadians(0))
+                        drive.trajectorySequenceBuilder(new Pose2d(-36, -66, Math.toRadians(90)))
+                                .lineToSplineHeading(new Pose2d(-40, -11, Math.toRadians(0)))
+//                                .lineToSplineHeading(new Pose2d(12, -32, Math.toRadians(90)))
+//                                // intake push and drop pixel
+//                                .waitSeconds(0.3)
+//                                // move away from pixel
+//                                .lineTo(new Vector2d(12, -43))
+//                                // bring slides up here
+//                                .lineToSplineHeading(new Pose2d(45, -37, Math.toRadians(180)))
+//                                // drop
+//                                .waitSeconds(2)
+//                                // park
+//                                .forward(4)
+//                                .strafeLeft(4)
+                                .lineToSplineHeading(new Pose2d(45, -13, Math.toRadians(0)))
                                 .build()
                 );
 
@@ -65,7 +66,7 @@ public class RightRed {
                         Constraints.MAX_ANG_ACCEL, Constraints.TRACK_WIDTH)
                 .followTrajectorySequence(drive ->
                         // middle
-                        drive.trajectorySequenceBuilder(new Pose2d(12, -66, Math.toRadians(90)))
+                        drive.trajectorySequenceBuilder(new Pose2d(-36, -66, Math.toRadians(90)))
                                 .splineToSplineHeading(new Pose2d(13, -26.5, Math.toRadians(0)), Math.toRadians(90))
                                 .waitSeconds(0.3)
                                 //move away from pixel
