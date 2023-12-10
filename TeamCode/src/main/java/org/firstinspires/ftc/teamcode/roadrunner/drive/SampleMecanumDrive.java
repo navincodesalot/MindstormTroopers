@@ -319,7 +319,7 @@ public class SampleMecanumDrive extends MecanumDrive {
         setDrivePower(vel);
     }
 
-    public void setWeightedSlowDrivePower(Pose2d drivePower, int slowFactor) {
+    public void setWeightedSlowDrivePower(Pose2d drivePower, double slowmode) {
         Pose2d vel = drivePower;
 
         if (Math.abs(drivePower.getX()) + Math.abs(drivePower.getY())
@@ -330,11 +330,14 @@ public class SampleMecanumDrive extends MecanumDrive {
                     + OMEGA_WEIGHT * Math.abs(drivePower.getHeading());
 
             vel = new Pose2d(
-                    (VX_WEIGHT * drivePower.getX()) / slowFactor,
-                    (VY_WEIGHT * drivePower.getY()) / slowFactor,
+                    VX_WEIGHT * drivePower.getX(),
+                    VY_WEIGHT * drivePower.getY(),
                     OMEGA_WEIGHT * drivePower.getHeading()
             ).div(denom);
         }
+
+        // Incorporate the slowmode factor
+        vel = vel.div(slowmode);
 
         setDrivePower(vel);
     }

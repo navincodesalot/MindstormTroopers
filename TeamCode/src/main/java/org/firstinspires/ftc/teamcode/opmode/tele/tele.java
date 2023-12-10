@@ -148,7 +148,7 @@ public class tele extends LinearOpMode {
                 target = 1165;
             }
             if (driver1.isDown(DPAD_RIGHT)) {
-                target = 500;
+                target = 700;
             }
             if (driver1.isDown(DPAD_DOWN)) {
                 target = 0;

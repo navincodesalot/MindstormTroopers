@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmode.auto.red;
+package org.firstinspires.ftc.teamcode.opmode.auto.blue;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
@@ -26,11 +26,10 @@ import org.firstinspires.ftc.teamcode.util.PoseStorage;
 import java.util.HashMap;
 
 @Autonomous
-public class RightRed extends BaseOpMode {
+public class LeftBlue extends BaseOpMode {
     private PropLocations location;
     private DcMotorEx i;
     private Servo leftS, rightS;
-
     @Override
     public void initialize() {
         CommandScheduler.getInstance().reset();
@@ -40,7 +39,7 @@ public class RightRed extends BaseOpMode {
         leftS = hardwareMap.get(Servo.class, "leftServo");
         rightS = hardwareMap.get(Servo.class, "rightServo");
         TensorflowSubsystem tensorflow = new TensorflowSubsystem(hardwareMap, "Webcam 1",
-                "redprop.tflite", LABELS);
+                "blueprop.tflite", LABELS);
 
         tensorflow.setMinConfidence(0.75);
 //        register(drop, intake);
@@ -65,63 +64,61 @@ public class RightRed extends BaseOpMode {
 //            telemetry.addData("Confidence", String.format("%.2f%%", bestDetection != null ? bestDetection.getConfidence() * 100 : 0));
             telemetry.update();
 
-             // On init
+            // On init
             drop.liftServo();
-
         }
 
-        Pose2d rightRedStartPos = new Pose2d(12, -66, Math.toRadians(90));
-        rrDrive.setPoseEstimate(rightRedStartPos);
+        Pose2d leftBlueStartPos = new Pose2d(12, 66, Math.toRadians(270));
+        rrDrive.setPoseEstimate(leftBlueStartPos);
 
         // Drop ground pixel (todo: wait 0.3 after)
-        TrajectorySequence dropLeft = rrDrive.trajectorySequenceBuilder(rightRedStartPos)
-                .lineToSplineHeading(new Pose2d(12, -35, Math.toRadians(180)),
+        TrajectorySequence dropLeft = rrDrive.trajectorySequenceBuilder(leftBlueStartPos)
+                .lineToSplineHeading(new Pose2d(12, 35, Math.toRadians(0)),
                         SampleMecanumDrive.getVelocityConstraint(17, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
-        TrajectorySequence dropMiddle = rrDrive.trajectorySequenceBuilder(rightRedStartPos) // what does reversed do
-                .lineToSplineHeading(new Pose2d(12, -35, Math.toRadians(90)),
+        TrajectorySequence dropMiddle = rrDrive.trajectorySequenceBuilder(leftBlueStartPos) // what does reversed do
+                .lineToSplineHeading(new Pose2d(12, 35, Math.toRadians(270)),
                         SampleMecanumDrive.getVelocityConstraint(17, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
 
-        TrajectorySequence dropRight = rrDrive.trajectorySequenceBuilder(rightRedStartPos) // what does reversed do
-                .lineToSplineHeading(new Pose2d(12, -35, Math.toRadians(0)),
+        TrajectorySequence dropRight = rrDrive.trajectorySequenceBuilder(leftBlueStartPos) // what does reversed do
+                .lineToSplineHeading(new Pose2d(12, 35, Math.toRadians(180)),
                         SampleMecanumDrive.getVelocityConstraint(17, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
 
         // Park
         TrajectorySequence parkLeft = rrDrive.trajectorySequenceBuilder(dropLeft.end())
-                .lineToSplineHeading(new Pose2d(12, -66, Math.toRadians(90)),
-                        SampleMecanumDrive.getVelocityConstraint(17, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                .lineToSplineHeading(new Pose2d(12, 66, Math.toRadians(270)),
+                        SampleMecanumDrive.getVelocityConstraint(22, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
-                .splineToLinearHeading(new Pose2d(59, -60, Math.toRadians(180)), Math.toRadians(0),
+                .splineToLinearHeading(new Pose2d(59, 60, Math.toRadians(180)), Math.toRadians(0),
                         SampleMecanumDrive.getVelocityConstraint(17, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
         TrajectorySequence parkMiddle = rrDrive.trajectorySequenceBuilder(dropMiddle.end())
-                .lineToSplineHeading(new Pose2d(12, -66, Math.toRadians(90)),
-                        SampleMecanumDrive.getVelocityConstraint(17, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                .lineToSplineHeading(new Pose2d(12, 66, Math.toRadians(270)),
+                        SampleMecanumDrive.getVelocityConstraint(22, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
-                .splineToLinearHeading(new Pose2d(59, -60, Math.toRadians(180)), Math.toRadians(0),
-                        SampleMecanumDrive.getVelocityConstraint(17, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                .splineToLinearHeading(new Pose2d(59, 60, Math.toRadians(180)), Math.toRadians(0),
+                        SampleMecanumDrive.getVelocityConstraint(22, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
         TrajectorySequence parkRight = rrDrive.trajectorySequenceBuilder(dropRight.end())
-                .lineToSplineHeading(new Pose2d(12, -66, Math.toRadians(90)),
-                        SampleMecanumDrive.getVelocityConstraint(17, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                .lineToSplineHeading(new Pose2d(12, 66, Math.toRadians(270)),
+                        SampleMecanumDrive.getVelocityConstraint(22, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
-                .splineToLinearHeading(new Pose2d(59, -60, Math.toRadians(180)), Math.toRadians(0),
-                        SampleMecanumDrive.getVelocityConstraint(17, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                .splineToLinearHeading(new Pose2d(59, 60, Math.toRadians(180)), Math.toRadians(0),
+                        SampleMecanumDrive.getVelocityConstraint(22, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
 
         waitForStart();
 
-        if (location == PropLocations.MIDDLE) {
+        if(location == PropLocations.MIDDLE) {
             rrDrive.followTrajectorySequence(dropMiddle);
-
             leftS.setPosition(0.5); // servos to ground
             rightS.setPosition(0.125);
             sleep(2000);
@@ -134,10 +131,10 @@ public class RightRed extends BaseOpMode {
             sleep(1000);
             leftS.setPosition(0.455); //lift
             rightS.setPosition(0.085);
+
             rrDrive.followTrajectorySequence(parkMiddle);
         } else if (location == PropLocations.RIGHT) {
             rrDrive.followTrajectorySequence(dropRight);
-
             leftS.setPosition(0.5); // servos to ground
             rightS.setPosition(0.125);
             sleep(2000);
@@ -153,7 +150,6 @@ public class RightRed extends BaseOpMode {
             rrDrive.followTrajectorySequence(parkRight);
         } else {
             rrDrive.followTrajectorySequence(dropLeft);
-
             leftS.setPosition(0.5); // servos to ground
             rightS.setPosition(0.125);
             sleep(2000);
