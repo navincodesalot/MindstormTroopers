@@ -28,21 +28,16 @@ import java.util.HashMap;
 @Autonomous
 public class LeftBlue extends BaseOpMode {
     private PropLocations location;
-    private DcMotorEx i;
-    private Servo leftS, rightS;
     @Override
     public void initialize() {
         CommandScheduler.getInstance().reset();
-        CommandScheduler.getInstance().enable();
         super.initialize();
-        i = hardwareMap.get(DcMotorEx.class, "intake");
-        leftS = hardwareMap.get(Servo.class, "leftServo");
-        rightS = hardwareMap.get(Servo.class, "rightServo");
         TensorflowSubsystem tensorflow = new TensorflowSubsystem(hardwareMap, "Webcam 1",
                 "blueprop.tflite", LABELS);
 
         tensorflow.setMinConfidence(0.75);
-//        register(drop, intake);
+        register(drop, intake);
+//        intake.setDefaultCommand(new RunCommand(intake::stop, intake));
 
         while (opModeInInit()) {
             Recognition bestDetection = tensorflow.getBestDetection();
@@ -114,63 +109,37 @@ public class LeftBlue extends BaseOpMode {
                         SampleMecanumDrive.getVelocityConstraint(22, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
-
         waitForStart();
 
-        if(location == PropLocations.MIDDLE) {
-            rrDrive.followTrajectorySequence(dropMiddle);
-            leftS.setPosition(0.5); // servos to ground
-            rightS.setPosition(0.125);
-            sleep(2000);
+        schedule(new SequentialCommandGroup(
+                // drop ground pixel
+                new ParallelCommandGroup(
+                        new SelectCommand(
+                                new HashMap<Object, Command>() {{
+                                    put(PropLocations.LEFT, new InstantCommand(() -> rrDrive.followTrajectorySequence(dropLeft)));
+                                    put(PropLocations.MIDDLE, new InstantCommand(() -> rrDrive.followTrajectorySequence(dropMiddle)));
+                                    put(PropLocations.RIGHT, new InstantCommand(() -> rrDrive.followTrajectorySequence(dropRight)));
+                                }},
+                                () -> location
+                        ),
+                        new InstantCommand(tensorflow::shutdown)
+                ),
 
-            i.setDirection(DcMotorEx.Direction.FORWARD);
-            i.setPower(0.4);
-            sleep(1500);
-            i.setPower(0);
+                // reset
+                new InstantCommand(drop::pickupPixel),
+                new WaitCommand(400),
+//                new RunCommand(() -> intake.pushSlow(0.6)).raceWith(new WaitCommand(1000)).andThen(new RunCommand(intake::stop)),
 
-            sleep(1000);
-            leftS.setPosition(0.455); //lift
-            rightS.setPosition(0.085);
+                new InstantCommand(drop::slideMiddle)
+        ));
 
-            rrDrive.followTrajectorySequence(parkMiddle);
-        } else if (location == PropLocations.RIGHT) {
-            rrDrive.followTrajectorySequence(dropRight);
-            leftS.setPosition(0.5); // servos to ground
-            rightS.setPosition(0.125);
-            sleep(2000);
-
-            i.setDirection(DcMotorEx.Direction.FORWARD);
-            i.setPower(0.4);
-            sleep(1500);
-            i.setPower(0);
-
-            sleep(1000);
-            leftS.setPosition(0.455); //lift
-            rightS.setPosition(0.085);
-            rrDrive.followTrajectorySequence(parkRight);
-        } else {
-            rrDrive.followTrajectorySequence(dropLeft);
-            leftS.setPosition(0.5); // servos to ground
-            rightS.setPosition(0.125);
-            sleep(2000);
-
-            i.setDirection(DcMotorEx.Direction.FORWARD);
-            i.setPower(0.4);
-            sleep(1500);
-            i.setPower(0);
-
-            sleep(1000);
-            leftS.setPosition(0.455); //lift
-            rightS.setPosition(0.085);
-            rrDrive.followTrajectorySequence(parkLeft);
-        }
         PoseStorage.currentPose = rrDrive.getPoseEstimate(); //send pose to tele
     }
 
     @Override
     public void run() {
         super.run();
-        drop.periodic(); //todo do we need this for slides?
+//        drop.periodic();
         rrDrive.update(); // since we are running some async, we gotta update while opmode is active
     }
 

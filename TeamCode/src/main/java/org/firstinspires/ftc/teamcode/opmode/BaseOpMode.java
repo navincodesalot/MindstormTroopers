@@ -70,6 +70,7 @@ public class BaseOpMode extends CommandOpMode {
 
     @Override
     public void run() {
+        CommandScheduler.getInstance().run();
         double loop = System.nanoTime();
         tad("hz ", 1000000000 / (loop - loopTime));
         loopTime = loop;

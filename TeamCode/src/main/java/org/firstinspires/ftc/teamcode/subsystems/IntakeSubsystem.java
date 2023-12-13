@@ -23,9 +23,9 @@ public class IntakeSubsystem extends SubsystemBase {
         intake.setPower(1);
     }
 
-    public void pushSlow() {
+    public void pushSlow(double p) {
         intake.setDirection(DcMotorEx.Direction.FORWARD);
-        intake.setPower(0.6);
+        intake.setPower(p);
     }
 
     public void stop() {
