@@ -31,13 +31,13 @@ public class CmdOpMode extends BaseOpMode {
     public void initialize() {
         CommandScheduler.getInstance().reset();
         super.initialize();
+        register(intake, drop, drive, bulkRead);
+        rrDrive.setPoseEstimate(PoseStorage.currentPose); // grab pose from auto
 
         // Set Default Commands for each op mode (more intuitive)
-        register(intake, drop, drive); // runs the periodics? (idk)
-
-        rrDrive.setPoseEstimate(PoseStorage.currentPose); // grab pose from auto
         intake.setDefaultCommand(new RunCommand(intake::stop, intake)); // pass intake subsystem as the requirements (only for run commands??? i think)
 
+        // todo: fix drives (fieldCentric, slow, robotCentric)
         DriveCommand driveCommand = new DriveCommand(drive, rrDrive, driver1, rrDrive.getPoseEstimate());
         drive.setDefaultCommand(driveCommand);
 
@@ -91,25 +91,6 @@ public class CmdOpMode extends BaseOpMode {
     @Override
     public void run() {
         super.run();
-        tad("left slide pos", leftSlideMotor.getCurrentPosition());
-        telemetry.update();
-
         rrDrive.update();
-//        Pose2d poseEstimate = rrDrive.getPoseEstimate();
-//
-//        Vector2d input = new Vector2d(
-//                -gamepad1.left_stick_y,
-//                -gamepad1.left_stick_x
-//        ).rotated(-poseEstimate.getHeading());
-//
-//        rrDrive.setWeightedDrivePower(
-//                new Pose2d(
-//                        input.getX(),
-//                        input.getY(),
-//                        -gamepad1.right_stick_x
-//                )
-//        );
-//
-//        rrDrive.update();
     }
 }

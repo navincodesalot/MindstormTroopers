@@ -1,4 +1,6 @@
-package org.firstinspires.ftc.teamcode.opmode.auto.red;
+package org.firstinspires.ftc.teamcode.opmode.auto.blue;
+
+import static org.firstinspires.ftc.teamcode.util.StartPoses.rightBlue;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
@@ -63,21 +65,20 @@ public class RightBlue extends BaseOpMode {
         }
 
 //        imu.reset(); todo
-        Pose2d rightBlueStartPos = new Pose2d(-36, 66, Math.toRadians(270));
-        rrDrive.setPoseEstimate(rightBlueStartPos);
+        rrDrive.setPoseEstimate(rightBlue);
 
         // Drop ground pixel (todo: wait 0.3 after)
-        TrajectorySequence dropLeft = rrDrive.trajectorySequenceBuilder(rightBlueStartPos) // what does reversed do
+        TrajectorySequence dropLeft = rrDrive.trajectorySequenceBuilder(rightBlue) // what does reversed do
                 .splineToSplineHeading(new Pose2d(10.5, -26.5, Math.toRadians(180)), Math.toRadians(90),
                         SampleMecanumDrive.getVelocityConstraint(17, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
-        TrajectorySequence dropMiddle = rrDrive.trajectorySequenceBuilder(rightBlueStartPos) // what does reversed do
+        TrajectorySequence dropMiddle = rrDrive.trajectorySequenceBuilder(rightBlue) // what does reversed do
                 .lineToSplineHeading(new Pose2d(12, -31, Math.toRadians(90)),
                         SampleMecanumDrive.getVelocityConstraint(17, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
-        TrajectorySequence dropRight = rrDrive.trajectorySequenceBuilder(rightBlueStartPos) // what does reversed do
+        TrajectorySequence dropRight = rrDrive.trajectorySequenceBuilder(rightBlue) // what does reversed do
                 .splineToSplineHeading(new Pose2d(13, -26.5, Math.toRadians(0)), Math.toRadians(90),
                         SampleMecanumDrive.getVelocityConstraint(17, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
@@ -109,7 +110,7 @@ public class RightBlue extends BaseOpMode {
                 .strafeLeft(10)
                 .splineToLinearHeading(new Pose2d(59, -60, Math.toRadians(180)), Math.toRadians(0))
                 .build();
-        TrajectorySequence parkMiddle = rrDrive.trajectorySequenceBuilder(rightBlueStartPos)
+        TrajectorySequence parkMiddle = rrDrive.trajectorySequenceBuilder(rightBlue)
 //                .forward(4)
 //                .strafeLeft(4)
                 .waitSeconds(12)

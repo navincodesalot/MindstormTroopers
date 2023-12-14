@@ -16,6 +16,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.subsystems.BulkReadSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.DropSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.MecanumDriveSubsystem;
@@ -27,6 +28,7 @@ public class BaseOpMode extends CommandOpMode {
     protected IntakeSubsystem intake;
     protected DropSubsystem drop;
     protected MecanumDriveSubsystem drive;
+    protected BulkReadSubsystem bulkRead;
     protected GamepadEx driver1;
     protected GamepadEx driver2;
     protected TriggerGamepadEx t1;
@@ -63,6 +65,7 @@ public class BaseOpMode extends CommandOpMode {
         intake = new IntakeSubsystem(intakeMotor);
         drop = new DropSubsystem(leftSlideMotor, rightSlideMotor, lS, rS);
         drive = new MecanumDriveSubsystem(fL, fR, bL, bR, imu);
+        bulkRead = new BulkReadSubsystem(hardwareMap);
 
         tad("Status", "BaseOpMode Initialized");
         telemetry.update();
@@ -70,7 +73,7 @@ public class BaseOpMode extends CommandOpMode {
 
     @Override
     public void run() {
-        CommandScheduler.getInstance().run();
+        CommandScheduler.getInstance().run(); // since we are overriding in opmodes, this will actually run it
         double loop = System.nanoTime();
         tad("hz ", 1000000000 / (loop - loopTime));
         loopTime = loop;

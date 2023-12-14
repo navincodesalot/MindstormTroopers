@@ -70,7 +70,7 @@ public class DropSubsystem extends SubsystemBase {
         this.target = target;
     }
 
-//    public Command read() { todo
-//
-//    }
+    public int getPosition() {
+        return leftSlide.getCurrentPosition();
+    }
 }
