@@ -2,25 +2,20 @@ package org.firstinspires.ftc.teamcode.opmode;
 
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.CommandScheduler;
-import com.arcrobotics.ftclib.command.button.GamepadButton;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
-import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
-
 import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.BulkReadSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.DropSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.MecanumDriveSubsystem;
-import org.firstinspires.ftc.teamcode.util.GamepadTrigger;
 import org.firstinspires.ftc.teamcode.util.TriggerGamepadEx;
 
 public class BaseOpMode extends CommandOpMode {
@@ -113,6 +108,7 @@ public class BaseOpMode extends CommandOpMode {
         bL.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
 
         intakeMotor.setDirection(DcMotorEx.Direction.FORWARD);
+
         rrDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 

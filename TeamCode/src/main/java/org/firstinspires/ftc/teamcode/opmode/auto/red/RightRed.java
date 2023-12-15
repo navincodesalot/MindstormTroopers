@@ -121,9 +121,8 @@ public class RightRed extends BaseOpMode {
 
         }
 
-        // Todo make sure ot use async trajs when running in parallel
+        // Todo make sure to use async trajs when running in parallel
         schedule(new SequentialCommandGroup(
-                //todo all instants with requirements
                 new ParallelCommandGroup(
                         new InstantCommand(tensorflow::shutdown),
                         new SelectCommand(
@@ -137,7 +136,7 @@ public class RightRed extends BaseOpMode {
                 ),
 
                 // drop ground pixel
-                new InstantCommand(drop::pickupPixel),
+                new InstantCommand(drop::pickupPixel, drop),
                 new WaitCommand(servoTime), // <- 400ms
                 new RunCommand(() -> intake.pushSlow(0.6), intake).raceWith(new WaitCommand(1000)).andThen(new RunCommand(intake::stop, intake)),
 
@@ -145,17 +144,17 @@ public class RightRed extends BaseOpMode {
                 new SelectCommand(
                         new HashMap<Object, Command>() {{
                             put(PropLocations.MIDDLE, new SequentialCommandGroup(
-                                    new InstantCommand(drop::liftServo),
+                                    new InstantCommand(drop::liftServo, drop),
                                     new WaitCommand(servoTime),
                                     new InstantCommand(() -> rrDrive.followTrajectorySequence(moveAwayMiddle)),
-                                    new InstantCommand(drop::pickupPixel), //get ready for slide lifts
+                                    new InstantCommand(drop::pickupPixel, drop), //get ready for slide lifts
                                     new WaitCommand(servoTime)
                             ));
                             put(PropLocations.RIGHT, new SequentialCommandGroup(
-                                    new InstantCommand(drop::liftServo),
+                                    new InstantCommand(drop::liftServo, drop),
                                     new WaitCommand(servoTime),
                                     new InstantCommand(() -> rrDrive.followTrajectorySequence(moveAwayRight)),
-                                    new InstantCommand(drop::pickupPixel), //get ready for slide lifts
+                                    new InstantCommand(drop::pickupPixel, drop), //get ready for slide lifts
                                     new WaitCommand(servoTime)
                             ));
                         }},
@@ -164,7 +163,7 @@ public class RightRed extends BaseOpMode {
 
 
                 new ParallelCommandGroup( // todo: these are async trajs (drive while lifting slides)
-                        new InstantCommand(drop::slideLift),
+                        new InstantCommand(drop::slideLift, drop),
                         // this will run the traj around 500ms after so the slides can go up and the servos don't drag on the field while running the trajectory
                         new DelayedCommand(new SelectCommand(
                                 new HashMap<Object, Command>() {{
@@ -181,14 +180,14 @@ public class RightRed extends BaseOpMode {
                         new InstantCommand(() -> {
                             drop.dropLeftPixel();
                             drop.dropRightPixel();
-                        })
+                        }, drop)
                 ),
                 new WaitCommand(1000),
 
                 //todo fix logic: here i need to reset servos, bring slides down, then lift servos down WHILE driving rr path to save time (make sure to not flip)
                 new ParallelCommandGroup( // example: https://github.com/Watt-sUP/CenterStage2023/blob/e2e4e643bfca7fcf61e531f743066df861e16ee3/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/autonomous/BlueLong.java#L150
-                        new InstantCommand(drop::pickupPixel),
-                        new DelayedCommand(new InstantCommand(drop::slideIdle), servoTime), // offsetted by the servo time
+                        new InstantCommand(drop::pickupPixel, drop),
+                        new DelayedCommand(new InstantCommand(drop::slideIdle, drop), servoTime), // offsetted by the servo time
                         new SequentialCommandGroup(
                                 new WaitUntilCommand(() -> drop.getPosition() <= 700), // wait until slides are low enough before starting traj
                                 new SelectCommand(

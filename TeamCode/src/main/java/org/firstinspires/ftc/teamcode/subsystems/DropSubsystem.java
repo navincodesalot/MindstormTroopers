@@ -20,6 +20,7 @@ public class DropSubsystem extends SubsystemBase {
         this.rightSlide = rightSlide;
         this.leftServo = leftServo;
         this.rightServo = rightServo;
+//        target = 0 // todo: for mp, set target/goal to 0 at start
     }
 
     //PIDF Loop

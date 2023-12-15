@@ -9,6 +9,7 @@ import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.hardware.RevIMU;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
+import com.arcrobotics.ftclib.util.MathUtils;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.IMU;
 
@@ -21,6 +22,9 @@ import java.util.function.DoubleSupplier;
 public class MecanumDriveSubsystem extends SubsystemBase {
     private final IMU imu;
     private final MecanumDrive drive;
+    public static int joystickTransformFactor = 30;
+    public int slowFactor = 3;
+    private double powerLimit = 1.0;
 
     public MecanumDriveSubsystem(MotorEx fL, MotorEx fR, MotorEx bL, MotorEx bR, IMU imu) {
         this.imu = imu;
@@ -29,34 +33,32 @@ public class MecanumDriveSubsystem extends SubsystemBase {
         drive = new MecanumDrive(false, fL, fR, bL, bR);
     }
 
-    public void fieldCentric(SampleMecanumDrive rrDrive, GamepadEx g1, Pose2d heading) {
-            Vector2d input = new Vector2d(
-                -g1.getLeftY(),
-                -g1.getLeftX()
-            ).rotated(-heading.getHeading());
-
-            rrDrive.setWeightedDrivePower(
-                    new Pose2d(
-                        input.getX(),
-                        input.getY(),
-                        -g1.getRightX()
-                    )
-            );
+    public void fieldCentric(DoubleSupplier strafeSpeed, DoubleSupplier forwardSpeed, DoubleSupplier turnSpeed, DoubleSupplier gyroAngle) {
+         drive.driveFieldCentric(strafeSpeed.getAsDouble(), forwardSpeed.getAsDouble(), turnSpeed.getAsDouble(), gyroAngle.getAsDouble());
     }
 
-    public void slowMode(SampleMecanumDrive rrDrive, GamepadEx g1, Pose2d heading) {
-        Vector2d input = new Vector2d(
-                -g1.getLeftY(),
-                -g1.getLeftX()
-        ).rotated(-heading.getHeading());
+    public void robotCentric(DoubleSupplier strafeSpeed, DoubleSupplier forwardSpeed, DoubleSupplier turnSpeed) {
+        drive.driveRobotCentric(joystickTransform(strafeSpeed.getAsDouble()), joystickTransform(forwardSpeed.getAsDouble()), joystickTransform(turnSpeed.getAsDouble()), false);
+    }
 
-        rrDrive.setWeightedSlowDrivePower(
-                new Pose2d(
-                        input.getX(),
-                        input.getY(),
-                        -g1.getRightX()
-                ),
-                3
-        );
+    public void slowMode(DoubleSupplier strafeSpeed, DoubleSupplier forwardSpeed, DoubleSupplier turnSpeed) {
+                drive.driveRobotCentric(strafeSpeed.getAsDouble() / slowFactor, forwardSpeed.getAsDouble() / slowFactor, turnSpeed.getAsDouble() / slowFactor);
+    }
+
+    // desmos: https://www.desmos.com/calculator/j2e6yaorld
+    public double joystickTransform(double input) {
+        return (1.0 / (joystickTransformFactor - 1)) * Math.signum(input) * (Math.pow(joystickTransformFactor, Math.abs(input)) - 1);
+    }
+
+    public double getPowerLimit() {
+        return powerLimit;
+    }
+
+    public void setPowerLimit(double limit) {
+        if (MathUtils.clamp(Math.abs(limit), 0, 1) == powerLimit)
+            return;
+
+        powerLimit = MathUtils.clamp(Math.abs(limit), 0, 1);
+        drive.setMaxSpeed(powerLimit);
     }
 }
