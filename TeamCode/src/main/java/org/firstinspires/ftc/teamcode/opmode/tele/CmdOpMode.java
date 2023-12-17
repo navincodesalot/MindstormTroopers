@@ -33,9 +33,8 @@ public class CmdOpMode extends BaseOpMode {
 
         // Set Default Commands for each op mode (more intuitive)
         intake.setDefaultCommand(new RunCommand(intake::stop, intake));
-        drive.setDefaultCommand(new RunCommand(() -> drive.fieldCentric(driver1::getLeftX, driver1::getLeftY, driver1::getRightX, () -> imu.getRobotOrientationAsQuaternion().x * 1), drive)); //todo fix if its x or y
+        drive.setDefaultCommand(new RunCommand(() -> drive.fieldCentric(driver1::getLeftX, driver1::getLeftY, driver1::getRightX, () -> imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS)), drive));
         tad("Status", "OpMode Initialized");
-//        float heading = imu.getRobotOrientation(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).firstAngle;
         // Keybinds
         t1.getGamepadTrigger(LEFT_TRIGGER).whileActiveContinuous(
                 new RunCommand(() -> drive.slowMode(driver1::getLeftX, driver1::getLeftY, driver1::getRightX), drive)
@@ -43,7 +42,7 @@ public class CmdOpMode extends BaseOpMode {
         // todo add keybind for brakes: (powerLimit)
         driver1.getGamepadButton(BACK).toggleWhenPressed(
                 new RunCommand(() -> drive.robotCentric(driver1::getLeftX, driver1::getLeftY, driver1::getRightX), drive),
-                new RunCommand(() -> drive.fieldCentric(driver1::getLeftX, driver1::getLeftY, driver1::getRightX, () -> imu.getRobotOrientationAsQuaternion().x * 1), drive)
+                new RunCommand(() -> drive.fieldCentric(driver1::getLeftX, driver1::getLeftY, driver1::getRightX, () -> imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS)), drive)
         );
         driver1.getGamepadButton(LEFT_BUMPER).whileHeld(
                 new RunCommand(intake::grab, intake)
