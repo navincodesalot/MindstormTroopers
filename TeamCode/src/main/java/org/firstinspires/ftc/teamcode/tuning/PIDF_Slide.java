@@ -15,7 +15,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @Config
-@Disabled
+//@Disabled
 @TeleOp(name = "Tune Slide PIDF")
 public class PIDF_Slide extends OpMode {
     private PDController controller;

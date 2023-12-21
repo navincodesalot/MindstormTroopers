@@ -29,7 +29,7 @@ public class CmdOpMode extends BaseOpMode {
         CommandScheduler.getInstance().reset();
         super.initialize();
         register(intake, drop, drive, bulkRead);
-        rrDrive.setPoseEstimate(PoseStorage.currentPose); // grab pose from auto
+//        rrDrive.setPoseEstimate(PoseStorage.currentPose); // grab pose from auto
 
         // Set Default Commands for each op mode (more intuitive)
         intake.setDefaultCommand(new RunCommand(intake::stop, intake));
@@ -51,7 +51,8 @@ public class CmdOpMode extends BaseOpMode {
                 new RunCommand(intake::push, intake)
         );
         driver1.getGamepadButton(DPAD_UP).whenPressed(
-                new InstantCommand(drop::slideLift, drop)
+//                new InstantCommand(drop::slideLift, drop)
+                new InstantCommand(() -> drop.setPower(1), drop)
         );
         driver1.getGamepadButton(DPAD_DOWN).whenPressed(
                 new InstantCommand(drop::slideIdle, drop)
