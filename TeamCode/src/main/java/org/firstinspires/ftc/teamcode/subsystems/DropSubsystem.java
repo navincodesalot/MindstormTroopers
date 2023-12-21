@@ -24,16 +24,11 @@ public class DropSubsystem extends SubsystemBase {
     }
 
     //PIDF Loop
-//    @Override
-//    public void periodic() { //Runs in a loop while op mode is active (in the run method of scheduler class)
-//        leftSlide.setPower(PIDFController.returnPower(leftSlide.getCurrentPosition(), target));
-//        rightSlide.setPower(PIDFController.returnPower(leftSlide.getCurrentPosition(), target));
-//        super.periodic();
-//    }
-
-    public void setPower(double p) {
-        leftSlide.setPower(p);
-        rightSlide.setPower(p);
+    @Override
+    public void periodic() { //Runs in a loop while op mode is active (in the run method of scheduler class)
+        leftSlide.setPower(PIDFController.returnPower(leftSlide.getCurrentPosition(), target));
+        rightSlide.setPower(PIDFController.returnPower(leftSlide.getCurrentPosition(), target));
+        super.periodic();
     }
 
     // Servo

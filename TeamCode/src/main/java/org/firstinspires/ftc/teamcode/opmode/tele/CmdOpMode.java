@@ -51,8 +51,7 @@ public class CmdOpMode extends BaseOpMode {
                 new RunCommand(intake::push, intake)
         );
         driver1.getGamepadButton(DPAD_UP).whenPressed(
-//                new InstantCommand(drop::slideLift, drop)
-                new InstantCommand(() -> drop.setPower(1), drop)
+                new InstantCommand(drop::slideLift, drop)
         );
         driver1.getGamepadButton(DPAD_DOWN).whenPressed(
                 new InstantCommand(drop::slideIdle, drop)
