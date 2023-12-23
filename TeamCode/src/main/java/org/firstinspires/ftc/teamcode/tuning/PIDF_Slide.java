@@ -31,7 +31,7 @@ public class PIDF_Slide extends OpMode {
 
     @Override
     public void init() {
-        controller = new PDController(p , d);
+        controller = new PDController(p, d);
         telemetry = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
 
         rightSlide = hardwareMap.get(DcMotorEx.class, "rightSlide");

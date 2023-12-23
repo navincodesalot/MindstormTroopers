@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.subsystems;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
+
+import org.firstinspires.ftc.teamcode.tuning.RunMotionProfile;
 import org.firstinspires.ftc.teamcode.util.PIDFController;
 import org.firstinspires.ftc.teamcode.util.ServoLocation;
 
@@ -12,22 +14,24 @@ public class DropSubsystem extends SubsystemBase {
     private final Servo leftServo;
     private final Servo rightServo;
     private int target = 0;
-
-    //import global heights here todo
+    private final RunMotionProfile profile = new RunMotionProfile(
+            60000,70000,80000,
+            0.1,1,0,0.2, 1
+    ); // todo
 
     public DropSubsystem(DcMotorEx leftSlide, DcMotorEx rightSlide, Servo leftServo, Servo rightServo) {
         this.leftSlide = leftSlide;
         this.rightSlide = rightSlide;
         this.leftServo = leftServo;
         this.rightServo = rightServo;
-//        target = 0 // todo: for mp, set target/goal to 0 at start
+        target = 0; // todo: for mp, set target/goal to 0 at start
     }
 
     //PIDF Loop
     @Override
     public void periodic() { //Runs in a loop while op mode is active (in the run method of scheduler class)
-        leftSlide.setPower(PIDFController.returnPower(leftSlide.getCurrentPosition(), target));
-        rightSlide.setPower(PIDFController.returnPower(leftSlide.getCurrentPosition(), target));
+        leftSlide.setPower(profile.profiledMovement(target, getPosition()));
+        rightSlide.setPower(profile.profiledMovement(target, getPosition()));
         super.periodic();
     }
 
@@ -71,7 +75,35 @@ public class DropSubsystem extends SubsystemBase {
         this.target = target;
     }
 
+    public double getError() {
+        return target - getPosition();
+    }
+
     public int getPosition() {
         return leftSlide.getCurrentPosition();
     }
+
+    public boolean isTimeDone() {
+        return profile.getProfileDuration() < profile.getCurrentTime();
+    }
+    public boolean isPositionDone() {
+        return Math.abs(getError()) < 10;
+    }
+
+    public void setMotionConstraints(double maxVel, double maxAccel, double maxJerk) {
+        profile.setMotionConstraints(maxVel, maxAccel, maxJerk);
+    }
+
+    public void setPIDFcoeffs(double Kp, double Ki, double Kd, double Kf, double limit) {
+        profile.setPIDFcoeffs(Kp, Ki, Kd, Kf, limit);
+    }
+
+    public double getMotionTarget() {
+        return -profile.getMotionTarget();
+    }
+
+    public double getMotionTime() {
+        return profile.getCurrentTime();
+    }
 }
+
