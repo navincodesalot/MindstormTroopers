@@ -15,12 +15,8 @@ import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.RIGHT_BUMPER;
 import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Trigger.LEFT_TRIGGER;
 import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.X;
 import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.Y;
-
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.teamcode.opmode.BaseOpMode;
-import org.firstinspires.ftc.teamcode.util.PoseStorage;
 
 @TeleOp(name = "CmdTele Test")
 public class CmdOpMode extends BaseOpMode {
@@ -33,7 +29,7 @@ public class CmdOpMode extends BaseOpMode {
 
         // Set Default Commands for each op mode (more intuitive)
         intake.setDefaultCommand(new RunCommand(intake::stop, intake));
-        drive.setDefaultCommand(new RunCommand(() -> drive.fieldCentric(driver1::getLeftX, driver1::getLeftY, driver1::getRightX, () -> imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS)), drive));
+        drive.setDefaultCommand(new RunCommand(() -> drive.fieldCentric(driver1::getLeftX, driver1::getLeftY, driver1::getRightX, () -> imu.getRobotYawPitchRollAngles().getPitch(AngleUnit.RADIANS)), drive));
         tad("Status", "OpMode Initialized");
         // Keybinds
         t1.getGamepadTrigger(LEFT_TRIGGER).whileActiveContinuous(
@@ -42,7 +38,7 @@ public class CmdOpMode extends BaseOpMode {
         // todo add keybind for brakes: (powerLimit)
         driver1.getGamepadButton(BACK).toggleWhenPressed(
                 new RunCommand(() -> drive.robotCentric(driver1::getLeftX, driver1::getLeftY, driver1::getRightX), drive),
-                new RunCommand(() -> drive.fieldCentric(driver1::getLeftX, driver1::getLeftY, driver1::getRightX, () -> imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS)), drive)
+                new RunCommand(() -> drive.fieldCentric(driver1::getLeftX, driver1::getLeftY, driver1::getRightX, () -> imu.getRobotYawPitchRollAngles().getPitch(AngleUnit.RADIANS)), drive)
         );
         driver1.getGamepadButton(LEFT_BUMPER).whileHeld(
                 new RunCommand(intake::grab, intake)

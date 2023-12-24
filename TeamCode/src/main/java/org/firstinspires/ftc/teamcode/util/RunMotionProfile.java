@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.tuning;
+package org.firstinspires.ftc.teamcode.util;
 
 import com.acmerobotics.roadrunner.profile.MotionProfile;
 import com.acmerobotics.roadrunner.profile.MotionProfileGenerator;
@@ -10,7 +10,7 @@ public class RunMotionProfile {
     private double lastTarget;
     private double maxVel, maxAccel, maxJerk;
     private MotionState motionState;
-    private PIDFController PIDF;
+    private final PIDFController PIDF;
     private final ElapsedTime timer = new ElapsedTime();
     private MotionProfile profile = MotionProfileGenerator.generateSimpleMotionProfile(
             new MotionState(0,0,0),

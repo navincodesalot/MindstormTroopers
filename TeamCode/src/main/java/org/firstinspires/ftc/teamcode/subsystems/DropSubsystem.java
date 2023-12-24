@@ -4,8 +4,7 @@ import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.tuning.RunMotionProfile;
-import org.firstinspires.ftc.teamcode.util.PIDFController;
+import org.firstinspires.ftc.teamcode.util.RunMotionProfile;
 import org.firstinspires.ftc.teamcode.util.ServoLocation;
 
 public class DropSubsystem extends SubsystemBase {
