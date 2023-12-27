@@ -57,7 +57,7 @@ public class BaseOpMode extends CommandOpMode {
         t2 = new TriggerGamepadEx(gamepad2, driver2);
 
         // Subsystems go here
-        intake = new IntakeSubsystem(intakeMotor);
+//        intake = new IntakeSubsystem(intakeMotor);
         drop = new DropSubsystem(leftSlideMotor, rightSlideMotor, lS, rS);
         drive = new MecanumDriveSubsystem(fL, fR, bL, bR, imu);
         bulkRead = new BulkReadSubsystem(hardwareMap);
@@ -76,7 +76,7 @@ public class BaseOpMode extends CommandOpMode {
 
     protected void initHardware() {
         imu = hardwareMap.get(IMU.class, "imu");
-        intakeMotor = hardwareMap.get(DcMotorEx.class, "intake");
+//        intakeMotor = hardwareMap.get(DcMotorEx.class, "intake");
         leftSlideMotor = hardwareMap.get(DcMotorEx.class, "leftSlide");
         rightSlideMotor = hardwareMap.get(DcMotorEx.class, "rightSlide");
         lS = hardwareMap.get(Servo.class, "leftServo");
@@ -107,7 +107,7 @@ public class BaseOpMode extends CommandOpMode {
         bR.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         bL.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
 
-        intakeMotor.setDirection(DcMotorEx.Direction.FORWARD);
+//        intakeMotor.setDirection(DcMotorEx.Direction.FORWARD);
 
         rrDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }

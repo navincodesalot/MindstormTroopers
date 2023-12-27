@@ -14,30 +14,36 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.util.RunMotionProfile;
+
 @Config
 //@Disabled
 @TeleOp(name = "Tune Slide PIDF")
 public class PIDF_Slide extends OpMode {
     private PDController controller;
 
-    public static double p = 0.005, i = 0.0, d = 0.000001, f = 0;
-
+    public static double p = 0.0065, i = 0.35, d = 0.0001, f = 0.0035;
+    public static double maxVel = 40000, maxAccel = 50000, maxJerk = 60000;
+    private final RunMotionProfile profile = new RunMotionProfile(
+            maxVel, maxAccel, maxJerk,
+            p, i, d, f, 1
+    ); // todo
     public static int target = 0;
 
     private DcMotorEx rightSlide;
     private DcMotorEx leftSlide;
-    private Servo leftServo;
-    private Servo rightServo;
+//    private Servo leftServo;
+//    private Servo rightServo;
 
     @Override
     public void init() {
-        controller = new PDController(p, d);
+//        controller = new PIDController(p, i, d);
         telemetry = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
 
         rightSlide = hardwareMap.get(DcMotorEx.class, "rightSlide");
         leftSlide = hardwareMap.get(DcMotorEx.class, "leftSlide");
-        leftServo = hardwareMap.get(Servo.class, "leftServo");
-        rightServo = hardwareMap.get(Servo.class, "rightServo");
+//        leftServo = hardwareMap.get(Servo.class, "leftServo");
+//        rightServo = hardwareMap.get(Servo.class, "rightServo");
 
         leftSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -49,33 +55,36 @@ public class PIDF_Slide extends OpMode {
         rightSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // lift servos TODO
-        leftServo.setDirection(Servo.Direction.FORWARD);
-        rightServo.setDirection(Servo.Direction.REVERSE);
-        leftServo.setPosition(0.5);
-        rightServo.setPosition(0.12);
+//        leftServo.setDirection(Servo.Direction.FORWARD);
+//        rightServo.setDirection(Servo.Direction.REVERSE);
+//        leftServo.setPosition(0.5);
+//        rightServo.setPosition(0.12);
     }
 
     @Override
     public void loop() {
-        int leftSlidePos = leftSlide.getCurrentPosition();
-        double power = returnPower(leftSlidePos, target);
+        double power = profile.profiledMovement(target, getPosition());
 
         leftSlide.setPower(power);
         rightSlide.setPower(power);
 
         telemetry.addData("leftSlide Pos", leftSlide.getCurrentPosition());
         telemetry.addData("rightSlide Pos", rightSlide.getCurrentPosition());
-        telemetry.addData("error", Math.abs(target - leftSlidePos));
+        telemetry.addData("error", Math.abs(target - getPosition()));
         telemetry.addData("target", target);
         telemetry.update();
     }
 
-    public double returnPower(int pos, int target) {
-        controller.setPID(p, i, d);
-        double pid = controller.calculate(pos, target);
-        //if (Math.abs(target - pos) <= 90 && Math.abs(target - pos) >= 50) { // if we say go to 1000 ticks, its at 995-1005, it will brake (to save voltage)
-            //return 0; // set to brake
-        //}
-        return pid + f;
+    public int getPosition() {
+        return leftSlide.getCurrentPosition();
     }
+
+//    public double returnPower(int pos, int target) {
+//        controller.setPID(p, i, d);
+//        double pid = controller.calculate(pos, target);
+//        //if (Math.abs(target - pos) <= 90 && Math.abs(target - pos) >= 50) { // if we say go to 1000 ticks, its at 995-1005, it will brake (to save voltage)
+//            //return 0; // set to brake
+//        //}
+//        return pid + f;
+//    }
 }

@@ -41,7 +41,7 @@ public class RunMotionProfile {
     public double profiledMovement(double target, double state) {
         if (lastTarget != target) {
             lastTarget = target;
-            profile = MotionProfileGenerator.generateSimpleMotionProfile(new MotionState(state, 0, 0), new MotionState(target, 0, 0), maxVel, maxAccel,maxJerk);
+            profile = MotionProfileGenerator.generateSimpleMotionProfile(new MotionState(state, 0, 0), new MotionState(target, 0, 0), maxVel, maxAccel, maxJerk);
             timer.reset();
         } else {
             lastTarget = target;
@@ -53,7 +53,7 @@ public class RunMotionProfile {
     public double profiledServoMovement(double target, double state) { // todo: use for gobilda servos if needed
         if (lastTarget != target) {
             lastTarget = target;
-            profile = MotionProfileGenerator.generateSimpleMotionProfile(new MotionState(state, 0, 0), new MotionState(target, 0, 0), maxVel, maxAccel,maxJerk);
+            profile = MotionProfileGenerator.generateSimpleMotionProfile(new MotionState(state, 0, 0), new MotionState(target, 0, 0), maxVel, maxAccel, maxJerk);
             timer.reset();
         }
         else {

@@ -14,8 +14,8 @@ public class DropSubsystem extends SubsystemBase {
     private final Servo rightServo;
     private int target = 0;
     private final RunMotionProfile profile = new RunMotionProfile(
-            60000,70000,80000,
-            0.1,1,0,0.2, 1
+            60000, 70000, 80000,
+            0.1, 1, 0, 0.2, 1
     ); // todo
 
     public DropSubsystem(DcMotorEx leftSlide, DcMotorEx rightSlide, Servo leftServo, Servo rightServo) {
@@ -85,6 +85,7 @@ public class DropSubsystem extends SubsystemBase {
     public boolean isTimeDone() {
         return profile.getProfileDuration() < profile.getCurrentTime();
     }
+
     public boolean isPositionDone() {
         return Math.abs(getError()) < 10;
     }

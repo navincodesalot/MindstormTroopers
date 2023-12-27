@@ -18,18 +18,18 @@ import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.Y;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.opmode.BaseOpMode;
 
-@TeleOp(name = "CmdTele Test")
+@TeleOp(name = "cooked ahh box")
 public class CmdOpMode extends BaseOpMode {
     @Override
     public void initialize() {
         CommandScheduler.getInstance().reset();
         super.initialize();
-        register(intake, drop, drive, bulkRead);
+        register(drop, drive, bulkRead);
 //        rrDrive.setPoseEstimate(PoseStorage.currentPose); // grab pose from auto
 
         // Set Default Commands for each op mode (more intuitive)
-        intake.setDefaultCommand(new RunCommand(intake::stop, intake));
-        drive.setDefaultCommand(new RunCommand(() -> drive.fieldCentric(driver1::getLeftX, driver1::getLeftY, driver1::getRightX, () -> imu.getRobotYawPitchRollAngles().getPitch(AngleUnit.RADIANS)), drive));
+//        intake.setDefaultCommand(new RunCommand(intake::stop, intake));
+        drive.setDefaultCommand(new RunCommand(() -> drive.fieldCentric(driver1::getLeftX, driver1::getLeftY, driver1::getRightX, () -> imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES)), drive));
         tad("Status", "OpMode Initialized");
         // Keybinds
         t1.getGamepadTrigger(LEFT_TRIGGER).whileActiveContinuous(
@@ -38,14 +38,14 @@ public class CmdOpMode extends BaseOpMode {
         // todo add keybind for brakes: (powerLimit)
         driver1.getGamepadButton(BACK).toggleWhenPressed(
                 new RunCommand(() -> drive.robotCentric(driver1::getLeftX, driver1::getLeftY, driver1::getRightX), drive),
-                new RunCommand(() -> drive.fieldCentric(driver1::getLeftX, driver1::getLeftY, driver1::getRightX, () -> imu.getRobotYawPitchRollAngles().getPitch(AngleUnit.RADIANS)), drive)
+                new RunCommand(() -> drive.fieldCentric(driver1::getLeftX, driver1::getLeftY, driver1::getRightX, () -> imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES)), drive)
         );
-        driver1.getGamepadButton(LEFT_BUMPER).whileHeld(
-                new RunCommand(intake::grab, intake)
-        );
-        driver1.getGamepadButton(RIGHT_BUMPER).whileHeld(
-                new RunCommand(intake::push, intake)
-        );
+//        driver1.getGamepadButton(LEFT_BUMPER).whileHeld(
+//                new RunCommand(intake::grab, intake)
+//        );
+//        driver1.getGamepadButton(RIGHT_BUMPER).whileHeld(
+//                new RunCommand(intake::push, intake)
+//        );
         driver1.getGamepadButton(DPAD_UP).whenPressed(
                 new InstantCommand(drop::slideLift, drop)
         );
