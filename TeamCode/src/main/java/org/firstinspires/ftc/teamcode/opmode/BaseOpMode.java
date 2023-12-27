@@ -6,6 +6,7 @@ import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.IMU;
@@ -19,7 +20,7 @@ import org.firstinspires.ftc.teamcode.subsystems.MecanumDriveSubsystem;
 import org.firstinspires.ftc.teamcode.util.TriggerGamepadEx;
 
 public class BaseOpMode extends CommandOpMode {
-    protected DcMotorEx intakeMotor, leftSlideMotor, rightSlideMotor;
+    protected DcMotorEx leftSlideMotor, rightSlideMotor;
     protected IntakeSubsystem intake;
     protected DropSubsystem drop;
     protected MecanumDriveSubsystem drive;
@@ -30,6 +31,7 @@ public class BaseOpMode extends CommandOpMode {
     protected TriggerGamepadEx t2;
     protected SampleMecanumDrive rrDrive;
     protected IMU imu;
+    protected AnalogInput axon;
     protected MotorEx fL, fR, bL, bR;
     protected Servo lS, rS;
     protected String[] LABELS = { // todo: when we train new model
@@ -57,7 +59,7 @@ public class BaseOpMode extends CommandOpMode {
         t2 = new TriggerGamepadEx(gamepad2, driver2);
 
         // Subsystems go here
-//        intake = new IntakeSubsystem(intakeMotor);
+        intake = new IntakeSubsystem(axon);
         drop = new DropSubsystem(leftSlideMotor, rightSlideMotor, lS, rS);
         drive = new MecanumDriveSubsystem(fL, fR, bL, bR, imu);
         bulkRead = new BulkReadSubsystem(hardwareMap);
@@ -76,7 +78,7 @@ public class BaseOpMode extends CommandOpMode {
 
     protected void initHardware() {
         imu = hardwareMap.get(IMU.class, "imu");
-//        intakeMotor = hardwareMap.get(DcMotorEx.class, "intake");
+        axon = hardwareMap.get(AnalogInput.class, "axon");
         leftSlideMotor = hardwareMap.get(DcMotorEx.class, "leftSlide");
         rightSlideMotor = hardwareMap.get(DcMotorEx.class, "rightSlide");
         lS = hardwareMap.get(Servo.class, "leftServo");
@@ -106,8 +108,6 @@ public class BaseOpMode extends CommandOpMode {
         fL.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         bR.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         bL.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
-
-//        intakeMotor.setDirection(DcMotorEx.Direction.FORWARD);
 
         rrDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }

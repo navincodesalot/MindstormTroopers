@@ -47,7 +47,7 @@ public class RunMotionProfile {
             lastTarget = target;
         }
         motionState = profile.get(timer.seconds());
-        return PIDF.calculate(motionState.getX() - state);
+        return PIDF.calculate(state, (motionState.getX() - state));
     }
 
     public double profiledServoMovement(double target, double state) { // todo: use for gobilda servos if needed
