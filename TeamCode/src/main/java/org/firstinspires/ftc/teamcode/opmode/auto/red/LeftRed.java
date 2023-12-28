@@ -4,16 +4,9 @@ import static org.firstinspires.ftc.teamcode.util.StartPoses.leftRed;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
-import com.acmerobotics.roadrunner.trajectory.Trajectory;
-import com.arcrobotics.ftclib.command.Command;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.InstantCommand;
-import com.arcrobotics.ftclib.command.ParallelCommandGroup;
-import com.arcrobotics.ftclib.command.RunCommand;
-import com.arcrobotics.ftclib.command.SelectCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
-import com.arcrobotics.ftclib.command.WaitCommand;
-import com.arcrobotics.ftclib.command.WaitUntilCommand;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.teamcode.opmode.BaseOpMode;
@@ -22,7 +15,6 @@ import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.subsystems.TensorflowSubsystem;
 import org.firstinspires.ftc.teamcode.util.PoseStorage;
-import java.util.HashMap;
 
 @Autonomous
 public class LeftRed extends BaseOpMode {
@@ -60,7 +52,7 @@ public class LeftRed extends BaseOpMode {
             telemetry.update();
 
             // On init
-            drop.liftServo();
+            drop.liftTray();
 
         }
 

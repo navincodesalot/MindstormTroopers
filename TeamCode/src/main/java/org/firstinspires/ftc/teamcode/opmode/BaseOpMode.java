@@ -6,7 +6,7 @@ import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
-import com.qualcomm.robotcore.hardware.AnalogInput;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.IMU;
@@ -31,9 +31,9 @@ public class BaseOpMode extends CommandOpMode {
     protected TriggerGamepadEx t2;
     protected SampleMecanumDrive rrDrive;
     protected IMU imu;
-    protected AnalogInput axon;
+    protected CRServo axon;
     protected MotorEx fL, fR, bL, bR;
-    protected Servo lS, rS;
+    protected Servo lS, rS, t;
     protected String[] LABELS = { // todo: when we train new model
             "left",
             "right"
@@ -60,7 +60,7 @@ public class BaseOpMode extends CommandOpMode {
 
         // Subsystems go here
         intake = new IntakeSubsystem(axon);
-        drop = new DropSubsystem(leftSlideMotor, rightSlideMotor, lS, rS);
+        drop = new DropSubsystem(leftSlideMotor, rightSlideMotor, lS, rS, t);
         drive = new MecanumDriveSubsystem(fL, fR, bL, bR, imu);
         bulkRead = new BulkReadSubsystem(hardwareMap);
 
@@ -78,11 +78,16 @@ public class BaseOpMode extends CommandOpMode {
 
     protected void initHardware() {
         imu = hardwareMap.get(IMU.class, "imu");
-        axon = hardwareMap.get(AnalogInput.class, "axon");
+
         leftSlideMotor = hardwareMap.get(DcMotorEx.class, "leftSlide");
         rightSlideMotor = hardwareMap.get(DcMotorEx.class, "rightSlide");
+
         lS = hardwareMap.get(Servo.class, "leftServo");
         rS = hardwareMap.get(Servo.class, "rightServo");
+        t = hardwareMap.get(Servo.class, "tray");
+
+        axon = hardwareMap.get(CRServo.class, "axon");
+
         fL = new MotorEx(hardwareMap, "leftFront");
         fR = new MotorEx(hardwareMap, "rightFront");
         bL = new MotorEx(hardwareMap, "leftRear");
@@ -92,8 +97,13 @@ public class BaseOpMode extends CommandOpMode {
     protected void setupHardware() {
         fR.setInverted(true);
         bL.setInverted(true);
+
         lS.setDirection(Servo.Direction.FORWARD);
         rS.setDirection(Servo.Direction.REVERSE);
+        t.setDirection(Servo.Direction.REVERSE);
+
+        axon.setDirection(CRServo.Direction.FORWARD);
+
         //set modes and reset encoders here
         leftSlideMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         leftSlideMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);

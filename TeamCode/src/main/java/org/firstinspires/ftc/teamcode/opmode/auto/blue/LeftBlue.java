@@ -3,8 +3,6 @@ package org.firstinspires.ftc.teamcode.opmode.auto.blue;
 import static org.firstinspires.ftc.teamcode.util.StartPoses.leftBlue;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
-import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.arcrobotics.ftclib.command.Command;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.InstantCommand;
@@ -13,20 +11,15 @@ import com.arcrobotics.ftclib.command.RunCommand;
 import com.arcrobotics.ftclib.command.SelectCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
-import com.arcrobotics.ftclib.command.WaitUntilCommand;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.teamcode.opmode.BaseOpMode;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
-import org.firstinspires.ftc.teamcode.subsystems.BulkReadSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.TensorflowSubsystem;
 import org.firstinspires.ftc.teamcode.util.PoseStorage;
-import org.firstinspires.ftc.teamcode.util.ServoLocation;
 
 import java.util.HashMap;
 
@@ -90,7 +83,7 @@ public class LeftBlue extends BaseOpMode {
         rrDrive.setPoseEstimate(leftBlue);
 
         // On init
-        drop.liftServo();
+        drop.liftTray();
 
         while (opModeInInit()) {
             Recognition bestDetection = tensorflow.getBestDetection();
@@ -132,7 +125,7 @@ public class LeftBlue extends BaseOpMode {
                 new RunCommand(() -> intake.pushSlow(0.6), intake).raceWith(new WaitCommand(1000)).andThen(new RunCommand(intake::stop, intake)),
 
                 //todo: maybe do in parallel? (reset for lift)
-                new InstantCommand(drop::liftServo),
+                new InstantCommand(drop::liftTray),
                 new WaitCommand(250),
 
                 new ParallelCommandGroup(

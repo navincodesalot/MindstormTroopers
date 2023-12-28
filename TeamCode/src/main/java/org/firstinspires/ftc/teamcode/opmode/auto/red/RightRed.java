@@ -97,7 +97,7 @@ public class RightRed extends BaseOpMode {
         rrDrive.setPoseEstimate(rightRed);
 
         // On init
-        drop.liftServo();
+        drop.liftTray();
 
         while (opModeInInit()) {
             Recognition bestDetection = tensorflow.getBestDetection();
@@ -144,14 +144,14 @@ public class RightRed extends BaseOpMode {
                 new SelectCommand(
                         new HashMap<Object, Command>() {{
                             put(PropLocations.MIDDLE, new SequentialCommandGroup(
-                                    new InstantCommand(drop::liftServo, drop),
+                                    new InstantCommand(drop::liftTray, drop),
                                     new WaitCommand(servoTime),
                                     new InstantCommand(() -> rrDrive.followTrajectorySequence(moveAwayMiddle)),
                                     new InstantCommand(drop::pickupPixel, drop), //get ready for slide lifts
                                     new WaitCommand(servoTime)
                             ));
                             put(PropLocations.RIGHT, new SequentialCommandGroup(
-                                    new InstantCommand(drop::liftServo, drop),
+                                    new InstantCommand(drop::liftTray, drop),
                                     new WaitCommand(servoTime),
                                     new InstantCommand(() -> rrDrive.followTrajectorySequence(moveAwayRight)),
                                     new InstantCommand(drop::pickupPixel, drop), //get ready for slide lifts
@@ -178,8 +178,7 @@ public class RightRed extends BaseOpMode {
                 // drop pixel
                 new ParallelCommandGroup( // todo: watch syntax here
                         new InstantCommand(() -> {
-                            drop.dropLeftPixel();
-                            drop.dropRightPixel();
+                            drop.dropPixel();
                         }, drop)
                 ),
                 new WaitCommand(1000),

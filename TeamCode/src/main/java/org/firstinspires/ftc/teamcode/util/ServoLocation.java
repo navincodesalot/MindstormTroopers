@@ -5,8 +5,7 @@ public class ServoLocation {
     public enum ServoLocationState {
         LIFTED,
         PICKUP,
-        DROP_LEFT,
-        DROP_RIGHT
+        DROP
     }
 
     private static ServoLocationState servoLocation;

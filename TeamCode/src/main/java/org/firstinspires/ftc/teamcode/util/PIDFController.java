@@ -6,14 +6,15 @@ import static org.firstinspires.ftc.teamcode.tuning.PIDF_Slide.i;
 import static org.firstinspires.ftc.teamcode.tuning.PIDF_Slide.p;
 
 import com.arcrobotics.ftclib.controller.PDController;
+import com.arcrobotics.ftclib.controller.PIDController;
 
 public class PIDFController {
 
 
     public static double returnPower(int pos, int target) {
-        PDController controller;
-        controller = new PDController(p, d);
-        controller.setPID(p,0, d);
+        PIDController controller;
+        controller = new PIDController(p, i, d);
+        controller.setPID(p,i, d);
 
         double pid = controller.calculate(pos, target);
 
