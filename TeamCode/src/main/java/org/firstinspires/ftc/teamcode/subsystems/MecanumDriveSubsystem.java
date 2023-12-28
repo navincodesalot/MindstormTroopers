@@ -28,8 +28,8 @@ public class MecanumDriveSubsystem extends SubsystemBase {
 
     public MecanumDriveSubsystem(MotorEx fL, MotorEx fR, MotorEx bL, MotorEx bR, IMU imu) {
         this.imu = imu;
-        fR.setInverted(true);
-        bL.setInverted(true);
+        // fR.setInverted(true);
+        // bL.setInverted(true);
         drive = new MecanumDrive(false, fL, fR, bL, bR);
     }
 
