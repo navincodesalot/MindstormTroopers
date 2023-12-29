@@ -42,7 +42,7 @@ public class tele extends LinearOpMode {
 //        PhotonCore.CONTROL_HUB.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
 //        PhotonCore.EXPANSION_HUB.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
 //        PhotonCore.enable();
-        SampleMecanumDrive drive = new SampleMecanumDrive(true, hardwareMap);
+        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         drive.setPoseEstimate(PoseStorage.currentPose);
 

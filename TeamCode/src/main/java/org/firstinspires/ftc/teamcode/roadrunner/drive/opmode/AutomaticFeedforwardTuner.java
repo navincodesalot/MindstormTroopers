@@ -35,7 +35,7 @@ import java.util.List;
  *      regression.
  */
 @Config
-@Disabled
+//@Disabled
 @Autonomous(group = "drive")
 public class AutomaticFeedforwardTuner extends LinearOpMode {
     public static double MAX_POWER = 0.7;
@@ -56,12 +56,16 @@ public class AutomaticFeedforwardTuner extends LinearOpMode {
 
         telemetry.addLine("Press play to begin the feedforward tuning routine");
         telemetry.update();
+
         Servo leftServo = hardwareMap.get(Servo.class, "leftServo");
         Servo rightServo = hardwareMap.get(Servo.class, "rightServo");
+        Servo tray = hardwareMap.get(Servo.class, "tray");
+        tray.setDirection(Servo.Direction.REVERSE);
         leftServo.setDirection(Servo.Direction.FORWARD);
         rightServo.setDirection(Servo.Direction.REVERSE);
-        leftServo.setPosition(0.455);
-        rightServo.setPosition(0.085);
+        leftServo.setPosition(0.333);
+        rightServo.setPosition(0);
+        tray.setPosition(0.301);
 
         waitForStart();
 

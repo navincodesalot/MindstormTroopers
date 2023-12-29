@@ -25,7 +25,7 @@ import java.util.Objects;
  */
 
 @Config
-@Disabled
+//@Disabled
 @Autonomous(group = "drive")
 public class MaxAngularVeloTuner extends LinearOpMode {
     public static double RUNTIME = 4.0;
@@ -46,12 +46,16 @@ public class MaxAngularVeloTuner extends LinearOpMode {
         telemetry.addLine("");
         telemetry.addLine("Press start when ready.");
         telemetry.update();
+
         Servo leftServo = hardwareMap.get(Servo.class, "leftServo");
         Servo rightServo = hardwareMap.get(Servo.class, "rightServo");
+        Servo tray = hardwareMap.get(Servo.class, "tray");
+        tray.setDirection(Servo.Direction.REVERSE);
         leftServo.setDirection(Servo.Direction.FORWARD);
         rightServo.setDirection(Servo.Direction.REVERSE);
-        leftServo.setPosition(0.455);
-        rightServo.setPosition(0.085);
+        leftServo.setPosition(0.333);
+        rightServo.setPosition(0);
+        tray.setPosition(0.301);
 
         waitForStart();
 

@@ -27,7 +27,7 @@ import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
  */
 @Config
 @Autonomous(group = "drive")
-@Disabled
+//@Disabled
 public class TrackWidthTuner extends LinearOpMode {
     public static double ANGLE = 180; // deg
     public static int NUM_TRIALS = 5;
@@ -44,12 +44,16 @@ public class TrackWidthTuner extends LinearOpMode {
         telemetry.addLine("Press play to begin the track width tuner routine");
         telemetry.addLine("Make sure your robot has enough clearance to turn smoothly");
         telemetry.update();
+
         Servo leftServo = hardwareMap.get(Servo.class, "leftServo");
         Servo rightServo = hardwareMap.get(Servo.class, "rightServo");
+        Servo tray = hardwareMap.get(Servo.class, "tray");
+        tray.setDirection(Servo.Direction.REVERSE);
         leftServo.setDirection(Servo.Direction.FORWARD);
         rightServo.setDirection(Servo.Direction.REVERSE);
-        leftServo.setPosition(0.455);
-        rightServo.setPosition(0.085);
+        leftServo.setPosition(0.333);
+        rightServo.setPosition(0);
+        tray.setPosition(0.301);
 
         waitForStart();
 

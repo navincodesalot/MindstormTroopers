@@ -18,7 +18,7 @@ import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
  */
 @Config
 @Autonomous(group = "drive")
-@Disabled
+//@Disabled
 public class StraightTest extends LinearOpMode {
     public static double DISTANCE = 60; // in
 
@@ -34,10 +34,13 @@ public class StraightTest extends LinearOpMode {
 
         Servo leftServo = hardwareMap.get(Servo.class, "leftServo");
         Servo rightServo = hardwareMap.get(Servo.class, "rightServo");
+        Servo tray = hardwareMap.get(Servo.class, "tray");
+        tray.setDirection(Servo.Direction.REVERSE);
         leftServo.setDirection(Servo.Direction.FORWARD);
         rightServo.setDirection(Servo.Direction.REVERSE);
-        leftServo.setPosition(0.455);
-        rightServo.setPosition(0.085);
+        leftServo.setPosition(0.333);
+        rightServo.setPosition(0);
+        tray.setPosition(0.301);
 
         waitForStart();
 

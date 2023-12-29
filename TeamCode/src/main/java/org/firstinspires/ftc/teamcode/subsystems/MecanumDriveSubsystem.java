@@ -34,15 +34,15 @@ public class MecanumDriveSubsystem extends SubsystemBase {
     }
 
     public void fieldCentric(DoubleSupplier strafeSpeed, DoubleSupplier forwardSpeed, DoubleSupplier turnSpeed, DoubleSupplier gyroAngle) {
-         drive.driveFieldCentric(strafeSpeed.getAsDouble(), forwardSpeed.getAsDouble(), turnSpeed.getAsDouble(), gyroAngle.getAsDouble());
+         drive.driveFieldCentric(strafeSpeed.getAsDouble(), forwardSpeed.getAsDouble(), turnSpeed.getAsDouble(), gyroAngle.getAsDouble(), true);
     }
 
     public void robotCentric(DoubleSupplier strafeSpeed, DoubleSupplier forwardSpeed, DoubleSupplier turnSpeed) {
-        drive.driveRobotCentric(joystickTransform(strafeSpeed.getAsDouble()), joystickTransform(forwardSpeed.getAsDouble()), joystickTransform(turnSpeed.getAsDouble()), false);
+        drive.driveRobotCentric(joystickTransform(strafeSpeed.getAsDouble()), joystickTransform(forwardSpeed.getAsDouble()), joystickTransform(turnSpeed.getAsDouble()), true);
     }
 
     public void slowMode(DoubleSupplier strafeSpeed, DoubleSupplier forwardSpeed, DoubleSupplier turnSpeed) {
-                drive.driveRobotCentric(strafeSpeed.getAsDouble() / slowFactor, forwardSpeed.getAsDouble() / slowFactor, turnSpeed.getAsDouble() / slowFactor);
+        drive.driveRobotCentric(strafeSpeed.getAsDouble() / slowFactor, forwardSpeed.getAsDouble() / slowFactor, turnSpeed.getAsDouble() / slowFactor, true);
     }
 
     // desmos: https://www.desmos.com/calculator/j2e6yaorld

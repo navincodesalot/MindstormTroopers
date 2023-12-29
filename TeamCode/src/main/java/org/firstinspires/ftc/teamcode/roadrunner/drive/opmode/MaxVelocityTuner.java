@@ -27,7 +27,7 @@ import java.util.Objects;
  * Further fine tuning of kF may be desired.
  */
 @Config
-@Disabled
+//@Disabled
 @Autonomous(group = "drive")
 public class MaxVelocityTuner extends LinearOpMode {
     public static double RUNTIME = 2.0;
@@ -52,12 +52,16 @@ public class MaxVelocityTuner extends LinearOpMode {
         telemetry.addLine("");
         telemetry.addLine("Press start when ready.");
         telemetry.update();
+
         Servo leftServo = hardwareMap.get(Servo.class, "leftServo");
         Servo rightServo = hardwareMap.get(Servo.class, "rightServo");
+        Servo tray = hardwareMap.get(Servo.class, "tray");
+        tray.setDirection(Servo.Direction.REVERSE);
         leftServo.setDirection(Servo.Direction.FORWARD);
         rightServo.setDirection(Servo.Direction.REVERSE);
-        leftServo.setPosition(0.455);
-        rightServo.setPosition(0.085);
+        leftServo.setPosition(0.333);
+        rightServo.setPosition(0);
+        tray.setPosition(0.301);
 
         waitForStart();
 
