@@ -20,15 +20,20 @@ import org.firstinspires.ftc.teamcode.opmode.BaseOpMode;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
+import org.firstinspires.ftc.teamcode.subsystems.AprilTagSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.TensorflowSubsystem;
 import org.firstinspires.ftc.teamcode.util.DelayedCommand;
 import org.firstinspires.ftc.teamcode.util.PoseStorage;
+
 import java.util.HashMap;
+import java.util.List;
 
 @Autonomous
 public class RightRed extends BaseOpMode {
     private PropLocations location;
     private final int servoTime = 400;
+    private List<Vector2d> tagVectors;
+
     @Override
     public void initialize() {
         CommandScheduler.getInstance().reset();
@@ -37,6 +42,8 @@ public class RightRed extends BaseOpMode {
                 "russianred.tflite", REDLABEL);
 
         tensorflow.setMinConfidence(0.70);
+
+        AprilTagSubsystem apriltagSubsystem = new AprilTagSubsystem(hardwareMap, "Webcam 1", 4, 5, 6); // todo: for red its 4, 5, 6
         register(drop, intake, bulkRead); // register so it runs the periodics in a loop while opmode is active
 
         // Drop ground pixel

@@ -64,7 +64,7 @@ import java.util.concurrent.TimeUnit;
  */
 
 @TeleOp(name="Optimize AprilTag Exposure", group = "Concept")
-@Disabled
+//@Disabled
 public class ConceptAprilTagOptimizeExposure extends LinearOpMode
 {
     private VisionPortal visionPortal = null;        // Used to manage the video source.
@@ -172,7 +172,7 @@ public class ConceptAprilTagOptimizeExposure extends LinearOpMode
         Can only be called AFTER calling initAprilTag();
         Returns true if controls are set.
      */
-    private boolean    setManualExposure(int exposureMS, int gain) {
+    private boolean setManualExposure(int exposureMS, int gain) {
         // Ensure Vision Portal has been setup.
         if (visionPortal == null) {
             return false;
