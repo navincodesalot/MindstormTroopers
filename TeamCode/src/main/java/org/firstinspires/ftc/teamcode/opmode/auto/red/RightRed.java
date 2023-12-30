@@ -34,14 +34,14 @@ public class RightRed extends BaseOpMode {
         CommandScheduler.getInstance().reset();
         super.initialize();
         TensorflowSubsystem tensorflow = new TensorflowSubsystem(hardwareMap, "Webcam 1",
-                "redprop.tflite", LABELS);
+                "russianred.tflite", REDLABEL);
 
-        tensorflow.setMinConfidence(0.75);
+        tensorflow.setMinConfidence(0.70);
         register(drop, intake, bulkRead); // register so it runs the periodics in a loop while opmode is active
 
         // Drop ground pixel
         TrajectorySequence dropLeft = rrDrive.trajectorySequenceBuilder(rightRed)
-                .lineToSplineHeading(new Pose2d(12, -35, Math.toRadians(180)),
+                .lineToSplineHeading(new Pose2d(35, -29, Math.toRadians(180)),
                         SampleMecanumDrive.getVelocityConstraint(17, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
@@ -52,29 +52,28 @@ public class RightRed extends BaseOpMode {
                 .build();
 
         TrajectorySequence dropRight = rrDrive.trajectorySequenceBuilder(rightRed)
-                .lineToSplineHeading(new Pose2d(12, -35, Math.toRadians(0)),
-                        SampleMecanumDrive.getVelocityConstraint(17, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                .lineToSplineHeading(new Pose2d(35, -29, Math.toRadians(180)),
+                        SampleMecanumDrive.getVelocityConstraint(37, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
-
-        // Move away (not needed for left)
-        TrajectorySequence moveAwayMiddle = rrDrive.trajectorySequenceBuilder(dropMiddle.end())
-                .lineTo(new Vector2d(12, -40))
-                .build();
-        TrajectorySequence moveAwayRight = rrDrive.trajectorySequenceBuilder(dropRight.end())
-                .back(2)
-                .build();
+//
+//        // Move away (not needed for left)
+//        TrajectorySequence moveAwayMiddle = rrDrive.trajectorySequenceBuilder(dropMiddle.end())
+//                .lineTo(new Vector2d(12, -40))
+//                .build();
+//        TrajectorySequence moveAwayRight = rrDrive.trajectorySequenceBuilder(dropRight.end())
+//                .back(2)
+//                .build();
 
         // Drop to backdrop
         TrajectorySequence dropToBackdropLeft = rrDrive.trajectorySequenceBuilder(dropLeft.end())
                 .lineTo(new Vector2d(45, -29))
                 .build();
-        TrajectorySequence dropToBackdropMiddle = rrDrive.trajectorySequenceBuilder(moveAwayMiddle.end())
+        TrajectorySequence dropToBackdropMiddle = rrDrive.trajectorySequenceBuilder(dropMiddle.end())
                 .lineToSplineHeading(new Pose2d(45, -37, Math.toRadians(180)))
                 .build();
-        TrajectorySequence dropToBackdropRight = rrDrive.trajectorySequenceBuilder(moveAwayRight.end())
-                .strafeRight(22)
-                .lineToSplineHeading(new Pose2d(45, -42, Math.toRadians(180)))
+        TrajectorySequence dropToBackdropRight = rrDrive.trajectorySequenceBuilder(dropRight.end())
+                .lineToConstantHeading(new Vector2d(47, -44))
                 .build();
 
         // Park
@@ -91,26 +90,24 @@ public class RightRed extends BaseOpMode {
         TrajectorySequence parkRight = rrDrive.trajectorySequenceBuilder(dropToBackdropRight.end())
                 .forward(5)
                 .strafeLeft(3)
-                .splineToLinearHeading(new Pose2d(59, -60, Math.toRadians(180)), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(59, -60), Math.toRadians(0))
                 .build();
 
         rrDrive.setPoseEstimate(rightRed);
 
         // On init
-        drop.liftTray();
+        drop.liftHighTray();
 
         while (opModeInInit()) {
             Recognition bestDetection = tensorflow.getBestDetection();
-            location = PropLocations.MIDDLE;
+            location = PropLocations.LEFT;
 
             if (bestDetection != null) {
                 double x = (bestDetection.getLeft() + bestDetection.getRight()) / 2;
-                if (x < 150) {
-                    location = PropLocations.LEFT;
-                } else if (x > 150 && x < 440) {
-                    location = PropLocations.MIDDLE;
-                } else {
+                if (x > 365) {
                     location = PropLocations.RIGHT;
+                } else if (x > 160 && x < 365) {
+                    location = PropLocations.MIDDLE;
                 }
             }
 
@@ -125,80 +122,60 @@ public class RightRed extends BaseOpMode {
         schedule(new SequentialCommandGroup(
                 new ParallelCommandGroup(
                         new InstantCommand(tensorflow::shutdown),
+                        new DelayedCommand(new InstantCommand(drop::pickupPixel), 1000),
                         new SelectCommand(
                                 new HashMap<Object, Command>() {{
-                                    put(PropLocations.LEFT, new InstantCommand(() -> rrDrive.followTrajectorySequence(dropLeft)));
-                                    put(PropLocations.MIDDLE, new InstantCommand(() -> rrDrive.followTrajectorySequence(dropMiddle)));
-                                    put(PropLocations.RIGHT, new InstantCommand(() -> rrDrive.followTrajectorySequence(dropRight)));
+                                    put(PropLocations.LEFT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropLeft)));
+                                    put(PropLocations.MIDDLE, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropMiddle)));
+                                    put(PropLocations.RIGHT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropRight)));
                                 }},
                                 () -> location
-                        )
-                ),
-
-                // drop ground pixel
-                new InstantCommand(drop::pickupPixel, drop),
-                new WaitCommand(servoTime), // <- 400ms
-                new RunCommand(() -> intake.pushSlow(0.6), intake).raceWith(new WaitCommand(1000)).andThen(new RunCommand(intake::stop, intake)),
-
-                // move away (not for left)
-                new SelectCommand(
-                        new HashMap<Object, Command>() {{
-                            put(PropLocations.MIDDLE, new SequentialCommandGroup(
-                                    new InstantCommand(drop::liftTray, drop),
-                                    new WaitCommand(servoTime),
-                                    new InstantCommand(() -> rrDrive.followTrajectorySequence(moveAwayMiddle)),
-                                    new InstantCommand(drop::pickupPixel, drop), //get ready for slide lifts
-                                    new WaitCommand(servoTime)
-                            ));
-                            put(PropLocations.RIGHT, new SequentialCommandGroup(
-                                    new InstantCommand(drop::liftTray, drop),
-                                    new WaitCommand(servoTime),
-                                    new InstantCommand(() -> rrDrive.followTrajectorySequence(moveAwayRight)),
-                                    new InstantCommand(drop::pickupPixel, drop), //get ready for slide lifts
-                                    new WaitCommand(servoTime)
-                            ));
-                        }},
-                        () -> location
-                ),
-
-
-                new ParallelCommandGroup( // todo: these are async trajs (drive while lifting slides)
-                        new InstantCommand(drop::slideLift, drop),
-                        // this will run the traj around 500ms after so the slides can go up and the servos don't drag on the field while running the trajectory
-                        new DelayedCommand(new SelectCommand(
-                                new HashMap<Object, Command>() {{
-                                    put(PropLocations.LEFT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropToBackdropLeft)));
-                                    put(PropLocations.MIDDLE, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropToBackdropMiddle)));
-                                    put(PropLocations.RIGHT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropToBackdropRight)));
-                                }},
-                                () -> location
-                            ), 500)
-                ),
-
-                // drop pixel
-                new ParallelCommandGroup( // todo: watch syntax here
-                        new InstantCommand(() -> {
-                            drop.dropPixel();
-                        }, drop)
-                ),
-                new WaitCommand(1000),
-
-                //todo fix logic: here i need to reset servos, bring slides down, then lift servos down WHILE driving rr path to save time (make sure to not flip)
-                new ParallelCommandGroup( // example: https://github.com/Watt-sUP/CenterStage2023/blob/e2e4e643bfca7fcf61e531f743066df861e16ee3/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/autonomous/BlueLong.java#L150
-                        new InstantCommand(drop::pickupPixel, drop),
-                        new DelayedCommand(new InstantCommand(drop::slideIdle, drop), servoTime), // offsetted by the servo time
-                        new SequentialCommandGroup(
-                                new WaitUntilCommand(() -> drop.getPosition() <= 700), // wait until slides are low enough before starting traj
-                                new SelectCommand(
-                                        new HashMap<Object, Command>() {{
-                                            put(PropLocations.LEFT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(parkLeft)));
-                                            put(PropLocations.MIDDLE, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(parkMiddle)));
-                                            put(PropLocations.RIGHT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(parkRight)));
-                                        }},
-                                        () -> location
-                                )
                         )
                 )
+
+//                // drop ground pixel
+//                new InstantCommand(drop::pickupPixel, drop),
+//                new WaitCommand(servoTime), // <- 400ms
+//                new RunCommand(() -> intake.pushSlow(0.6), intake).raceWith(new WaitCommand(1000)).andThen(new RunCommand(intake::stop, intake)),
+//
+//
+//                new ParallelCommandGroup( // todo: these are async trajs (drive while lifting slides)
+//                        new InstantCommand(drop::slideLift, drop),
+//                        // this will run the traj around 500ms after so the slides can go up and the servos don't drag on the field while running the trajectory
+//                        new DelayedCommand(new SelectCommand(
+//                                new HashMap<Object, Command>() {{
+//                                    put(PropLocations.LEFT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropToBackdropLeft)));
+//                                    put(PropLocations.MIDDLE, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropToBackdropMiddle)));
+//                                    put(PropLocations.RIGHT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropToBackdropRight)));
+//                                }},
+//                                () -> location
+//                            ), 500)
+//                ),
+//
+//                // drop pixel
+//                new ParallelCommandGroup( // todo: watch syntax here
+//                        new InstantCommand(() -> {
+//                            drop.dropPixel();
+//                        }, drop)
+//                ),
+//                new WaitCommand(1000),
+//
+//                //todo fix logic: here i need to reset servos, bring slides down, then lift servos down WHILE driving rr path to save time (make sure to not flip)
+//                new ParallelCommandGroup( // example: https://github.com/Watt-sUP/CenterStage2023/blob/e2e4e643bfca7fcf61e531f743066df861e16ee3/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/autonomous/BlueLong.java#L150
+//                        new InstantCommand(drop::pickupPixel, drop),
+//                        new DelayedCommand(new InstantCommand(drop::slideIdle, drop), servoTime), // offsetted by the servo time
+//                        new SequentialCommandGroup(
+//                                new WaitUntilCommand(() -> drop.getPosition() <= 700), // wait until slides are low enough before starting traj
+//                                new SelectCommand(
+//                                        new HashMap<Object, Command>() {{
+//                                            put(PropLocations.LEFT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(parkLeft)));
+//                                            put(PropLocations.MIDDLE, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(parkMiddle)));
+//                                            put(PropLocations.RIGHT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(parkRight)));
+//                                        }},
+//                                        () -> location
+//                                )
+//                        )
+//                )
         ));
 
         PoseStorage.currentPose = rrDrive.getPoseEstimate(); //send pose to tele

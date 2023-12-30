@@ -34,9 +34,11 @@ public class BaseOpMode extends CommandOpMode {
     protected CRServo axon;
     protected MotorEx fL, fR, bL, bR;
     protected Servo lS, rS, t;
-    protected String[] LABELS = { // todo: when we train new model
-            "left",
-            "right"
+    protected String[] REDLABEL = {
+            "RedProp"
+    };
+    protected String[] BLUELABEL = {
+            "BlueProp"
     };
     private double loopTime = 0.0;
 

@@ -31,7 +31,7 @@ public class LeftBlue extends BaseOpMode {
         CommandScheduler.getInstance().reset();
         super.initialize();
         TensorflowSubsystem tensorflow = new TensorflowSubsystem(hardwareMap, "Webcam 1",
-                "blueprop.tflite", LABELS);
+                "russianblue.tflite", BLUELABEL);
 
         tensorflow.setMinConfidence(0.75);
         register(drop, intake, bulkRead); // register so it runs the periodics

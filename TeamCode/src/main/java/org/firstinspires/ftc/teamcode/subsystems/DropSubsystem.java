@@ -65,6 +65,10 @@ public class DropSubsystem extends SubsystemBase {
         ServoLocation.setServoLocation(ServoLocation.ServoLocationState.PICKUP);
     }
 
+    public void liftHighTray() {
+        tray.setPosition(0.52);
+    }
+
     // Slide
     public void slideLift() {
         this.target = 1165;

@@ -26,7 +26,7 @@ public class RightBlue extends BaseOpMode {
         CommandScheduler.getInstance().enable();
         super.initialize();
         TensorflowSubsystem tensorflow = new TensorflowSubsystem(hardwareMap, "Webcam 1",
-                "redprop.tflite", LABELS);
+                "russianblue.tflite", BLUELABEL);
 
         tensorflow.setMinConfidence(0.75);
 //        register(drop, intake);
