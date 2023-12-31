@@ -23,7 +23,7 @@ public class MecanumDriveSubsystem extends SubsystemBase {
     private final IMU imu;
     private final MecanumDrive drive;
     public static int joystickTransformFactor = 30;
-    public int slowFactor = 3;
+    public int slowFactor = 2;
     private double powerLimit = 1.0;
 
     public MecanumDriveSubsystem(MotorEx fL, MotorEx fR, MotorEx bL, MotorEx bR, IMU imu) {

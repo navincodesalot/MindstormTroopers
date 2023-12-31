@@ -18,8 +18,9 @@ public class RightRed {
                 .setConstraints(Constraints.MAX_VEL, Constraints.MAX_ACCEL, Constraints.MAX_ANG_VEL,
                         Constraints.MAX_ANG_ACCEL, Constraints.TRACK_WIDTH)
                 .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(new Pose2d(12, -65, Math.toRadians(90)))
-                                .splineToSplineHeading(new Pose2d(10.5, -26.5, Math.toRadians(180)), Math.toRadians(90))
+                        drive.trajectorySequenceBuilder(new Pose2d(12, -65, Math.toRadians(270)))
+                                .strafeLeft(2)
+                                .lineToSplineHeading(new Pose2d(10.5, -26.5, Math.toRadians(182)))
                                 .waitSeconds(0.3)
                                 // move away from pixel
                                 // bring slides up here
@@ -27,9 +28,8 @@ public class RightRed {
                                 // drop
                                 .waitSeconds(2)
                                 // park
-                                .forward(6)
-                                .strafeLeft(10)
-                                .splineToLinearHeading(new Pose2d(59, -60, Math.toRadians(180)), Math.toRadians(0))
+//                                .strafeLeft(10)
+                                .lineToLinearHeading(new Pose2d(47, -60, Math.toRadians(180)))
                                 .build()
                 );
 
@@ -40,20 +40,16 @@ public class RightRed {
                         Constraints.MAX_ANG_ACCEL, Constraints.TRACK_WIDTH)
                 .followTrajectorySequence(drive ->
                         // middle
-                        drive.trajectorySequenceBuilder(new Pose2d(12, -65, Math.toRadians(90)))
-                                .lineToSplineHeading(new Pose2d(12, -32, Math.toRadians(90)))
+                        drive.trajectorySequenceBuilder(new Pose2d(12, -65, Math.toRadians(270)))
+                                .lineToSplineHeading(new Pose2d(23, -23, Math.toRadians(182)))
                                 // intake push and drop pixel
                                 .waitSeconds(0.3)
-                                // move away from pixel
-                                .lineTo(new Vector2d(12, -43))
                                 // bring slides up here
-                                .lineToSplineHeading(new Pose2d(45, -37, Math.toRadians(180)))
+                                .lineToConstantHeading(new Vector2d(47, -35))
                                 // drop
                                 .waitSeconds(2)
                                 // park
-                                .forward(4)
-                                .strafeLeft(4)
-                                .splineToLinearHeading(new Pose2d(59, -60, Math.toRadians(180)), Math.toRadians(0))
+                                .lineToLinearHeading(new Pose2d(47, -60, Math.toRadians(180)))
                                 .build()
                 );
 
@@ -71,9 +67,7 @@ public class RightRed {
                                 .lineToConstantHeading(new Vector2d(47, -44))
                                 .waitSeconds(2)
                                 //park
-                                .forward(5)
-                                .strafeLeft(3)
-                                .splineToConstantHeading(new Vector2d(59, -60), Math.toRadians(0))
+                                .lineToLinearHeading(new Pose2d(47, -60, Math.toRadians(180)))
                                 .build()
                 );
 
@@ -81,8 +75,8 @@ public class RightRed {
                 .setDarkMode(true)
                 .setBackgroundAlpha(0.95f)
 //                .addEntity(leftBot)
-//                .addEntity(middleBot)
-               .addEntity(rightBot)
+                .addEntity(middleBot)
+//               .addEntity(rightBot)
                 .start();
     }
 }

@@ -29,7 +29,6 @@ public class BaseOpMode extends CommandOpMode {
     protected GamepadEx driver2;
     protected TriggerGamepadEx t1;
     protected TriggerGamepadEx t2;
-    protected SampleMecanumDrive rrDrive;
     protected IMU imu;
     protected CRServo axon;
     protected MotorEx fL, fR, bL, bR;
@@ -45,8 +44,6 @@ public class BaseOpMode extends CommandOpMode {
     @Override
     public void initialize() {
         telemetry.update();
-        rrDrive = new SampleMecanumDrive(hardwareMap);
-
         initHardware();
         setupHardware();
 
@@ -120,8 +117,6 @@ public class BaseOpMode extends CommandOpMode {
         fL.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         bR.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         bL.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
-
-        rrDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     // telemetry add data = tad
