@@ -22,7 +22,7 @@ import org.firstinspires.ftc.teamcode.util.RunMotionProfile;
 public class PIDF_Slide extends OpMode {
     private PIDController controller;
 
-    public static double p = 0.0065, i = 0.35, d = 0.0001, f = 0.0035;
+    public static double p = 0.031, i = 0.31, d = 0.00046, f = 0.0048;
 //    public static double maxVel = 40000, maxAccel = 50000, maxJerk = 60000;
 //    private final RunMotionProfile profile = new RunMotionProfile(
 //            maxVel, maxAccel, maxJerk,
@@ -53,7 +53,8 @@ public class PIDF_Slide extends OpMode {
         rightSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
+        leftServo.setDirection(Servo.Direction.FORWARD);
+        rightServo.setDirection(Servo.Direction.REVERSE);
         // lift servos
         leftServo.setPosition(0.333);
         rightServo.setPosition(0);
