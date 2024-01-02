@@ -35,6 +35,7 @@ class DetectionUtilities:
         }
         return data
 
+
 class LabelingUtilities:
     def __init__(self) -> None:
         self.window: Dict[str, Optional[tuple[int, int]]] = {
@@ -63,21 +64,25 @@ class LabelingUtilities:
 
         pyautogui.moveTo(self.clamp(detection['xmin'], detection['ymin']), duration=0.2)
         pyautogui.mouseDown(button='left')
-        pyautogui.moveTo(self.clamp(detection['xmax'], detection['ymax']), duration=0.33)
+        pyautogui.moveTo(self.clamp(detection['xmax'], detection['ymax']), duration=0.25)
         pyautogui.mouseUp(button='left')
-        pyautogui.typewrite(detection_data['name'][0], interval=0.16)
+        pyautogui.typewrite(detection_data['name'], interval=0.16)
 
 if __name__ == '__main__':
-    model = torch.hub.load('ultralytics/yolov5', 'custom', 'best.pt', force_reload=True, verbose=False, _verbose=False)
+    model = torch.hub.load('ultralytics/yolov5', 'custom', 'redbest.pt', force_reload=True, verbose=False, _verbose=False)
     model.conf = 0.3
     detectionUtils = DetectionUtilities()
     labelUtils = LabelingUtilities()
-    labelUtils.setWindow((159, 110), (955, 707))
+    labelUtils.setWindow((637, 436), (1275, 914)) #todo: (top_left, bottom_right)
 
-    for _ in range(350):
+    for _ in range(376): # todo: for number of frames
         results = model(Screenshot.grab(), size=640)
         detection_data = detectionUtils.getBestObject(results.pandas().xyxy[0])
         labelUtils.drawBoundingBox(detection_data)
 
-        pyautogui.click(385, 775)
+        pyautogui.click(821, 966) #todo: next frame button
         sleep(1)
+
+# # Display mouse position:
+# import pyautogui
+# pyautogui.displayMousePosition()
