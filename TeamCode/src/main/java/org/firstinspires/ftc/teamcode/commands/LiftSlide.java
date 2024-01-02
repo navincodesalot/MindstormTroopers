@@ -1,25 +1,21 @@
 package org.firstinspires.ftc.teamcode.commands;
 
-import com.arcrobotics.ftclib.command.ConditionalCommand;
 import com.arcrobotics.ftclib.command.InstantCommand;
-import com.arcrobotics.ftclib.command.RunCommand;
+import com.arcrobotics.ftclib.command.ParallelCommandGroup;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
-import com.arcrobotics.ftclib.command.WaitCommand;
-
+import com.arcrobotics.ftclib.command.WaitUntilCommand;
 import org.firstinspires.ftc.teamcode.subsystems.DropSubsystem;
-import org.firstinspires.ftc.teamcode.util.ServoLocation;
 
 public class LiftSlide extends SequentialCommandGroup {
     public LiftSlide (DropSubsystem drop) {
         super(
-                new ConditionalCommand(
-                        new InstantCommand(drop::slideLift),
-                        new InstantCommand(drop::pickupPixel).alongWith(
-                                new WaitCommand(400),
-                                new InstantCommand(drop::slideLift)
-                        ),
-                        () -> (ServoLocation.getServoLocation() == ServoLocation.ServoLocationState.PICKUP)
-                )
+                new ParallelCommandGroup(
+                        new InstantCommand(drop::setupTrayForSlide),
+                        new InstantCommand(drop::slideLiftPoint)
+                ),
+                new WaitUntilCommand(() -> (drop.getPosition() <= 210) && (drop.getPosition() >= 190)), // figure out (or use time if needed)
+                new InstantCommand(drop::slideLift)
+                // do tray stuff here (after we use a wait until and check the slides pos)
         );
     }
 }

@@ -12,10 +12,12 @@ import com.arcrobotics.ftclib.command.RunCommand;
 import com.arcrobotics.ftclib.command.SelectCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
+import com.arcrobotics.ftclib.command.WaitUntilCommand;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
+import org.firstinspires.ftc.teamcode.commands.LiftSlide;
 import org.firstinspires.ftc.teamcode.opmode.BaseOpMode;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
@@ -49,6 +51,7 @@ public class RightRed2Pixel extends BaseOpMode {
 //        AprilTagSubsystem apriltagSubsystem = new AprilTagSubsystem(hardwareMap, "Webcam 1", 4, 5, 6); // todo: for red its 4, 5, 6
         register(drop, intake, bulkRead); // register so it runs the periodics in a loop while opmode is active
         intake.setDefaultCommand(new RunCommand(intake::stop, intake));
+
         // Drop ground pixel
         TrajectorySequence dropLeft = rrDrive.trajectorySequenceBuilder(rightRed)
                 .strafeLeft(2)
@@ -122,7 +125,7 @@ public class RightRed2Pixel extends BaseOpMode {
                                     new ParallelCommandGroup(
                                             new InstantCommand(tensorflow::shutdown, tensorflow),
                                             new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropLeft)),
-                                            new DelayedCommand(new InstantCommand(drop::pickupPixel, drop), 750),
+                                            new DelayedCommand(new InstantCommand(drop::pickupPixel, drop), 1000),
                                             new DelayedCommand(new RunCommand(intake::push, intake).raceWith(new WaitCommand(1000)), 3000)
                                     )
                             ));
@@ -139,7 +142,7 @@ public class RightRed2Pixel extends BaseOpMode {
                                             new InstantCommand(tensorflow::shutdown, tensorflow),
                                             new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropRight)),
                                             new DelayedCommand(new InstantCommand(drop::pickupPixel, drop), 1000),
-//                                            new WaitUntilCommand(() -> rrDrive.getPoseEstimate().getY() == (-24.0)),
+//                                            new WaitUntilCommand(() -> (rrDrive.getPoseEstimate().getY() <= (-25.0)) && (rrDrive.getPoseEstimate().getY() >= (-23.0))), todo
                                             new DelayedCommand(new RunCommand(intake::push, intake).raceWith(new WaitCommand(1000)), 3000)
                                     )
                             ));
@@ -157,6 +160,10 @@ public class RightRed2Pixel extends BaseOpMode {
                                 () -> location
                         )
                 ),
+                // todo: when lifting slide
+//                new LiftSlide(drop),
+//                new WaitUntilCommand(() -> (drop.getPosition() <= 1080) && (drop.getPosition() >= 1060)),
+
                 new SelectCommand(
                         new HashMap<Object, Command>() {{
                             put(PropLocations.LEFT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(parkLeft)));

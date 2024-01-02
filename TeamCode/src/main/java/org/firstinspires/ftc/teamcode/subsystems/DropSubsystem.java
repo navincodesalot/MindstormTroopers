@@ -29,15 +29,15 @@ public class DropSubsystem extends SubsystemBase {
         target = 0; // todo: for mp, set target/goal to 0 at start
     }
 
-    //PIDF Loop
+    // PIDF Loop
     @Override
-    public void periodic() { //Runs in a loop while op mode is active (in the run method of scheduler class)
+    public void periodic() { // Runs in a loop while op mode is active (in the run method of scheduler class)
         leftSlide.setPower(PIDFController.returnPower(leftSlide.getCurrentPosition(), target));
         rightSlide.setPower(PIDFController.returnPower(leftSlide.getCurrentPosition(), target));
         super.periodic();
     }
 
-    // Servo
+    // Servos
     public void goParallel() {
         leftServo.setPosition(leftParallel);
         rightServo.setPosition(rightParallel);
@@ -65,17 +65,21 @@ public class DropSubsystem extends SubsystemBase {
         ServoLocation.setServoLocation(ServoLocation.ServoLocationState.PICKUP);
     }
 
-    public void liftHighTray() {
+    public void setupTrayForSlide() {
         tray.setPosition(0.52);
     }
 
     // Slide
     public void slideLift() {
-        this.target = 1165;
+        this.target = 1070;
     }
 
     public void slideMiddle() {
-        this.target = 700;
+        this.target = 750;
+    }
+
+    public void slideLiftPoint() {
+        this.target = 200;
     }
 
     public void slideIdle() {
@@ -86,13 +90,13 @@ public class DropSubsystem extends SubsystemBase {
         this.target = target;
     }
 
-//    public double getError() {
-//        return target - getPosition();
-//    }
-//
     public int getPosition() {
         return leftSlide.getCurrentPosition();
     }
+
+//    public double getError() {
+//        return target - getPosition();
+//    }
 //
 //    public boolean isTimeDone() {
 //        return profile.getProfileDuration() < profile.getCurrentTime();
