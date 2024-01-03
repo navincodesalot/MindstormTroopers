@@ -5,7 +5,6 @@ import static org.firstinspires.ftc.teamcode.tuning.PIDF_Slide.f;
 import static org.firstinspires.ftc.teamcode.tuning.PIDF_Slide.i;
 import static org.firstinspires.ftc.teamcode.tuning.PIDF_Slide.p;
 
-import com.arcrobotics.ftclib.controller.PDController;
 import com.arcrobotics.ftclib.controller.PIDController;
 
 public class PIDFController {

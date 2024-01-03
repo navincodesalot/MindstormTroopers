@@ -2,13 +2,14 @@ package org.firstinspires.ftc.teamcode.opmode.tele;
 
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.InstantCommand;
-import com.arcrobotics.ftclib.command.ParallelCommandGroup;
 import com.arcrobotics.ftclib.command.RunCommand;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.A;
+import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.B;
 import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.BACK;
 import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.DPAD_DOWN;
 import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.DPAD_LEFT;
+import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.DPAD_RIGHT;
 import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.DPAD_UP;
 import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.LEFT_BUMPER;
 import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.RIGHT_BUMPER;
@@ -16,6 +17,11 @@ import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Trigger.LEFT_TRIGGER;
 import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.X;
 import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.Y;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.teamcode.commands.DropSlide;
+import org.firstinspires.ftc.teamcode.commands.LiftSlideHigh;
+import org.firstinspires.ftc.teamcode.commands.LiftSlideLow;
+import org.firstinspires.ftc.teamcode.commands.LiftSlideMed;
+import org.firstinspires.ftc.teamcode.commands.LiftSlideSmall;
 import org.firstinspires.ftc.teamcode.opmode.BaseOpMode;
 
 @TeleOp(name = "cooked ahh tray")
@@ -34,17 +40,18 @@ public class CmdOpMode extends BaseOpMode {
         drop.goParallel();
         drop.liftTray();
 
-        drive.setDefaultCommand(new RunCommand(() -> drive.fieldCentric(driver1::getLeftX, driver1::getLeftY, driver1::getRightX, () -> imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES)), drive));
+//        drive.setDefaultCommand(new RunCommand(() -> drive.fieldCentric(driver1::getLeftX, driver1::getLeftY, driver1::getRightX, () -> imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES)), drive));
+
+        drive.setDefaultCommand(new RunCommand(() -> drive.robotCentric(driver1::getLeftX, driver1::getLeftY, driver1::getRightX), drive));
         tad("Status", "OpMode Initialized");
         // Keybinds
         t1.getGamepadTrigger(LEFT_TRIGGER).whileActiveContinuous(
                 new RunCommand(() -> drive.slowMode(driver1::getLeftX, driver1::getLeftY, driver1::getRightX), drive)
         );
-        // todo add keybind for brakes: (powerLimit)
-        driver1.getGamepadButton(BACK).toggleWhenPressed(
-                new RunCommand(() -> drive.robotCentric(driver1::getLeftX, driver1::getLeftY, driver1::getRightX), drive),
-                new RunCommand(() -> drive.fieldCentric(driver1::getLeftX, driver1::getLeftY, driver1::getRightX, () -> imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES)), drive)
-        );
+//        driver1.getGamepadButton(BACK).toggleWhenPressed(
+//                new RunCommand(() -> drive.robotCentric(driver1::getLeftX, driver1::getLeftY, driver1::getRightX), drive),
+//                new RunCommand(() -> drive.fieldCentric(driver1::getLeftX, driver1::getLeftY, driver1::getRightX, () -> imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES)), drive)
+//        );
         driver1.getGamepadButton(LEFT_BUMPER).whileHeld(
                 new RunCommand(intake::push, intake)
         );
@@ -52,30 +59,49 @@ public class CmdOpMode extends BaseOpMode {
                 new RunCommand(intake::grab, intake)
         );
         driver1.getGamepadButton(DPAD_UP).whenPressed(
-                new InstantCommand(drop::slideLift, drop)
+                new LiftSlideHigh(drop)
+        );
+        driver1.getGamepadButton(DPAD_RIGHT).whenPressed(
+                new LiftSlideMed(drop)
         );
         driver1.getGamepadButton(DPAD_DOWN).whenPressed(
-                new InstantCommand(drop::slideIdle, drop)
+                new DropSlide(drop)
         );
         driver1.getGamepadButton(DPAD_LEFT).whenPressed(
-                new InstantCommand(drop::slideMiddle, drop)
+                new LiftSlideLow(drop)
         );
         driver1.getGamepadButton(X).whenPressed(
                 new InstantCommand(drop::dropPixel, drop)
         );
-
-        //todo make a drop for both?
-
-        // Manual commands
+        driver1.getGamepadButton(B).whenPressed(
+                new InstantCommand(drop::dropPixel, drop)
+        );
         driver1.getGamepadButton(Y).whenPressed(
                 new InstantCommand(drop::liftTray, drop)
         );
-
         driver1.getGamepadButton(A).whenPressed(
                 new InstantCommand(drop::pickupPixel, drop)
         );
 
         // Backup commands
+        driver2.getGamepadButton(DPAD_UP).whenPressed(
+                new LiftSlideHigh(drop)
+        );
+        driver2.getGamepadButton(DPAD_RIGHT).whenPressed(
+                new LiftSlideMed(drop)
+        );
+        driver2.getGamepadButton(DPAD_DOWN).whenPressed(
+                new DropSlide(drop)
+        );
+        driver2.getGamepadButton(DPAD_LEFT).whenPressed(
+                new LiftSlideLow(drop)
+        );
+        driver2.getGamepadButton(X).whenPressed(
+                new InstantCommand(drop::dropPixel, drop)
+        );
+        driver2.getGamepadButton(B).whenPressed(
+                new InstantCommand(drop::dropPixel, drop)
+        );
         driver2.getGamepadButton(A).whenPressed(
                 new InstantCommand(drop::pickupPixel, drop)
         );

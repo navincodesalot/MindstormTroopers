@@ -50,6 +50,12 @@ public class DropSubsystem extends SubsystemBase {
         ServoLocation.setServoLocation(ServoLocation.ServoLocationState.LIFTED);
     }
 
+    public void semiLiftTrayForDrop() {
+        leftServo.setPosition(leftParallel);
+        rightServo.setPosition(rightParallel);
+        tray.setPosition(0.23);
+    }
+
     public void dropPixel() {
         leftServo.setPosition(0.7);
         rightServo.setPosition(0.321);
@@ -66,24 +72,34 @@ public class DropSubsystem extends SubsystemBase {
     }
 
     public void setupTrayForSlide() {
-        tray.setPosition(0.52);
+        leftServo.setPosition(leftParallel);
+        rightServo.setPosition(rightParallel);
+        tray.setPosition(0.12);
     }
 
     // Slide
-    public void slideLift() {
+    public void slideHigh() {
         this.target = 1070;
     }
 
-    public void slideMiddle() {
+    public void slideMed() {
+        this.target = 900;
+    }
+
+    public void slideLow() {
         this.target = 750;
     }
 
-    public void slideLiftPoint() {
+    public void slidePoint() {
         this.target = 200;
     }
 
+    public void slideSmall() {
+        this.target = 500;
+    }
+
     public void slideIdle() {
-        this.target = 10;
+        this.target = 0;
     }
 
     public void slideGoTo(int target) {

@@ -22,7 +22,7 @@ import org.firstinspires.ftc.teamcode.util.RunMotionProfile;
 public class PIDF_Slide extends OpMode {
     private PIDController controller;
 
-    public static double p = 0.031, i = 0.31, d = 0.00046, f = 0.0048;
+    public static double p = 0.031, i = 0.31, d = 0.00085, f = 0.0048;
 //    public static double maxVel = 40000, maxAccel = 50000, maxJerk = 60000;
 //    private final RunMotionProfile profile = new RunMotionProfile(
 //            maxVel, maxAccel, maxJerk,

@@ -1,24 +1,24 @@
 package org.firstinspires.ftc.teamcode.commands;
 
-import com.arcrobotics.ftclib.command.ConditionalCommand;
 import com.arcrobotics.ftclib.command.InstantCommand;
-import com.arcrobotics.ftclib.command.RunCommand;
+import com.arcrobotics.ftclib.command.ParallelCommandGroup;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
-
+import com.arcrobotics.ftclib.command.WaitUntilCommand;
 import org.firstinspires.ftc.teamcode.subsystems.DropSubsystem;
-import org.firstinspires.ftc.teamcode.util.ServoLocation;
+import org.firstinspires.ftc.teamcode.util.DelayedCommand;
 
 public class DropSlide extends SequentialCommandGroup {
     public DropSlide (DropSubsystem drop) {
         super(
-                new ConditionalCommand(
-                        new InstantCommand(drop::slideIdle),
-                        new InstantCommand(drop::pickupPixel).alongWith(
-                            new WaitCommand(400),
-                            new InstantCommand(drop::slideIdle)
-                        ),
-                        () -> (ServoLocation.getServoLocation() == ServoLocation.ServoLocationState.PICKUP)
+                new ParallelCommandGroup(
+                        new InstantCommand(drop::setupTrayForSlide),
+                        new DelayedCommand(new InstantCommand(() -> drop.slideGoTo(250)), 750)
+                ),
+                new WaitUntilCommand(() -> (drop.getPosition() <= 255) && (drop.getPosition() >= 242)),
+                new ParallelCommandGroup(
+                        new DelayedCommand(new InstantCommand(drop::semiLiftTrayForDrop), 100),
+                        new DelayedCommand(new InstantCommand(drop::slideIdle, drop), 300)
                 )
         );
     }
