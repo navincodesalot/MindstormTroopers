@@ -12,7 +12,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 
-//@Disabled
+@Disabled
 @Config
 @TeleOp(name="Pose Finder")
 public class PoseFinder extends OpMode {

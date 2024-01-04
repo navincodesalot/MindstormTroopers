@@ -3,7 +3,10 @@ package org.firstinspires.ftc.teamcode.opmode.tele;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.RunCommand;
+import com.outoftheboxrobotics.photoncore.Photon;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.IMU;
 import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.A;
 import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.B;
 import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.BACK;
@@ -21,28 +24,43 @@ import org.firstinspires.ftc.teamcode.commands.DropSlide;
 import org.firstinspires.ftc.teamcode.commands.LiftSlideHigh;
 import org.firstinspires.ftc.teamcode.commands.LiftSlideLow;
 import org.firstinspires.ftc.teamcode.commands.LiftSlideMed;
-import org.firstinspires.ftc.teamcode.commands.LiftSlideSmall;
 import org.firstinspires.ftc.teamcode.opmode.BaseOpMode;
+import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants;
+import org.firstinspires.ftc.teamcode.subsystems.MecanumDriveSubsystem;
 
+@Photon
 @TeleOp(name = "cooked ahh tray")
 public class CmdOpMode extends BaseOpMode {
+    private IMU imu;
+    private MecanumDriveSubsystem drive;
+
+    private boolean internalSlowMode = false;
+
     @Override
     public void initialize() {
         CommandScheduler.getInstance().reset();
+
+        imu = hardwareMap.get(IMU.class, "imu"); // init imu first for teleop (takes longer to init)
+        imu.initialize(new IMU.Parameters(
+                new RevHubOrientationOnRobot(
+                DriveConstants.LOGO_FACING_DIR, DriveConstants.USB_FACING_DIR
+                )
+        ));
+
         super.initialize();
+
+        drive = new MecanumDriveSubsystem(fL, fR, bL, bR, imu);
         register(drop, intake, drive, bulkRead);
-//        rrDrive.setPoseEstimate(PoseStorage.currentPose); // grab pose from auto
 
         // Set Default Commands for each op mode (more intuitive)
         intake.setDefaultCommand(new RunCommand(intake::stop, intake));
 
         //in init:
-        drop.goParallel();
         drop.liftTray();
 
-//        drive.setDefaultCommand(new RunCommand(() -> drive.fieldCentric(driver1::getLeftX, driver1::getLeftY, driver1::getRightX, () -> imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES)), drive));
+        drive.setDefaultCommand(new RunCommand(() -> drive.fieldCentric(driver1::getLeftX, driver1::getLeftY, driver1::getRightX, () -> imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES)), drive));
+//        drive.setDefaultCommand(new RunCommand(() -> drive.robotCentric(driver1::getLeftX, driver1::getLeftY, driver1::getRightX), drive));
 
-        drive.setDefaultCommand(new RunCommand(() -> drive.robotCentric(driver1::getLeftX, driver1::getLeftY, driver1::getRightX), drive));
         tad("Status", "OpMode Initialized");
         // Keybinds
         t1.getGamepadTrigger(LEFT_TRIGGER).whileActiveContinuous(

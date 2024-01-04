@@ -4,34 +4,25 @@ import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
-import com.arcrobotics.ftclib.hardware.motors.MotorEx;
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
-import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants;
-import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.BulkReadSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.DropSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.MecanumDriveSubsystem;
 import org.firstinspires.ftc.teamcode.util.TriggerGamepadEx;
 
 public class BaseOpMode extends CommandOpMode {
     protected DcMotorEx leftSlideMotor, rightSlideMotor;
     protected IntakeSubsystem intake;
     protected DropSubsystem drop;
-    protected MecanumDriveSubsystem drive;
     protected BulkReadSubsystem bulkRead;
     protected GamepadEx driver1;
     protected GamepadEx driver2;
     protected TriggerGamepadEx t1;
     protected TriggerGamepadEx t2;
-    protected IMU imu;
     protected CRServo axon;
-    protected MotorEx fL, fR, bL, bR;
+    protected Motor fL, fR, bL, bR;
     protected Servo lS, rS, t;
     protected String[] REDLABEL = {
             "RedProp"
@@ -47,20 +38,15 @@ public class BaseOpMode extends CommandOpMode {
         initHardware();
         setupHardware();
 
-        IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
-                DriveConstants.LOGO_FACING_DIR, DriveConstants.USB_FACING_DIR));
-        imu.initialize(parameters);
-
         driver1 = new GamepadEx(gamepad1);
         driver2 = new GamepadEx(gamepad2);
 
         t1 = new TriggerGamepadEx(gamepad1, driver1);
         t2 = new TriggerGamepadEx(gamepad2, driver2);
 
-        // Subsystems go here
+        // Common subsystems go here (for auto and tele)
         intake = new IntakeSubsystem(axon);
         drop = new DropSubsystem(leftSlideMotor, rightSlideMotor, lS, rS, t);
-        drive = new MecanumDriveSubsystem(fL, fR, bL, bR, imu);
         bulkRead = new BulkReadSubsystem(hardwareMap);
 
         tad("Status", "BaseOpMode Initialized");
@@ -69,15 +55,13 @@ public class BaseOpMode extends CommandOpMode {
 
     @Override
     public void run() {
-        CommandScheduler.getInstance().run(); // since we are overriding in opmodes, this will actually run it
+        super.run(); // since we are overriding in opmodes, this will actually run it
         double loop = System.nanoTime();
         tad("hz ", 1000000000 / (loop - loopTime));
         loopTime = loop;
     }
 
     protected void initHardware() {
-        imu = hardwareMap.get(IMU.class, "imu");
-
         leftSlideMotor = hardwareMap.get(DcMotorEx.class, "leftSlide");
         rightSlideMotor = hardwareMap.get(DcMotorEx.class, "rightSlide");
 
@@ -87,10 +71,10 @@ public class BaseOpMode extends CommandOpMode {
 
         axon = hardwareMap.get(CRServo.class, "axon");
 
-        fL = new MotorEx(hardwareMap, "leftFront");
-        fR = new MotorEx(hardwareMap, "rightFront");
-        bL = new MotorEx(hardwareMap, "leftRear");
-        bR = new MotorEx(hardwareMap, "rightRear");
+        fL = new Motor(hardwareMap, "leftFront");
+        fR = new Motor(hardwareMap, "rightFront");
+        bL = new Motor(hardwareMap, "leftRear");
+        bR = new Motor(hardwareMap, "rightRear");
     }
 
     protected void setupHardware() {

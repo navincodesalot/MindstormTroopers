@@ -12,6 +12,7 @@ import com.arcrobotics.ftclib.command.RunCommand;
 import com.arcrobotics.ftclib.command.SelectCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
+import com.outoftheboxrobotics.photoncore.Photon;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
@@ -28,6 +29,7 @@ import org.firstinspires.ftc.teamcode.util.PoseStorage;
 import java.util.HashMap;
 import java.util.List;
 
+@Photon
 @Autonomous
 public class RightRed2Pixel extends BaseOpMode {
     private PropLocations location;
@@ -113,7 +115,6 @@ public class RightRed2Pixel extends BaseOpMode {
             telemetry.addData("Current Location", location.toString());
 //            telemetry.addData("Confidence", String.format("%.2f%%", bestDetection != null ? bestDetection.getConfidence() * 100 : 0));
             telemetry.update();
-
         }
 
         // Todo make sure to use async trajs when running in parallel
