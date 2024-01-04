@@ -20,6 +20,7 @@ import org.firstinspires.ftc.teamcode.opmode.BaseOpMode;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
+import org.firstinspires.ftc.teamcode.subsystems.AprilTagSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.TensorflowSubsystem;
 import org.firstinspires.ftc.teamcode.util.DelayedCommand;
 import org.firstinspires.ftc.teamcode.util.PoseStorage;
@@ -46,7 +47,7 @@ public class RightRed2Pixel extends BaseOpMode {
 
         tensorflow.setMinConfidence(0.70);
 
-//        AprilTagSubsystem apriltagSubsystem = new AprilTagSubsystem(hardwareMap, "Webcam 1", 4, 5, 6); // todo: for red its 4, 5, 6
+        AprilTagSubsystem apriltagSubsystem = new AprilTagSubsystem(hardwareMap, "Webcam 1", "Webcam 2");
         register(drop, intake, bulkRead); // register so it runs the periodics in a loop while opmode is active
         intake.setDefaultCommand(new RunCommand(intake::stop, intake));
 

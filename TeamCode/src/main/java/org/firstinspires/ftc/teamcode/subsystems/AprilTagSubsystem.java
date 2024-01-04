@@ -5,7 +5,10 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.vision.VisionPortal;
@@ -21,10 +24,19 @@ import java.util.stream.Collectors;
 public class AprilTagSubsystem extends SubsystemBase {
 
     private final AprilTagProcessor aprilTagProcessor;
-    public VisionPortal portal;
-    private List<Integer> targetsList;
+    private final VisionPortal portal;
+    private final WebcamName webcam1, webcam2;
 
-    public AprilTagSubsystem(HardwareMap hardwareMap, String cameraName) {
+    private final Vector2d camera1Offset = new Vector2d(0, 0); // todo: find in inches
+    private final Vector2d camera2Offset = new Vector2d(0, 0);
+
+    public AprilTagSubsystem(HardwareMap hardwareMap, String camera1Name, String camera2Name) {
+        webcam1 = hardwareMap.get(WebcamName.class, camera1Name);
+        webcam2 = hardwareMap.get(WebcamName.class, camera2Name);
+
+        CameraName switchableCamera = ClassFactory.getInstance()
+                .getCameraManager().nameForSwitchableCamera(webcam1, webcam2);
+
         aprilTagProcessor = new AprilTagProcessor.Builder()
                 .setTagFamily(AprilTagProcessor.TagFamily.TAG_36h11)
                 .setOutputUnits(DistanceUnit.INCH, AngleUnit.RADIANS)
@@ -32,87 +44,60 @@ public class AprilTagSubsystem extends SubsystemBase {
                 .build();
 
         portal = new VisionPortal.Builder()
-                .setCamera(hardwareMap.get(WebcamName.class, cameraName))
+                .setCamera(switchableCamera)
                 .addProcessor(aprilTagProcessor)
                 .setAutoStopLiveView(true)
                 .build();
     }
 
-    public AprilTagSubsystem(HardwareMap hardwareMap, String cameraName, Integer... targets) {
-        this(hardwareMap, cameraName);
-        this.setTargetTags(targets);
-    }
-
-    public void setTargetTags(Integer... targets) {
-        targetsList = Arrays.asList(targets);
-    }
-
-    /**
-     * Filters currently detected AprilTags based on the set targets.
-     *
-     * @return A list of AprilTag detections containing targets exclusively
-     */
-    public List<AprilTagDetection> getFilteredDetections() {
-        if (portal.getCameraState() != VisionPortal.CameraState.STREAMING || targetsList.isEmpty())
+    public List<AprilTagDetection> getDetections() {
+        if (portal.getCameraState() != VisionPortal.CameraState.STREAMING)
             return new ArrayList<>();
 
-        List<AprilTagDetection> aprilTagDetections = aprilTagProcessor.getDetections();
-        return aprilTagDetections.stream()
-                .filter(detection -> targetsList.contains(detection.id))
-                .collect(Collectors.toList());
+        return aprilTagProcessor.getDetections();
+    }
+
+    public void switchCamera(String cameraName) {
+        if (cameraName.equals(webcam1.getDeviceName())) {
+            portal.setActiveCamera(webcam1);
+        } else {
+            portal.setActiveCamera(webcam2);
+        }
     }
 
     /**
-     * <p>Converts a list of AprilTag detections to field-based distances.</p>
-     * <p>The vector represents the translational offset from the tag, with the X and Y axes representing the forward and strafe offset, respectively.</p>
-     *
-     * @param detections A list of AprilTag detections to calculate the vectors of
-     * @return A list of Vector2d objects containing the offsets of each tag
+     * @param botheading In Radians.
+     * @return FC Pose of bot.
      */
-    public List<Vector2d> getDetectionVectors(List<AprilTagDetection> detections) {
-        return detections.stream()
-                .map(tag -> {
-                    // TODO: Verify whether the yaw or its negative should be used
-                    double x = tag.ftcPose.range * Math.cos(tag.ftcPose.bearing);
-                    double y = tag.ftcPose.range * Math.sin(tag.ftcPose.bearing);
-                    return new Vector2d(x, y).rotated(-tag.ftcPose.yaw);
-                }).collect(Collectors.toList());
-    }
+    public Vector2d getFCPosition(AprilTagDetection detection, double botheading) {
+        Vector2d cameraOffset;
+        if (portal.getActiveCamera().equals(webcam2)) {cameraOffset = camera2Offset;} else {cameraOffset = camera1Offset;}
+        // get coordinates of the robot in RC coordinates
+        // ensure offsets are RC
+        double x = detection.ftcPose.x - cameraOffset.getX();
+        double y = detection.ftcPose.y - cameraOffset.getY();
 
-    /**
-     * <p>Converts the current AprilTag detections to field-based distances.</p>
-     * <p>The vector represents the translational offset from the tag, with the X and Y axes representing the forward and strafe offset, respectively.</p>
-     *
-     * @return A list of Vector2d objects containing the offsets of each tag
-     */
-    public List<Vector2d> getDetectionVectors() {
-        return this.getDetectionVectors(this.getFilteredDetections());
-    }
+        // invert heading to correct properly
+        botheading = -botheading;
 
-    /**
-     * <p>Converts a list of AprilTag detections to Pose2d objects.</p>
-     * <p>The X and Y axes of a pose constitute the camera's forward and strafe offsets, while the heading represents the yaw.</p>
-     *
-     * @param detections A list of AprilTag detections to calculate the poses of
-     * @return A list of Pose2d objects containing the pose relative to each tag
-     */
-    public List<Pose2d> getDetectionPoses(List<AprilTagDetection> detections) {
-        return detections.stream()
-                .map(tag -> {
-                    double x = tag.ftcPose.range * Math.cos(tag.ftcPose.bearing);
-                    double y = tag.ftcPose.range * Math.sin(tag.ftcPose.bearing);
-                    return new Pose2d(new Vector2d(x, y).rotated(-tag.ftcPose.yaw), tag.ftcPose.yaw);
-                }).collect(Collectors.toList());
-    }
+        // rotate RC coordinates to be field-centric
+        double x2 = x * Math.cos(botheading) + y * Math.sin(botheading);
+        double y2 = x * -Math.sin(botheading) + y * Math.cos(botheading);
+        double absX;
+        double absY;
 
-    /**
-     * <p>Converts the current AprilTag detections to Pose2d objects.</p>
-     * <p>The X and Y axes of a pose constitute the camera's forward and strafe offsets, while the heading represents the yaw.</p>
-     *
-     * @return A list of Pose2d objects containing the pose relative to each tag
-     */
-    public List<Pose2d> getDetectionPoses() {
-        return this.getDetectionPoses(this.getFilteredDetections());
+        // add FC coordinates to apriltag position
+        VectorF tagpose = detection.metadata.fieldPosition;
+        if (detection.metadata.id <= 6) { // first 6 are backdrop tags
+            absX = tagpose.get(0) + y2;
+            absY = tagpose.get(1) - x2;
+
+        } else { // then just reverse positions
+            absX = tagpose.get(0) - y2;
+            absY = tagpose.get(1) + x2;
+        }
+        // Don't send over a pose, as apriltag heading can be off (see discord)
+        return new Vector2d(absX, absY);
     }
 
     public void shutdown() {
