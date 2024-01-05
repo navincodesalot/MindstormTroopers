@@ -72,8 +72,8 @@ public class DropSubsystem extends SubsystemBase {
     }
 
     public void setupTrayForSlide() {
-        leftServo.setPosition(leftParallel);
-        rightServo.setPosition(rightParallel);
+        leftServo.setPosition(0);
+        rightServo.setPosition(0);
         tray.setPosition(0.12);
     }
 

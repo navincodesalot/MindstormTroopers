@@ -28,7 +28,7 @@ public class AprilTagSubsystem extends SubsystemBase {
     private final WebcamName webcam1, webcam2;
 
     private final Vector2d camera1Offset = new Vector2d(0, 0); // todo: find in inches
-    private final Vector2d camera2Offset = new Vector2d(0, 0);
+    private final Vector2d camera2Offset = new Vector2d(0, -6.375);
 
     public AprilTagSubsystem(HardwareMap hardwareMap, String camera1Name, String camera2Name) {
         webcam1 = hardwareMap.get(WebcamName.class, camera1Name);

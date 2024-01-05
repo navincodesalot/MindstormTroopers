@@ -12,7 +12,7 @@ import com.arcrobotics.ftclib.command.RunCommand;
 import com.arcrobotics.ftclib.command.SelectCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
-import com.outoftheboxrobotics.photoncore.Photon;
+//import com.outoftheboxrobotics.photoncore.Photon;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
@@ -29,7 +29,7 @@ import org.firstinspires.ftc.teamcode.util.PoseStorage;
 import java.util.HashMap;
 import java.util.List;
 
-@Photon
+//@Photon
 @Autonomous
 public class RightRed2Pixel extends BaseOpMode {
     private PropLocations location;

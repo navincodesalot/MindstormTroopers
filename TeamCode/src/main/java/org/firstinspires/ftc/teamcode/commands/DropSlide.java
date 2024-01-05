@@ -12,12 +12,12 @@ public class DropSlide extends SequentialCommandGroup {
     public DropSlide (DropSubsystem drop) {
         super(
                 new ParallelCommandGroup(
-                        new InstantCommand(drop::setupTrayForSlide),
-                        new DelayedCommand(new InstantCommand(() -> drop.slideGoTo(250)), 750)
+                        new InstantCommand(drop::setupTrayForSlide, drop),
+                        new DelayedCommand(new InstantCommand(() -> drop.slideGoTo(250), drop), 750)
                 ),
                 new WaitUntilCommand(() -> (drop.getPosition() <= 255) && (drop.getPosition() >= 242)),
                 new ParallelCommandGroup(
-                        new DelayedCommand(new InstantCommand(drop::semiLiftTrayForDrop), 100),
+                        new DelayedCommand(new InstantCommand(drop::semiLiftTrayForDrop, drop), 100),
                         new DelayedCommand(new InstantCommand(drop::slideIdle, drop), 300)
                 )
         );

@@ -3,7 +3,9 @@ package org.firstinspires.ftc.teamcode.opmode.tele;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.RunCommand;
-import com.outoftheboxrobotics.photoncore.Photon;
+//import com.outoftheboxrobotics.photoncore.Photon;
+import com.arcrobotics.ftclib.command.WaitCommand;
+import com.arcrobotics.ftclib.command.WaitUntilCommand;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.IMU;
@@ -24,11 +26,12 @@ import org.firstinspires.ftc.teamcode.commands.DropSlide;
 import org.firstinspires.ftc.teamcode.commands.LiftSlideHigh;
 import org.firstinspires.ftc.teamcode.commands.LiftSlideLow;
 import org.firstinspires.ftc.teamcode.commands.LiftSlideMed;
+import org.firstinspires.ftc.teamcode.commands.PushOnePixel;
 import org.firstinspires.ftc.teamcode.opmode.BaseOpMode;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.subsystems.MecanumDriveSubsystem;
 
-@Photon
+//@Photon
 @TeleOp(name = "cooked ahh tray")
 public class CmdOpMode extends BaseOpMode {
     private IMU imu;
@@ -58,8 +61,8 @@ public class CmdOpMode extends BaseOpMode {
         //in init:
         drop.liftTray();
 
-        drive.setDefaultCommand(new RunCommand(() -> drive.fieldCentric(driver1::getLeftX, driver1::getLeftY, driver1::getRightX, () -> imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES)), drive));
-//        drive.setDefaultCommand(new RunCommand(() -> drive.robotCentric(driver1::getLeftX, driver1::getLeftY, driver1::getRightX), drive));
+//        drive.setDefaultCommand(new RunCommand(() -> drive.fieldCentric(driver1::getLeftX, driver1::getLeftY, driver1::getRightX, () -> imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES)), drive));
+        drive.setDefaultCommand(new RunCommand(() -> drive.robotCentric(driver1::getLeftX, driver1::getLeftY, driver1::getRightX), drive));
 
         tad("Status", "OpMode Initialized");
         // Keybinds
@@ -92,7 +95,7 @@ public class CmdOpMode extends BaseOpMode {
                 new InstantCommand(drop::dropPixel, drop)
         );
         driver1.getGamepadButton(B).whenPressed(
-                new InstantCommand(drop::dropPixel, drop)
+                new PushOnePixel(intake)
         );
         driver1.getGamepadButton(Y).whenPressed(
                 new InstantCommand(drop::liftTray, drop)

@@ -13,13 +13,13 @@ public class LiftSlideHigh extends ConditionalCommand {
         super (
                 new SequentialCommandGroup( // todo
                         new ParallelCommandGroup(
-                                new DelayedCommand(new InstantCommand(drop::setupTrayForSlide), 75),
-                                new InstantCommand(drop::slidePoint)
+                                new DelayedCommand(new InstantCommand(drop::setupTrayForSlide, drop), 75),
+                                new InstantCommand(drop::slidePoint, drop)
                         ),
                         new WaitUntilCommand(() -> (drop.getPosition() <= 210) && (drop.getPosition() >= 195)),
-                        new InstantCommand(drop::slideHigh) // 1070
+                        new InstantCommand(drop::slideHigh, drop) // 1070
                 ),
-                new InstantCommand(drop::slideHigh),
+                new InstantCommand(drop::slideHigh, drop),
                 ()-> drop.getPosition() <= 400
 
         );
