@@ -13,73 +13,54 @@ public class LeftRed {
         MeepMeep meepMeep = new MeepMeep(650);
 
         RoadRunnerBotEntity leftBot = new DefaultBotBuilder(meepMeep)
-                // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setColorScheme(new ColorSchemeRedDark())
                 .setConstraints(Constraints.MAX_VEL, Constraints.MAX_ACCEL, Constraints.MAX_ANG_VEL,
                         Constraints.MAX_ANG_ACCEL, Constraints.TRACK_WIDTH)
                 .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(new Pose2d(-36, -66, Math.toRadians(90)))
-                                .splineToSplineHeading(new Pose2d(10.5, -26.5, Math.toRadians(180)), Math.toRadians(90))
-                                .waitSeconds(0.3)
-                                // move away from pixel
-                                // bring slides up here
-                                .lineTo(new Vector2d(45, -29))
-                                // drop
-                                .waitSeconds(2)
-                                // park
-                                .forward(6)
-                                .strafeLeft(10)
-                                .splineToLinearHeading(new Pose2d(59, -60, Math.toRadians(180)), Math.toRadians(0))
-                                .build()
+                                drive.trajectorySequenceBuilder(new Pose2d(-36, -65, Math.toRadians(270)))
+                                        .lineToSplineHeading(new Pose2d(-34, -25.5, Math.toRadians(180)))
+                                        .waitSeconds(0.3)
+                                        .lineToConstantHeading(new Vector2d(-48, -12))
+                                        .waitSeconds(2)
+                                        .lineToSplineHeading(new Pose2d(35, -12, Math.toRadians(180)))
+                                        .lineToConstantHeading(new Vector2d(53, -31))
+                                        .waitSeconds(2)
+                                        .lineToLinearHeading(new Pose2d(49, -15, Math.toRadians(180)))
+                                        .build()
                 );
 
         RoadRunnerBotEntity middleBot = new DefaultBotBuilder(meepMeep)
-                // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setColorScheme(new ColorSchemeRedDark())
                 .setConstraints(Constraints.MAX_VEL, Constraints.MAX_ACCEL, Constraints.MAX_ANG_VEL,
                         Constraints.MAX_ANG_ACCEL, Constraints.TRACK_WIDTH)
                 .followTrajectorySequence(drive ->
-                        // middle
-                        drive.trajectorySequenceBuilder(new Pose2d(-36, -66, Math.toRadians(90)))
-                                .lineToSplineHeading(new Pose2d(-40, -11, Math.toRadians(0)))
-//                                .lineToSplineHeading(new Pose2d(12, -32, Math.toRadians(90)))
-//                                // intake push and drop pixel
-//                                .waitSeconds(0.3)
-//                                // move away from pixel
-//                                .lineTo(new Vector2d(12, -43))
-//                                // bring slides up here
-//                                .lineToSplineHeading(new Pose2d(45, -37, Math.toRadians(180)))
-//                                // drop
-//                                .waitSeconds(2)
-//                                // park
-//                                .forward(4)
-//                                .strafeLeft(4)
-                                .lineToSplineHeading(new Pose2d(45, -13, Math.toRadians(0)))
+                        drive.trajectorySequenceBuilder(new Pose2d(-36, -65, Math.toRadians(270)))
+                                .lineToSplineHeading(new Pose2d(-43, -25.5, Math.toRadians(0)))
+                                .waitSeconds(0.3)
+                                .lineToSplineHeading(new Pose2d(-48, -12, Math.toRadians(180)))
+                                .waitSeconds(2)
+                                .lineToSplineHeading(new Pose2d(35, -12, Math.toRadians(180)))
+                                .lineToConstantHeading(new Vector2d(53, -37))
+                                .waitSeconds(2)
+                                .lineToLinearHeading(new Pose2d(49, -15, Math.toRadians(180)))
                                 .build()
                 );
 
-
         RoadRunnerBotEntity rightBot = new DefaultBotBuilder(meepMeep)
-                // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setColorScheme(new ColorSchemeRedDark())
                 .setConstraints(Constraints.MAX_VEL, Constraints.MAX_ACCEL, Constraints.MAX_ANG_VEL,
                         Constraints.MAX_ANG_ACCEL, Constraints.TRACK_WIDTH)
                 .followTrajectorySequence(drive ->
-                        // middle
-                        drive.trajectorySequenceBuilder(new Pose2d(-36, -66, Math.toRadians(90)))
-                                .splineToSplineHeading(new Pose2d(13, -26.5, Math.toRadians(0)), Math.toRadians(90))
+                        drive.trajectorySequenceBuilder(new Pose2d(-36, -65, Math.toRadians(270)))
+                                .strafeRight(2)
+                                .lineToSplineHeading(new Pose2d(-31, -25.5, Math.toRadians(0)))
                                 .waitSeconds(0.3)
-                                //move away from pixel
-                                .back(2)
-                                // bring slides up
-                                // drop
-                                .strafeRight(22)
-                                .lineToSplineHeading(new Pose2d(45, -42, Math.toRadians(180)))
+                                .lineToLinearHeading(new Pose2d(-48, -12, Math.toRadians(180)))
                                 .waitSeconds(2)
-                                //park
-                                .forward(5)
-                                .strafeLeft(3)
-                                .splineToLinearHeading(new Pose2d(59, -60, Math.toRadians(180)), Math.toRadians(0))
+                                .lineToSplineHeading(new Pose2d(35, -12, Math.toRadians(180)))
+                                .lineToConstantHeading(new Vector2d(53, -43))
+                                .waitSeconds(2)
+                                .lineToLinearHeading(new Pose2d(49, -15, Math.toRadians(180)))
                                 .build()
                 );
 

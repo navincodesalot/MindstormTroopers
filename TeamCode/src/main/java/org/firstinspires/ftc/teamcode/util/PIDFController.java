@@ -13,7 +13,7 @@ public class PIDFController {
     public static double returnPower(int pos, int target) {
         PIDController controller;
         controller = new PIDController(p, i, d);
-        controller.setPID(p,i, d);
+        controller.setIntegrationBounds(0.1, 0.25);
 
         double pid = controller.calculate(pos, target);
 

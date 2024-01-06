@@ -16,7 +16,7 @@ public class LiftSlideLow extends ConditionalCommand {
                                 new DelayedCommand(new InstantCommand(drop::setupTrayForSlide), 75),
                                 new InstantCommand(drop::slidePoint)
                         ),
-                        new WaitUntilCommand(() -> (drop.getPosition() <= 210) && (drop.getPosition() >= 195)),
+                        new WaitUntilCommand(() -> (drop.getPosition() <= 215) && (drop.getPosition() >= 190)),
                         new InstantCommand(drop::slideLow) // 750
                 ),
                 new InstantCommand(drop::slideLow),

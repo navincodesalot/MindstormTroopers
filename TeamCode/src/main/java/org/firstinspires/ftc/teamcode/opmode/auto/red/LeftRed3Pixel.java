@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmode.auto.red;
 
-import static org.firstinspires.ftc.teamcode.util.StartPoses.rightRed;
+import static org.firstinspires.ftc.teamcode.util.StartPoses.leftRed;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
@@ -33,7 +33,7 @@ import java.util.List;
 
 //@Photon
 @Autonomous
-public class RightRed2Pixel extends BaseOpMode {
+public class LeftRed3Pixel extends BaseOpMode {
     private PropLocations location;
     private RRDriveSubsystem rrDrive;
     private List<Pose2d> tagPoses;
@@ -57,36 +57,73 @@ public class RightRed2Pixel extends BaseOpMode {
         intake.setDefaultCommand(new RunCommand(intake::stop, intake));
 
         // Drop ground pixel
-        TrajectorySequence dropLeft = rrDrive.trajectorySequenceBuilder(rightRed)
-                .strafeLeft(2)
-                .lineToSplineHeading(new Pose2d(10.5, -26.5, Math.toRadians(180)),
+        TrajectorySequence dropLeft = rrDrive.trajectorySequenceBuilder(leftRed)
+                .lineToSplineHeading(new Pose2d(-34, -25.5, Math.toRadians(180)),
                         SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(35))
                 .build();
-        TrajectorySequence dropMiddle = rrDrive.trajectorySequenceBuilder(rightRed)
-                .lineToSplineHeading(new Pose2d(23, -25.5, Math.toRadians(180)),
+        TrajectorySequence dropMiddle = rrDrive.trajectorySequenceBuilder(leftRed)
+                .lineToSplineHeading(new Pose2d(-43, -25.5, Math.toRadians(0)),
                         SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(35))
                 .build();
 
-        TrajectorySequence dropRight = rrDrive.trajectorySequenceBuilder(rightRed)
-                .lineToSplineHeading(new Pose2d(31, -25.5, Math.toRadians(180)),
+        TrajectorySequence dropRight = rrDrive.trajectorySequenceBuilder(leftRed)
+                .lineToSplineHeading(new Pose2d(-43, -25.5, Math.toRadians(0)),
+        SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(35))
+                .build();
+
+        // Go to stacks
+        TrajectorySequence goToStacksLeft = rrDrive.trajectorySequenceBuilder(dropLeft.end())
+                .lineToConstantHeading(new Vector2d(-48, -12),
+                        SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(35))
+                .build();
+
+        TrajectorySequence goToStacksMiddle = rrDrive.trajectorySequenceBuilder(dropMiddle.end())
+                .lineToLinearHeading(new Pose2d(-48, -12, Math.toRadians(180)),
+                        SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(35))
+                .build();
+
+        TrajectorySequence goToStacksRight = rrDrive.trajectorySequenceBuilder(dropRight.end())
+                .lineToLinearHeading(new Pose2d(-48, -12, Math.toRadians(180)),
+                        SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(35))
+                .build();
+
+        // Cross Truss
+        TrajectorySequence crossTrussLeft = rrDrive.trajectorySequenceBuilder(goToStacksLeft.end())
+                .lineToSplineHeading(new Pose2d(35, -12, Math.toRadians(180)),
+                        SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(35))
+                .build();
+
+        TrajectorySequence crossTrussMiddle = rrDrive.trajectorySequenceBuilder(goToStacksMiddle.end())
+                .lineToSplineHeading(new Pose2d(35, -12, Math.toRadians(180)),
+                        SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(35))
+                .build();
+
+        TrajectorySequence crossTrustRight = rrDrive.trajectorySequenceBuilder(goToStacksRight.end())
+                .lineToSplineHeading(new Pose2d(35, -12, Math.toRadians(180)),
                         SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(35))
                 .build();
 
         // Drop to backdrop
-        TrajectorySequence dropToBackdropLeft = rrDrive.trajectorySequenceBuilder(dropLeft.end())
+        TrajectorySequence dropToBackdropLeft = rrDrive.trajectorySequenceBuilder(crossTrussLeft.end())
                 .lineToConstantHeading(new Vector2d(53, -31),
                         SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(30))
                 .build();
-        TrajectorySequence dropToBackdropMiddle = rrDrive.trajectorySequenceBuilder(dropMiddle.end())
+        TrajectorySequence dropToBackdropMiddle = rrDrive.trajectorySequenceBuilder(crossTrussMiddle.end())
                 .lineToConstantHeading(new Vector2d(53, -37),
                         SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(30))
                 .build();
-        TrajectorySequence dropToBackdropRight = rrDrive.trajectorySequenceBuilder(dropRight.end())
+        TrajectorySequence dropToBackdropRight = rrDrive.trajectorySequenceBuilder(crossTrustRight.end())
                 .lineToConstantHeading(new Vector2d(53, -43),
                         SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(30))
@@ -94,16 +131,16 @@ public class RightRed2Pixel extends BaseOpMode {
 
         // Park
         TrajectorySequence parkLeft = rrDrive.trajectorySequenceBuilder(dropToBackdropLeft.end())
-                .lineToLinearHeading(new Pose2d(49, -61, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(49, -15, Math.toRadians(180)))
                 .build();
         TrajectorySequence parkMiddle = rrDrive.trajectorySequenceBuilder(dropToBackdropMiddle.end())
-                .lineToLinearHeading(new Pose2d(49, -61, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(49, -15, Math.toRadians(180)))
                 .build();
         TrajectorySequence parkRight = rrDrive.trajectorySequenceBuilder(dropToBackdropRight.end())
-                .lineToLinearHeading(new Pose2d(49, -61, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(49, -15, Math.toRadians(180)))
                 .build();
 
-        rrDrive.setPoseEstimate(rightRed);
+        rrDrive.setPoseEstimate(leftRed);
 
         // On init --> do nothing
 
@@ -181,6 +218,7 @@ public class RightRed2Pixel extends BaseOpMode {
                         }},
                         () -> location
                 )
+//                new InstantCommand(() -> noRRDrive = false)
         ));
     }
 
