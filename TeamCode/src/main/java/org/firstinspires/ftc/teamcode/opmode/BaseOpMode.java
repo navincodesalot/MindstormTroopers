@@ -61,6 +61,7 @@ public class BaseOpMode extends CommandOpMode {
         double loop = System.nanoTime();
         tad("hz ", 1000000000 / (loop - loopTime));
         loopTime = loop;
+        telemetry.update();
     }
 
     protected void initHardware() {

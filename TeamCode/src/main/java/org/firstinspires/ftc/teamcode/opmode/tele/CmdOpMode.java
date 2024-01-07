@@ -134,6 +134,5 @@ public class CmdOpMode extends BaseOpMode {
     @Override
     public void run() {
         super.run();
-        telemetry.update();
     }
 }

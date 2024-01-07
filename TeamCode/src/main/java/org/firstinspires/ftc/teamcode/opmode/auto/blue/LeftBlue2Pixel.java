@@ -189,7 +189,6 @@ public class LeftBlue2Pixel extends BaseOpMode {
     public void run() {
         super.run();
         rrDrive.update(noRRDrive);
-        telemetry.update();
     }
 
     private enum PropLocations {

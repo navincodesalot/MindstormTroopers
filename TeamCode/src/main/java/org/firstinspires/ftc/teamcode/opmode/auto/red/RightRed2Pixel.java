@@ -187,7 +187,6 @@ public class RightRed2Pixel extends BaseOpMode {
     public void run() {
         super.run();
         rrDrive.update(noRRDrive);
-        telemetry.update();
     }
 
     private enum PropLocations {
