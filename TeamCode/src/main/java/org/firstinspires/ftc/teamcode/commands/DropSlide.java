@@ -15,7 +15,7 @@ public class DropSlide extends SequentialCommandGroup {
                         new InstantCommand(drop::setupTrayForSlide),
                         new DelayedCommand(new InstantCommand(() -> drop.slideGoTo(250)), 750)
                 ),
-                new WaitUntilCommand(() -> (drop.getPosition() <= 255) && (drop.getPosition() >= 242)),
+                new WaitUntilCommand(() -> (drop.getPosition() <= 255) && (drop.getPosition() >= 240)),
                 new ParallelCommandGroup(
                         new DelayedCommand(new InstantCommand(drop::semiLiftTrayForDrop), 100),
                         new DelayedCommand(new InstantCommand(drop::slideIdle, drop), 300)

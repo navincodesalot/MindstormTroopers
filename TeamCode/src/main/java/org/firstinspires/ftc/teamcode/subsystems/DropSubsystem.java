@@ -82,8 +82,8 @@ public class DropSubsystem extends SubsystemBase {
     }
 
     public void pickupPixel() {
-        leftServo.setPosition(leftParallel);
-        rightServo.setPosition(rightParallel);
+        leftServo.setPosition(0.5);
+        rightServo.setPosition(0.2);
         tray.setPosition(0.205);
         ServoLocation.setServoLocation(ServoLocation.ServoLocationState.PICKUP);
     }
@@ -96,15 +96,15 @@ public class DropSubsystem extends SubsystemBase {
 
     // Slide
     public void slideHigh() {
-        this.target = 1070;
+        this.target = 1000;
     }
 
     public void slideMed() {
-        this.target = 900;
+        this.target = 830;
     }
 
     public void slideLow() {
-        this.target = 750;
+        this.target = 680;
     }
 
     public void slidePoint() {

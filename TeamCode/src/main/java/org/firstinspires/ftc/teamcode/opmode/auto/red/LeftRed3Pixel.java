@@ -193,32 +193,39 @@ public class LeftRed3Pixel extends BaseOpMode {
                             ));
                         }},
                         () -> location
-                ),
-                new SelectCommand(
-                        new HashMap<Object, Command>() {{
-                            put(PropLocations.LEFT, new InstantCommand(() -> rrDrive.followTrajectorySequence(dropToBackdropLeft)));
-                            put(PropLocations.MIDDLE, new InstantCommand(() -> rrDrive.followTrajectorySequence(dropToBackdropMiddle)));
-                            put(PropLocations.RIGHT, new InstantCommand(() -> rrDrive.followTrajectorySequence(dropToBackdropRight)));
-                        }},
-                        () -> location
-                ),
-                new InstantCommand(() -> noRRDrive = true),
-                new LiftSlideSmall(drop),
-                new WaitUntilCommand(() -> drop.getPosition() <= 660 && drop.getPosition() >= 640),
-                new InstantCommand(drop::dropPixel, drop),
-                new DelayedCommand(new RunCommand(intake::push, intake).raceWith(new WaitCommand(1200)), 600).andThen(new InstantCommand(intake::stop, intake)),
-                new DelayedCommand(new DropSlide(drop), 200),
-                new WaitUntilCommand(() -> (drop.getPosition() <= 10 && drop.getPosition() <= -6)),
-                new InstantCommand(drop::liftTray),
-                new SelectCommand(
-                        new HashMap<Object, Command>() {{
-                            put(PropLocations.LEFT, new InstantCommand(() -> rrDrive.followTrajectorySequence(parkLeft)));
-                            put(PropLocations.MIDDLE, new InstantCommand(() -> rrDrive.followTrajectorySequence(parkMiddle)));
-                            put(PropLocations.RIGHT, new InstantCommand(() -> rrDrive.followTrajectorySequence(parkRight)));
-                        }},
-                        () -> location
                 )
-//                new InstantCommand(() -> noRRDrive = false)
+//                new SelectCommand(
+//                        new HashMap<Object, Command>() {{
+//                            put(PropLocations.LEFT, new InstantCommand(() -> rrDrive.followTrajectorySequence(goToStacksLeft)));
+//                            put(PropLocations.MIDDLE, new InstantCommand(() -> rrDrive.followTrajectorySequence(goToStacksMiddle)));
+//                            put(PropLocations.RIGHT, new InstantCommand(() -> rrDrive.followTrajectorySequence(goToStacksRight)));
+//                        }},
+//                        () -> location
+//                ),
+//                new SelectCommand(
+//                        new HashMap<Object, Command>() {{
+//                            put(PropLocations.LEFT, new InstantCommand(() -> rrDrive.followTrajectorySequence(crossTrussLeft)));
+//                            put(PropLocations.MIDDLE, new InstantCommand(() -> rrDrive.followTrajectorySequence(crossTrussMiddle)));
+//                            put(PropLocations.RIGHT, new InstantCommand(() -> rrDrive.followTrajectorySequence(crossTrustRight)));
+//                        }},
+//                        () -> location
+//                ),
+//                new InstantCommand(() -> noRRDrive = true),
+//                new LiftSlideSmall(drop),
+//                new WaitUntilCommand(() -> drop.getPosition() <= 660 && drop.getPosition() >= 640),
+//                new InstantCommand(drop::dropPixel, drop),
+//                new DelayedCommand(new RunCommand(intake::push, intake).raceWith(new WaitCommand(1200)), 600).andThen(new InstantCommand(intake::stop, intake)),
+//                new DelayedCommand(new DropSlide(drop), 200),
+//                new WaitUntilCommand(() -> (drop.getPosition() <= 10 && drop.getPosition() <= -6)),
+//                new InstantCommand(drop::liftTray),
+//                new SelectCommand(
+//                        new HashMap<Object, Command>() {{
+//                            put(PropLocations.LEFT, new InstantCommand(() -> rrDrive.followTrajectorySequence(parkLeft)));
+//                            put(PropLocations.MIDDLE, new InstantCommand(() -> rrDrive.followTrajectorySequence(parkMiddle)));
+//                            put(PropLocations.RIGHT, new InstantCommand(() -> rrDrive.followTrajectorySequence(parkRight)));
+//                        }},
+//                        () -> location
+//                )
         ));
     }
 
