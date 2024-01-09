@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import android.util.Size;
+
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.arcrobotics.ftclib.command.SubsystemBase;
@@ -28,7 +30,7 @@ public class AprilTagSubsystem extends SubsystemBase {
     private final WebcamName webcam1, webcam2;
 
     private final Vector2d camera1Offset = new Vector2d(0, 0); // todo: find in inches
-    private final Vector2d camera2Offset = new Vector2d(0, -6.375);
+    private final Vector2d camera2Offset = new Vector2d(0, -5.4);
 
     public AprilTagSubsystem(HardwareMap hardwareMap, String camera1Name, String camera2Name) {
         webcam1 = hardwareMap.get(WebcamName.class, camera1Name);
@@ -39,12 +41,13 @@ public class AprilTagSubsystem extends SubsystemBase {
 
         aprilTagProcessor = new AprilTagProcessor.Builder()
                 .setTagFamily(AprilTagProcessor.TagFamily.TAG_36h11)
-                .setOutputUnits(DistanceUnit.INCH, AngleUnit.RADIANS)
                 .setTagLibrary(AprilTagGameDatabase.getCurrentGameTagLibrary())
+                .setOutputUnits(DistanceUnit.INCH, AngleUnit.DEGREES)
                 .build();
 
         portal = new VisionPortal.Builder()
                 .setCamera(switchableCamera)
+                .setCameraResolution(new Size(640, 480))
                 .addProcessor(aprilTagProcessor)
                 .setAutoStopLiveView(true)
                 .build();
