@@ -24,20 +24,25 @@ import org.firstinspires.ftc.teamcode.opmode.BaseOpMode;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
+import org.firstinspires.ftc.teamcode.subsystems.AprilTagSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.RRDriveSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.TensorflowSubsystem;
 import org.firstinspires.ftc.teamcode.util.DelayedCommand;
+import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Vector;
 
 //@Photon
 @Autonomous
 public class RightRed2Pixel extends BaseOpMode {
     private PropLocations location;
     private RRDriveSubsystem rrDrive;
-    private List<Pose2d> tagPoses;
     private boolean noRRDrive = false;
+    private double loopTime = 0.0;
+
+    AprilTagSubsystem apriltagSubsystem = new AprilTagSubsystem(hardwareMap, "Webcam 1", "Webcam 2");
 
     @Override
     public void initialize() {
@@ -52,8 +57,10 @@ public class RightRed2Pixel extends BaseOpMode {
 
         tensorflow.setMinConfidence(0.69);
 
-//        AprilTagSubsystem apriltagSubsystem = new AprilTagSubsystem(hardwareMap, "Webcam 1", "Webcam 2");
+        apriltagSubsystem.switchCamera(2);
+
         register(drop, intake, bulkRead); // register so it runs the periodics in a loop while opmode is active
+
         intake.setDefaultCommand(new RunCommand(intake::stop, intake));
 
         // Drop ground pixel
@@ -179,7 +186,8 @@ public class RightRed2Pixel extends BaseOpMode {
                             put(PropLocations.RIGHT, new InstantCommand(() -> rrDrive.followTrajectorySequence(parkRight)));
                         }},
                         () -> location
-                )
+                ),
+                new InstantCommand(apriltagSubsystem::shutdown)
         ));
     }
 
@@ -187,6 +195,21 @@ public class RightRed2Pixel extends BaseOpMode {
     public void run() {
         super.run();
         rrDrive.update(noRRDrive);
+        telemetry.addData("Drive Pose", rrDrive.getPoseEstimate().toString());
+
+        AprilTagDetection currentDetection = apriltagSubsystem.getDetections().get(0);
+        if (currentDetection.metadata != null) { // if a tag is detected and robot velocity is 0
+            double heading = rrDrive.getPoseEstimate().getHeading();
+            Vector2d localizedAprilTagVector = apriltagSubsystem.getFCPosition(currentDetection, heading);
+
+            rrDrive.setPoseEstimate(localizedAprilTagVector.getX(), localizedAprilTagVector.getY(), heading);
+            telemetry.addData("April Tag Pose", localizedAprilTagVector.toString());
+        }
+
+        double loop = System.nanoTime();
+        telemetry.addData("hz ", 1000000000 / (loop - loopTime));
+        loopTime = loop;
+        telemetry.update();
     }
 
     private enum PropLocations {

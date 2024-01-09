@@ -36,8 +36,7 @@ import org.firstinspires.ftc.teamcode.subsystems.MecanumDriveSubsystem;
 public class CmdOpMode extends BaseOpMode {
     private IMU imu;
     private MecanumDriveSubsystem drive;
-
-    private boolean internalSlowMode = false;
+    private double loopTime = 0.0;
 
     @Override
     public void initialize() {
@@ -64,7 +63,8 @@ public class CmdOpMode extends BaseOpMode {
 //        drive.setDefaultCommand(new RunCommand(() -> drive.fieldCentric(driver1::getLeftX, driver1::getLeftY, driver1::getRightX, () -> imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES)), drive));
         drive.setDefaultCommand(new RunCommand(() -> drive.robotCentric(driver1::getLeftX, driver1::getLeftY, driver1::getRightX), drive));
 
-        tad("Status", "OpMode Initialized");
+        telemetry.addData("Status", "OpMode Initialized");
+
         // Keybinds
         t1.getGamepadTrigger(LEFT_TRIGGER).whileActiveContinuous(
                 new RunCommand(() -> drive.slowMode(driver1::getLeftX, driver1::getLeftY, driver1::getRightX), drive)
@@ -134,5 +134,10 @@ public class CmdOpMode extends BaseOpMode {
     @Override
     public void run() {
         super.run();
+
+        double loop = System.nanoTime();
+        telemetry.addData("hz ", 1000000000 / (loop - loopTime));
+        loopTime = loop;
+        telemetry.update();
     }
 }

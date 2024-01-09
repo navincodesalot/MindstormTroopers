@@ -29,7 +29,7 @@ public class AprilTagSubsystem extends SubsystemBase {
     private final VisionPortal portal;
     private final WebcamName webcam1, webcam2;
 
-    private final Vector2d camera1Offset = new Vector2d(0, 0); // todo: find in inches
+    private final Vector2d camera1Offset = new Vector2d(0, 0); // todo
     private final Vector2d camera2Offset = new Vector2d(0, -5.4);
 
     public AprilTagSubsystem(HardwareMap hardwareMap, String camera1Name, String camera2Name) {
@@ -60,10 +60,10 @@ public class AprilTagSubsystem extends SubsystemBase {
         return aprilTagProcessor.getDetections();
     }
 
-    public void switchCamera(String cameraName) {
-        if (cameraName.equals(webcam1.getDeviceName())) {
+    public void switchCamera(int cameraNum) {
+        if (cameraNum == 1) {
             portal.setActiveCamera(webcam1);
-        } else {
+        } else if (cameraNum == 2) {
             portal.setActiveCamera(webcam2);
         }
     }
@@ -74,7 +74,12 @@ public class AprilTagSubsystem extends SubsystemBase {
      */
     public Vector2d getFCPosition(AprilTagDetection detection, double botheading) {
         Vector2d cameraOffset;
-        if (portal.getActiveCamera().equals(webcam2)) {cameraOffset = camera2Offset;} else {cameraOffset = camera1Offset;}
+        if (portal.getActiveCamera().equals(webcam2)) {
+            cameraOffset = camera2Offset;
+        } else {
+            cameraOffset = camera1Offset;
+        }
+
         // get coordinates of the robot in RC coordinates
         // ensure offsets are RC
         double x = detection.ftcPose.x - cameraOffset.getX();

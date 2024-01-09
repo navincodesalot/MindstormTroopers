@@ -26,13 +26,8 @@ public class BaseOpMode extends CommandOpMode {
     protected CRServo axon;
     protected Motor fL, fR, bL, bR;
     protected Servo lS, rS, t;
-    protected String[] REDLABEL = {
-            "RedProp"
-    };
-    protected String[] BLUELABEL = {
-            "BlueProp"
-    };
-    private double loopTime = 0.0;
+    protected String[] REDLABEL = { "RedProp" };
+    protected String[] BLUELABEL = { "BlueProp" };
 
     @Override
     public void initialize() {
@@ -51,17 +46,13 @@ public class BaseOpMode extends CommandOpMode {
         drop = new DropSubsystem(leftSlideMotor, rightSlideMotor, lS, rS, t, batteryVoltageSensor);
         bulkRead = new BulkReadSubsystem(hardwareMap);
 
-        tad("Status", "BaseOpMode Initialized");
+        telemetry.addData("Status", "BaseOpMode Initialized");
         telemetry.update();
     }
 
     @Override
     public void run() {
         super.run(); // since we are overriding in opmodes, this will actually run it
-        double loop = System.nanoTime();
-        tad("hz ", 1000000000 / (loop - loopTime));
-        loopTime = loop;
-        telemetry.update();
     }
 
     protected void initHardware() {
@@ -105,14 +96,5 @@ public class BaseOpMode extends CommandOpMode {
         fL.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         bR.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         bL.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
-    }
-
-    // telemetry add data = tad
-    protected void tad(String caption, Object value) {
-        telemetry.addData(caption, value);
-    }
-
-    protected void tal(String caption) {
-        telemetry.addLine(caption);
     }
 }
