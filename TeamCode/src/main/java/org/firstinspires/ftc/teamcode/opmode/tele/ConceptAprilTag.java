@@ -194,13 +194,15 @@ public class ConceptAprilTag extends LinearOpMode {
                 // Step through the list of detections and display info for each one.
                 for (AprilTagDetection detection : currentDetections) {
                     if (detection.metadata != null) {
-                        telemetry.addLine(String.format("\n==== (ID %d) %s", detection.id, detection.metadata.name));
-                        telemetry.addData("April Tag Pose", getFCPosition(currentDetections.get(0), drive.getPoseEstimate().getHeading()).toString());
-                        telemetry.addData("April Tag Heading", Math.toDegrees(drive.getPoseEstimate().getHeading()));
+                        if (drive.getPoseVelocity().getX() <= 0.25) {
+                            telemetry.addLine(String.format("\n==== (ID %d) %s", detection.id, detection.metadata.name));
+                            telemetry.addData("April Tag Pose", getFCPosition(currentDetections.get(0), drive.getPoseEstimate().getHeading()).toString());
+                            telemetry.addData("April Tag Heading", Math.toDegrees(drive.getPoseEstimate().getHeading()));
+                        } else {
+                            telemetry.addData("April Tag Pose", "Robot velocity too high");
+                        }
                     } else {
-                        telemetry.addLine(String.format("\n==== (ID %d) Unknown", detection.id));
-                        telemetry.addLine(String.format("Center %6.0f %6.0f   (pixels)", detection.center.x, detection.center.y));
-                        telemetry.addData("April Tag Heading", Math.toDegrees(drive.getPoseEstimate().getHeading()));
+                        telemetry.addData("April Tag Pose", "Tag not detected");
                     }
                 }
 

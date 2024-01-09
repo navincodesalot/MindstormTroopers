@@ -32,6 +32,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.Vector;
 
 //@Photon
@@ -198,12 +199,20 @@ public class RightRed2Pixel extends BaseOpMode {
         telemetry.addData("Drive Pose", rrDrive.getPoseEstimate().toString());
 
         AprilTagDetection currentDetection = apriltagSubsystem.getDetections().get(0);
-        if (currentDetection.metadata != null) { // if a tag is detected and robot velocity is 0
-            double heading = rrDrive.getPoseEstimate().getHeading();
-            Vector2d localizedAprilTagVector = apriltagSubsystem.getFCPosition(currentDetection, heading);
+        if (currentDetection.metadata != null) { // if a tag is detected
+            Pose2d poseVelo = rrDrive.getPoseVelocity();
 
-            rrDrive.setPoseEstimate(localizedAprilTagVector.getX(), localizedAprilTagVector.getY(), heading);
-            telemetry.addData("April Tag Pose", localizedAprilTagVector.toString());
+            if (poseVelo.getX() <= 0.25) { // and if robot velocity is <= 0.25 inches
+                double heading = rrDrive.getPoseEstimate().getHeading();
+                Vector2d localizedAprilTagVector = apriltagSubsystem.getFCPosition(currentDetection, heading);
+
+                rrDrive.setPoseEstimate(localizedAprilTagVector.getX(), localizedAprilTagVector.getY(), heading);
+                telemetry.addData("April Tag Pose", localizedAprilTagVector + ", " + heading);
+            } else {
+                telemetry.addData("April Tag Pose", "Robot velocity too high");
+            }
+        } else {
+            telemetry.addData("April Tag Pose", "Tag not detected");
         }
 
         double loop = System.nanoTime();
