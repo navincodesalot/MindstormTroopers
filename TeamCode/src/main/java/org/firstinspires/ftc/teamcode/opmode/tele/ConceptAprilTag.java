@@ -194,7 +194,7 @@ public class ConceptAprilTag extends LinearOpMode {
                 // Step through the list of detections and display info for each one.
                 for (AprilTagDetection detection : currentDetections) {
                     if (detection.metadata != null) {
-                        if (drive.getPoseVelocity().getX() <= 0.25) {
+                        if (drive.getPoseVelocity().vec().norm() <= 0.25) {
                             telemetry.addLine(String.format("\n==== (ID %d) %s", detection.id, detection.metadata.name));
                             telemetry.addData("April Tag Pose", getFCPosition(currentDetections.get(0), drive.getPoseEstimate().getHeading()).toString());
                             telemetry.addData("April Tag Heading", Math.toDegrees(drive.getPoseEstimate().getHeading()));
