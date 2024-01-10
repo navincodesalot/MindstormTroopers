@@ -6,8 +6,6 @@ import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.VoltageSensor;
-
 import org.firstinspires.ftc.teamcode.subsystems.BulkReadSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.DropSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
@@ -16,7 +14,6 @@ import org.firstinspires.ftc.teamcode.util.TriggerGamepadEx;
 public class BaseOpMode extends CommandOpMode {
     protected DcMotorEx leftSlideMotor, rightSlideMotor;
     protected IntakeSubsystem intake;
-    protected VoltageSensor batteryVoltageSensor;
     protected DropSubsystem drop;
     protected BulkReadSubsystem bulkRead;
     protected GamepadEx driver1;
@@ -43,20 +40,19 @@ public class BaseOpMode extends CommandOpMode {
 
         // Common subsystems go here (for auto and tele)
         intake = new IntakeSubsystem(axon);
-        drop = new DropSubsystem(leftSlideMotor, rightSlideMotor, lS, rS, t, batteryVoltageSensor);
+        drop = new DropSubsystem(leftSlideMotor, rightSlideMotor, lS, rS, t);
         bulkRead = new BulkReadSubsystem(hardwareMap);
 
         telemetry.addData("Status", "BaseOpMode Initialized");
         telemetry.update();
     }
 
-    @Override
-    public void run() {
-        super.run(); // since we are overriding in opmodes, this will actually run it
-    }
+//    @Override
+//    public void run() {
+//        super.run(); // since we are overriding in opmodes, this will actually run it
+//    }
 
     protected void initHardware() {
-        batteryVoltageSensor = hardwareMap.voltageSensor.iterator().next();
         leftSlideMotor = hardwareMap.get(DcMotorEx.class, "leftSlide");
         rightSlideMotor = hardwareMap.get(DcMotorEx.class, "rightSlide");
 

@@ -11,17 +11,15 @@ import com.arcrobotics.ftclib.command.ParallelCommandGroup;
 import com.arcrobotics.ftclib.command.RunCommand;
 import com.arcrobotics.ftclib.command.SelectCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
-//import com.outoftheboxrobotics.photoncore.Photon;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.command.WaitUntilCommand;
+import com.outoftheboxrobotics.photoncore.Photon;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
-
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.teamcode.commands.DropSlide;
 import org.firstinspires.ftc.teamcode.commands.LiftSlideSmall;
 import org.firstinspires.ftc.teamcode.opmode.BaseOpMode;
-import org.firstinspires.ftc.teamcode.opmode.auto.red.RightRed2Pixel;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
@@ -32,7 +30,7 @@ import org.firstinspires.ftc.teamcode.util.DelayedCommand;
 import java.util.HashMap;
 import java.util.List;
 
-//@Photon
+@Photon
 @Autonomous
 public class LeftBlue2Pixel extends BaseOpMode {
     private PropLocations location;
@@ -54,7 +52,7 @@ public class LeftBlue2Pixel extends BaseOpMode {
         tensorflow.setMinConfidence(0.70);
 
 //        AprilTagSubsystem apriltagSubsystem = new AprilTagSubsystem(hardwareMap, "Webcam 1", "Webcam 2");
-        register(drop, intake, bulkRead); // register so it runs the periodics in a loop while opmode is active
+        register(drop); // register so it runs the periodics in a loop while opmode is active
         intake.setDefaultCommand(new RunCommand(intake::stop, intake));
 
         // Drop ground pixel
@@ -187,7 +185,7 @@ public class LeftBlue2Pixel extends BaseOpMode {
 
     @Override
     public void run() {
-        super.run();
+        super.run(); // since we are overriding in opmodes, this will actually run it
         rrDrive.update(noRRDrive);
     }
 

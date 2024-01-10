@@ -11,12 +11,11 @@ import com.arcrobotics.ftclib.command.ParallelCommandGroup;
 import com.arcrobotics.ftclib.command.RunCommand;
 import com.arcrobotics.ftclib.command.SelectCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
-//import com.outoftheboxrobotics.photoncore.Photon;
+import com.outoftheboxrobotics.photoncore.Photon;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.command.WaitUntilCommand;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
-
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.teamcode.commands.DropSlide;
 import org.firstinspires.ftc.teamcode.commands.LiftSlideSmall;
@@ -31,11 +30,8 @@ import org.firstinspires.ftc.teamcode.util.DelayedCommand;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
 import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
-import java.util.Vector;
 
-//@Photon
+@Photon
 @Autonomous
 public class RightRed2Pixel extends BaseOpMode {
     private PropLocations location;
@@ -60,7 +56,7 @@ public class RightRed2Pixel extends BaseOpMode {
 
         apriltagSubsystem.switchCamera(2);
 
-        register(drop, intake, bulkRead); // register so it runs the periodics in a loop while opmode is active
+        register(drop); // register so it runs the periodics in a loop while opmode is active
 
         intake.setDefaultCommand(new RunCommand(intake::stop, intake));
 
@@ -188,13 +184,13 @@ public class RightRed2Pixel extends BaseOpMode {
                         }},
                         () -> location
                 ),
-                new InstantCommand(apriltagSubsystem::shutdown)
+                new InstantCommand(apriltagSubsystem::shutdown) // todo: shutdown in parallel when nearing end of auto
         ));
     }
 
     @Override
     public void run() {
-        super.run();
+        super.run(); // since we are overriding in opmodes, this will actually run it
         rrDrive.update(noRRDrive);
         telemetry.addData("Drive Pose", rrDrive.getPoseEstimate().toString());
 
@@ -219,6 +215,7 @@ public class RightRed2Pixel extends BaseOpMode {
         telemetry.addData("hz ", 1000000000 / (loop - loopTime));
         loopTime = loop;
         telemetry.update();
+        bulkRead.read();
     }
 
     private enum PropLocations {

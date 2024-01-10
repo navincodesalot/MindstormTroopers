@@ -3,15 +3,12 @@ package org.firstinspires.ftc.teamcode.opmode.tele;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.RunCommand;
-//import com.outoftheboxrobotics.photoncore.Photon;
-import com.arcrobotics.ftclib.command.WaitCommand;
-import com.arcrobotics.ftclib.command.WaitUntilCommand;
+import com.outoftheboxrobotics.photoncore.Photon;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.IMU;
 import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.A;
 import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.B;
-import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.BACK;
 import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.DPAD_DOWN;
 import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.DPAD_LEFT;
 import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.DPAD_RIGHT;
@@ -21,7 +18,6 @@ import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.RIGHT_BUMPER;
 import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Trigger.LEFT_TRIGGER;
 import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.X;
 import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.Y;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.commands.DropSlide;
 import org.firstinspires.ftc.teamcode.commands.LiftSlideHigh;
 import org.firstinspires.ftc.teamcode.commands.LiftSlideLow;
@@ -31,7 +27,7 @@ import org.firstinspires.ftc.teamcode.opmode.BaseOpMode;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.subsystems.MecanumDriveSubsystem;
 
-//@Photon
+@Photon
 @TeleOp(name = "cooked ahh tray")
 public class CmdOpMode extends BaseOpMode {
     private IMU imu;
@@ -52,7 +48,7 @@ public class CmdOpMode extends BaseOpMode {
         super.initialize();
 
         drive = new MecanumDriveSubsystem(fL, fR, bL, bR, imu);
-        register(drop, intake, drive, bulkRead);
+        register(drop, drive);
 
         // Set Default Commands for each op mode (more intuitive)
         intake.setDefaultCommand(new RunCommand(intake::stop, intake));
@@ -133,11 +129,11 @@ public class CmdOpMode extends BaseOpMode {
 
     @Override
     public void run() {
-        super.run();
-
+        super.run(); // since we are overriding in opmodes, this will actually run it
         double loop = System.nanoTime();
         telemetry.addData("hz ", 1000000000 / (loop - loopTime));
         loopTime = loop;
         telemetry.update();
+        bulkRead.read();
     }
 }

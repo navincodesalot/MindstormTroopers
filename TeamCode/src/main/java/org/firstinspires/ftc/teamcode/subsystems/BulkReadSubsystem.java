@@ -15,8 +15,7 @@ public class BulkReadSubsystem extends SubsystemBase {
         }
     }
 
-    @Override
-    public void periodic() {
+    public void read() {
         for (LynxModule hub: allHubs) {
             hub.clearBulkCache();
         }

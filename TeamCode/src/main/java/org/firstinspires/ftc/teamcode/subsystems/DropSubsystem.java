@@ -1,53 +1,47 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import static org.firstinspires.ftc.teamcode.tuning.PIDF_Slide.d;
+import static org.firstinspires.ftc.teamcode.tuning.PIDF_Slide.f;
+import static org.firstinspires.ftc.teamcode.tuning.PIDF_Slide.i;
+import static org.firstinspires.ftc.teamcode.tuning.PIDF_Slide.p;
 import com.arcrobotics.ftclib.command.SubsystemBase;
+import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.VoltageSensor;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.util.PIDFController;
 import org.firstinspires.ftc.teamcode.util.ServoLocation;
 
 public class DropSubsystem extends SubsystemBase {
-    private final VoltageSensor batteryVoltageSensor;
     private final DcMotorEx leftSlide;
     private final DcMotorEx rightSlide;
     private final Servo tray;
     private final Servo leftServo;
     private final Servo rightServo;
     private final double liftedTrayPos = 0.301, leftParallel = 0.333, rightParallel = 0;
-    private ElapsedTime voltageTimer;
-    private double voltage;
     private double slidePower = 0;
     private int target = 0;
+    static PIDController controller;
 
 //    private final RunMotionProfile profile = new RunMotionProfile(
 //            60000, 70000, 80000,
 //            0.1, 1, 0, 0.2, 1
 //    ); // todo
 
-    public DropSubsystem(DcMotorEx leftSlide, DcMotorEx rightSlide, Servo leftServo, Servo rightServo, Servo tray, VoltageSensor b) {
+    public DropSubsystem(DcMotorEx leftSlide, DcMotorEx rightSlide, Servo leftServo, Servo rightServo, Servo tray) {
+        controller = new PIDController(p, i, d);
+        controller.setIntegrationBounds(0.1, 0.25);
         this.leftSlide = leftSlide;
         this.rightSlide = rightSlide;
         this.tray = tray;
         this.leftServo = leftServo;
         this.rightServo = rightServo;
-        this.batteryVoltageSensor = b;
         target = 0; // todo: for mp, set target/goal to 0 at start
-        voltageTimer = new ElapsedTime();
-        voltage = batteryVoltageSensor.getVoltage();
     }
 
     // PIDF Loop
     @Override
     public void periodic() { // Runs in a loop while op mode is active (in the run method of scheduler class)
-        if (voltageTimer.seconds() > 5) {
-            voltage = batteryVoltageSensor.getVoltage();
-            voltageTimer.reset();
-        }
-
-        slidePower = (PIDFController.returnPower(leftSlide.getCurrentPosition(), target)) / voltage * 12.5;
+        slidePower = returnPower(leftSlide.getCurrentPosition(), target);
 
         leftSlide.setPower(slidePower);
         rightSlide.setPower(slidePower);
@@ -125,6 +119,11 @@ public class DropSubsystem extends SubsystemBase {
 
     public int getPosition() {
         return leftSlide.getCurrentPosition();
+    }
+
+    public static double returnPower(int pos, int target) {
+        double pid = controller.calculate(pos, target);
+        return pid + f;
     }
 
 //    public double getError() {
