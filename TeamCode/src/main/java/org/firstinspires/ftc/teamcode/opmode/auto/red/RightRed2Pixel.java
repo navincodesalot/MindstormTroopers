@@ -39,7 +39,7 @@ public class RightRed2Pixel extends BaseOpMode {
     private boolean noRRDrive = false;
     private double loopTime = 0.0;
 
-//    AprilTagSubsystem apriltagSubsystem = new AprilTagSubsystem(hardwareMap, "Webcam 1", "Webcam 2");
+    AprilTagSubsystem apriltagSubsystem = new AprilTagSubsystem(hardwareMap, "Webcam 2");
 
     @Override
     public void initialize() {
@@ -53,8 +53,6 @@ public class RightRed2Pixel extends BaseOpMode {
                 "oldred.tflite", REDLABEL);
 
         tensorflow.setMinConfidence(0.69);
-
-//        apriltagSubsystem.switchCamera(2);
 
         register(drop); // register so it runs the periodics in a loop while opmode is active
 

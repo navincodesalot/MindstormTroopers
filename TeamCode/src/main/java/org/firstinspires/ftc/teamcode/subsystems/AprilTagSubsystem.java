@@ -2,44 +2,30 @@ package org.firstinspires.ftc.teamcode.subsystems;
 
 import android.util.Size;
 
-import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraName;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Quaternion;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
-import org.firstinspires.ftc.vision.apriltag.AprilTagGameDatabase;
 import org.firstinspires.ftc.vision.apriltag.AprilTagLibrary;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class AprilTagSubsystem extends SubsystemBase {
 
     private final AprilTagProcessor aprilTagProcessor;
     private final VisionPortal portal;
-    private final WebcamName webcam1, webcam2;
 
-    private final Vector2d camera1Offset = new Vector2d(0, 0); // todo
-    private final Vector2d camera2Offset = new Vector2d(0, -5.4);
+    private final Vector2d cameraOffset = new Vector2d(0, -5.4);
 
-    public AprilTagSubsystem(HardwareMap hardwareMap, String camera1Name, String camera2Name) {
-        webcam1 = hardwareMap.get(WebcamName.class, camera1Name);
-        webcam2 = hardwareMap.get(WebcamName.class, camera2Name);
-
-        CameraName switchableCamera = ClassFactory.getInstance()
-                .getCameraManager().nameForSwitchableCamera(webcam1, webcam2);
+    public AprilTagSubsystem(HardwareMap hardwareMap, String cameraName) {
 
         aprilTagProcessor = new AprilTagProcessor.Builder()
                 .setTagFamily(AprilTagProcessor.TagFamily.TAG_36h11)
@@ -49,13 +35,10 @@ public class AprilTagSubsystem extends SubsystemBase {
                 .build();
 
         portal = new VisionPortal.Builder()
-                .setCamera(switchableCamera)
                 .setCameraResolution(new Size(640, 480))
                 .addProcessor(aprilTagProcessor)
                 .setAutoStopLiveView(true)
                 .build();
-
-        portal.setActiveCamera(webcam1);
     }
 
     public List<AprilTagDetection> getDetections() {
@@ -65,26 +48,11 @@ public class AprilTagSubsystem extends SubsystemBase {
         return aprilTagProcessor.getDetections();
     }
 
-    public void switchCamera(int cameraNum) {
-        if (cameraNum == 1) {
-            portal.setActiveCamera(webcam1);
-        } else if (cameraNum == 2) {
-            portal.setActiveCamera(webcam2);
-        }
-    }
-
     /**
      * @param botheading In Radians.
      * @return FC Pose of bot.
      */
     public Vector2d getFCPosition(AprilTagDetection detection, double botheading) {
-        Vector2d cameraOffset;
-        if (portal.getActiveCamera().equals(webcam2)) {
-            cameraOffset = camera2Offset;
-        } else {
-            cameraOffset = camera1Offset;
-        }
-
         // get coordinates of the robot in RC coordinates
         // ensure offsets are RC
         double x = detection.ftcPose.x - cameraOffset.getX();
@@ -120,7 +88,7 @@ public class AprilTagSubsystem extends SubsystemBase {
         portal.close();
     }
 
-    public static AprilTagLibrary getCenterStageTagLibrary() {
+    public static AprilTagLibrary getCenterStageTagLibrary() { // custom field coords from michael
         return new AprilTagLibrary.Builder()
                 .addTag(1, "BlueAllianceLeft",
                         2, new VectorF(61.5f, 41.41f, 4f), DistanceUnit.INCH,

@@ -70,6 +70,7 @@ public class PIDF_Slide extends OpMode {
         rightSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftServo.setDirection(Servo.Direction.FORWARD);
         rightServo.setDirection(Servo.Direction.REVERSE);
+
         // lift servos
         leftServo.setPosition(0.333);
         rightServo.setPosition(0);
@@ -78,8 +79,8 @@ public class PIDF_Slide extends OpMode {
     @Override
     public void loop() {
 //        double power = profile.profiledMovement(target, getPosition());
-        double power = (returnPower(getPosition(), target));
         drive.update();
+        double power = (returnPower(getPosition(), target));
 
         leftSlide.setPower(power);
         rightSlide.setPower(power);
