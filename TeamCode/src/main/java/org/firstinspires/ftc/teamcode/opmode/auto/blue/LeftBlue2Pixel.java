@@ -52,7 +52,7 @@ public class LeftBlue2Pixel extends BaseOpMode {
         tensorflow.setMinConfidence(0.70);
 
 //        AprilTagSubsystem apriltagSubsystem = new AprilTagSubsystem(hardwareMap, "Webcam 1", "Webcam 2");
-        register(drop); // register so it runs the periodics in a loop while opmode is active
+//        register(drop); // register so it runs the periodics in a loop while opmode is active
         intake.setDefaultCommand(new RunCommand(intake::stop, intake));
 
         // Drop ground pixel

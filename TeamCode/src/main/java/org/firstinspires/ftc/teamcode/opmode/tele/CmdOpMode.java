@@ -27,7 +27,7 @@ import org.firstinspires.ftc.teamcode.opmode.BaseOpMode;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.subsystems.MecanumDriveSubsystem;
 
-@Photon
+//@Photon
 @TeleOp(name = "cooked ahh tray")
 public class CmdOpMode extends BaseOpMode {
     private IMU imu;

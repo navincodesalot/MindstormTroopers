@@ -54,6 +54,8 @@ public class AprilTagSubsystem extends SubsystemBase {
                 .addProcessor(aprilTagProcessor)
                 .setAutoStopLiveView(true)
                 .build();
+
+        portal.setActiveCamera(webcam1);
     }
 
     public List<AprilTagDetection> getDetections() {

@@ -20,6 +20,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants;
+import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.util.RunMotionProfile;
 
 @Config
@@ -28,8 +29,8 @@ import org.firstinspires.ftc.teamcode.util.RunMotionProfile;
 @TeleOp(name = "Tune Slide PIDF")
 public class PIDF_Slide extends OpMode {
     private PIDController controller;
-    private IMU imu;
-
+    private SampleMecanumDrive drive;
+    private double loopTime = 0.0;
 //    public static double p = 0.03, i = 0.2, d = 0.00015, f = 0.0048; // tele
     public static double p = 0.03, i = 0, d = 0.00015, f = 0; // auto
 
@@ -47,16 +48,13 @@ public class PIDF_Slide extends OpMode {
 
     @Override
     public void init() {
+        drive = new SampleMecanumDrive(hardwareMap);
+        drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
         controller = new PIDController(p, i, d);
-        controller.setIntegrationBounds(0.1, 0.25);
+//        controller.setIntegrationBounds(0.1, 0.25);
         telemetry = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
-        imu = hardwareMap.get(IMU.class, "imu");
-        imu.initialize(new IMU.Parameters(
-                new RevHubOrientationOnRobot(
-                        DriveConstants.LOGO_FACING_DIR, DriveConstants.USB_FACING_DIR
-                )
-        ));
-//
+
         rightSlide = hardwareMap.get(DcMotorEx.class, "rightSlide");
         leftSlide = hardwareMap.get(DcMotorEx.class, "leftSlide");
         leftServo = hardwareMap.get(Servo.class, "leftServo");
@@ -81,6 +79,7 @@ public class PIDF_Slide extends OpMode {
     public void loop() {
 //        double power = profile.profiledMovement(target, getPosition());
         double power = (returnPower(getPosition(), target));
+        drive.update();
 
         leftSlide.setPower(power);
         rightSlide.setPower(power);
@@ -89,7 +88,11 @@ public class PIDF_Slide extends OpMode {
         telemetry.addData("rightSlide Pos", rightSlide.getCurrentPosition());
         telemetry.addData("error", Math.abs(target - getPosition()));
         telemetry.addData("target", target);
-        telemetry.addData("heading", imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
+        telemetry.addData("pose", drive.getPoseEstimate());
+        double loop = System.nanoTime();
+        telemetry.addData("hz ", 1000000000 / (loop - loopTime));
+        loopTime = loop;
+        telemetry.update();
         telemetry.update();
     }
 
