@@ -192,22 +192,22 @@ public class RightRed2Pixel extends BaseOpMode {
         rrDrive.update(noRRDrive);
         telemetry.addData("Drive Pose", rrDrive.getPoseEstimate().toString());
 
-//        AprilTagDetection currentDetection = apriltagSubsystem.getDetections().get(0);
-//        if (currentDetection.metadata != null) { // if a tag is detected
-//            double poseVelo = rrDrive.getPoseVelocity().vec().norm();
-//
-//            if (poseVelo <= 0.25) { // and if robot velocity is <= 0.25 inches
-//                double heading = rrDrive.getPoseEstimate().getHeading();
-//                Vector2d localizedAprilTagVector = apriltagSubsystem.getFCPosition(currentDetection, heading);
-//
-//                rrDrive.setPoseEstimate(localizedAprilTagVector.getX(), localizedAprilTagVector.getY(), heading);
-//                telemetry.addData("April Tag Pose", localizedAprilTagVector + ", " + heading);
-//            } else {
-//                telemetry.addData("April Tag Pose", "Robot velocity too high");
-//            }
-//        } else {
-//            telemetry.addData("April Tag Pose", "Tag not detected");
-//        }
+        AprilTagDetection currentDetection = apriltagSubsystem.getDetections().get(0);
+        if (currentDetection.metadata != null) { // if a tag is detected
+            double poseVelo = rrDrive.getPoseVelocity().vec().norm();
+
+            if (poseVelo <= 0.25) { // and if robot velocity is <= 0.25 inches
+                double heading = rrDrive.getPoseEstimate().getHeading();
+                Vector2d localizedAprilTagVector = apriltagSubsystem.getFCPosition(currentDetection, heading);
+
+                rrDrive.setPoseEstimate(localizedAprilTagVector.getX(), localizedAprilTagVector.getY(), heading);
+                telemetry.addData("April Tag Pose", localizedAprilTagVector + ", " + heading);
+            } else {
+                telemetry.addData("April Tag Pose", "Robot velocity too high");
+            }
+        } else {
+            telemetry.addData("April Tag Pose", "Tag not detected");
+        }
 
         double loop = System.nanoTime();
         telemetry.addData("hz ", 1000000000 / (loop - loopTime));
