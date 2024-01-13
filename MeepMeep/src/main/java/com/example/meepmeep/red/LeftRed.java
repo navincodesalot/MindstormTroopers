@@ -18,14 +18,16 @@ public class LeftRed {
                         Constraints.MAX_ANG_ACCEL, Constraints.TRACK_WIDTH)
                 .followTrajectorySequence(drive ->
                                 drive.trajectorySequenceBuilder(new Pose2d(-36, -64, Math.toRadians(270)))
-                                        .lineToSplineHeading(new Pose2d(-34, -25.5, Math.toRadians(180)))
-                                        .waitSeconds(0.3)
-                                        .lineToConstantHeading(new Vector2d(-48, -12))
+                                        .lineToSplineHeading(new Pose2d(-46, -39, Math.toRadians(90)))
+                                        .back(4)
+                                        .strafeRight(14)
+                                        .lineToConstantHeading(new Vector2d(-36, -10))
+                                        .lineToSplineHeading(new Pose2d(-63, -12, Math.toRadians(180)))
                                         .waitSeconds(2)
-                                        .lineToSplineHeading(new Pose2d(35, -12, Math.toRadians(180)))
-                                        .lineToConstantHeading(new Vector2d(53, -31))
+                                        .lineToSplineHeading(new Pose2d(35, 0, Math.toRadians(180)))
+                                        .lineToConstantHeading(new Vector2d(56, -28))
                                         .waitSeconds(2)
-                                        .lineToLinearHeading(new Pose2d(49, -15, Math.toRadians(180)))
+                                        .lineToLinearHeading(new Pose2d(49.5, -15, Math.toRadians(180)))
                                         .build()
                 );
 
@@ -35,14 +37,14 @@ public class LeftRed {
                         Constraints.MAX_ANG_ACCEL, Constraints.TRACK_WIDTH)
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(new Pose2d(-36, -64, Math.toRadians(270)))
-                                .lineToSplineHeading(new Pose2d(-43, -25.5, Math.toRadians(0)))
+                                .lineToSplineHeading(new Pose2d(-43, -21.5, Math.toRadians(0)))
                                 .waitSeconds(0.3)
                                 .lineToSplineHeading(new Pose2d(-48, -12, Math.toRadians(180)))
                                 .waitSeconds(2)
                                 .lineToSplineHeading(new Pose2d(35, -12, Math.toRadians(180)))
-                                .lineToConstantHeading(new Vector2d(53, -37))
+                                .lineToConstantHeading(new Vector2d(56, -34))
                                 .waitSeconds(2)
-                                .lineToLinearHeading(new Pose2d(49, -15, Math.toRadians(180)))
+                                .lineToLinearHeading(new Pose2d(49.5, -15, Math.toRadians(180)))
                                 .build()
                 );
 
@@ -52,15 +54,16 @@ public class LeftRed {
                         Constraints.MAX_ANG_ACCEL, Constraints.TRACK_WIDTH)
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(new Pose2d(-36, -64, Math.toRadians(270)))
-                                .strafeRight(2)
-                                .lineToSplineHeading(new Pose2d(-31, -25.5, Math.toRadians(0)))
+                                .strafeRight(3)
+                                .lineToSplineHeading(new Pose2d(-32, -23.5, Math.toRadians(0)))
+                                .lineTo(new Vector2d(-46, -23.5))
                                 .waitSeconds(0.3)
                                 .lineToLinearHeading(new Pose2d(-48, -12, Math.toRadians(180)))
                                 .waitSeconds(2)
                                 .lineToSplineHeading(new Pose2d(35, -12, Math.toRadians(180)))
-                                .lineToConstantHeading(new Vector2d(53, -43))
+                                .lineToConstantHeading(new Vector2d(56, -41.5))
                                 .waitSeconds(2)
-                                .lineToLinearHeading(new Pose2d(49, -15, Math.toRadians(180)))
+                                .lineToLinearHeading(new Pose2d(49.5, -15, Math.toRadians(180)))
                                 .build()
                 );
 
@@ -68,8 +71,8 @@ public class LeftRed {
                 .setDarkMode(true)
                 .setBackgroundAlpha(0.95f)
 //                .addEntity(leftBot)
-                .addEntity(middleBot)
-//               .addEntity(rightBot)
+//                .addEntity(middleBot)
+               .addEntity(rightBot)
                 .start();
     }
 }

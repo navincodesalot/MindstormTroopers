@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 public class PushOnePixel extends SequentialCommandGroup {
     public PushOnePixel(IntakeSubsystem intake) {
         super(
-                new RunCommand(intake::push, intake).raceWith(new WaitCommand(150))
+                new RunCommand(intake::push, intake).raceWith(new WaitCommand(250))
         );
     }
 }

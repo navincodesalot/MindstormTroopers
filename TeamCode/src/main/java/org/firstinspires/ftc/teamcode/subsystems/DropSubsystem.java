@@ -88,6 +88,18 @@ public class DropSubsystem extends SubsystemBase {
         tray.setPosition(0.101);
     }
 
+    public void liftForFirstPixel() {
+        leftServo.setPosition(0);
+        rightServo.setPosition(0);
+        tray.setPosition(0.302);
+    }
+
+    public void dropForFirstPixel() {
+        leftServo.setPosition(0);
+        rightServo.setPosition(0);
+        tray.setPosition(0.284);
+    }
+
     // Slide
     public void slideHigh() {
         this.target = 1020;

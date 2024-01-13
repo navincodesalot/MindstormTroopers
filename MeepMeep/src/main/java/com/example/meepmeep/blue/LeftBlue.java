@@ -18,11 +18,11 @@ public class LeftBlue {
                         Constraints.MAX_ANG_ACCEL, Constraints.TRACK_WIDTH)
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(new Pose2d(12, 64, Math.toRadians(90)))
-                                .lineToSplineHeading(new Pose2d(31, 25.5, Math.toRadians(180)))
+                                .lineToSplineHeading(new Pose2d(32, 23, Math.toRadians(180)))
                                 .waitSeconds(0.3)
-                                .lineToConstantHeading(new Vector2d(53, 43))
+                                .lineToConstantHeading(new Vector2d(56, 41.5))
                                 .waitSeconds(2)
-                                .lineToLinearHeading(new Pose2d(49, 61, Math.toRadians(180)))
+                                .lineToLinearHeading(new Pose2d(49.5, 59, Math.toRadians(180)))
                                 .build()
                 );
 
@@ -32,11 +32,11 @@ public class LeftBlue {
                         Constraints.MAX_ANG_ACCEL, Constraints.TRACK_WIDTH)
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(new Pose2d(12, 64, Math.toRadians(90)))
-                                .lineToSplineHeading(new Pose2d(23, 25.5, Math.toRadians(180)))
+                                .lineToSplineHeading(new Pose2d(22, 21.5, Math.toRadians(180)))
                                 .waitSeconds(0.3)
-                                .lineToConstantHeading(new Vector2d(53, 37))
+                                .lineToConstantHeading(new Vector2d(56, 34))
                                 .waitSeconds(2)
-                                .lineToLinearHeading(new Pose2d(49, 61, Math.toRadians(180)))
+                                .lineToLinearHeading(new Pose2d(49.5, 59, Math.toRadians(180)))
                                 .build()
                 );
 
@@ -46,21 +46,22 @@ public class LeftBlue {
                         Constraints.MAX_ANG_ACCEL, Constraints.TRACK_WIDTH)
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(new Pose2d(12, 64, Math.toRadians(90)))
-                                .strafeRight(2)
-                                .lineToSplineHeading(new Pose2d(10.5, 26.5, Math.toRadians(180)))
+                                .strafeRight(3)
+                                .lineToSplineHeading(new Pose2d(16, 23.5, Math.toRadians(180)))
                                 .waitSeconds(0.3)
-                                .lineToConstantHeading(new Vector2d(53, 31))
+                                .lineTo(new Vector2d(8, 23.5))
+                                .lineToConstantHeading(new Vector2d(56, 28))
                                 .waitSeconds(2)
-                                .lineToLinearHeading(new Pose2d(49, 61, Math.toRadians(180)))
+                                .lineToLinearHeading(new Pose2d(49.5, 59, Math.toRadians(180)))
                                 .build()
                 );
 
         meepMeep.setBackground(MeepMeep.Background.FIELD_CENTERSTAGE_JUICE_DARK)
                 .setDarkMode(true)
                 .setBackgroundAlpha(0.95f)
-                .addEntity(leftBot)
+//                .addEntity(leftBot)
 //                .addEntity(middleBot)
-//               .addEntity(rightBot)
+               .addEntity(rightBot)
                 .start();
     }
 }

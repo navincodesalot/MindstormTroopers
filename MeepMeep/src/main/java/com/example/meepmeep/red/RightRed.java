@@ -48,7 +48,7 @@ public class RightRed {
                         Constraints.MAX_ANG_ACCEL, Constraints.TRACK_WIDTH)
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(new Pose2d(12, -64, Math.toRadians(270)))
-                                .lineToSplineHeading(new Pose2d(31, -22, Math.toRadians(180)))
+                                .lineToSplineHeading(new Pose2d(32, -23, Math.toRadians(180)))
                                 .waitSeconds(0.3)
                                 .lineToConstantHeading(new Vector2d(56, -41.5))
                                 .waitSeconds(2)
@@ -59,9 +59,9 @@ public class RightRed {
         meepMeep.setBackground(MeepMeep.Background.FIELD_CENTERSTAGE_JUICE_DARK)
                 .setDarkMode(true)
                 .setBackgroundAlpha(0.95f)
-                .addEntity(leftBot)
+//                .addEntity(leftBot)
 //                .addEntity(middleBot)
-//               .addEntity(rightBot)
+               .addEntity(rightBot)
                 .start();
     }
 }

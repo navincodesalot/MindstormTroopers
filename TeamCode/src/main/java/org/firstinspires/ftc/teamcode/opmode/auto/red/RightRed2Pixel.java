@@ -71,7 +71,7 @@ public class RightRed2Pixel extends BaseOpMode {
                 .build();
 
         TrajectorySequence dropRight = rrDrive.trajectorySequenceBuilder(rightRed)
-                .lineToSplineHeading(new Pose2d(31, -22, Math.toRadians(180)))
+                .lineToSplineHeading(new Pose2d(32, -23, Math.toRadians(180)))
                 .build();
 
         // Drop to backdrop
@@ -92,19 +92,13 @@ public class RightRed2Pixel extends BaseOpMode {
                 .build();
 
         // Park
-        TrajectorySequence parkLeft = rrDrive.trajectorySequenceBuilder(dropToBackdropLeft.end())
-                .lineToLinearHeading(new Pose2d(49.5, -59, Math.toRadians(180)))
-                .build();
-        TrajectorySequence parkMiddle = rrDrive.trajectorySequenceBuilder(dropToBackdropMiddle.end())
-                .lineToLinearHeading(new Pose2d(49.5, -59, Math.toRadians(180)))
-                .build();
-        TrajectorySequence parkRight = rrDrive.trajectorySequenceBuilder(dropToBackdropRight.end())
-                .lineToLinearHeading(new Pose2d(49.5, -59, Math.toRadians(180)))
+        TrajectorySequence park = rrDrive.trajectorySequenceBuilder(dropToBackdropLeft.end())
+                .lineToLinearHeading(new Pose2d(49.5, -59, Math.toRadians(180)),
+                        SampleMecanumDrive.getVelocityConstraint(25, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(25))
                 .build();
 
         rrDrive.setPoseEstimate(rightRed);
-
-//        drop.liftTray();
 
         // On init --> do nothing
 
@@ -151,7 +145,7 @@ public class RightRed2Pixel extends BaseOpMode {
                                             new InstantCommand(tensorflow::shutdown, tensorflow),
                                             new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropRight)),
                                             new DelayedCommand(new InstantCommand(drop::pickupPixel, drop), 1000),
-                                            new DelayedCommand(new RunCommand(intake::push, intake).raceWith(new WaitCommand(400)), 3600).andThen(new InstantCommand(intake::stop, intake))
+                                            new DelayedCommand(new RunCommand(intake::push, intake).raceWith(new WaitCommand(400)), 3675).andThen(new InstantCommand(intake::stop, intake))
                                     )
                             ));
                         }},
@@ -171,19 +165,12 @@ public class RightRed2Pixel extends BaseOpMode {
                 new WaitUntilCommand(() -> !rrDrive.isBusy()),
                 new LiftSlideSmall(drop),
                 new WaitUntilCommand(() -> drop.getPosition() <= 670 && drop.getPosition() >= 635),
-                new InstantCommand(drop::dropPixel, drop)
-//                new DelayedCommand(new RunCommand(intake::pushSlow, intake).raceWith(new WaitCommand(800)), 450).andThen(new InstantCommand(intake::stop, intake)),
-//                new DropSlide(drop),
-//                new WaitUntilCommand(() -> (drop.getPosition() <= 14 && drop.getPosition() <= -10)),
-//                new DelayedCommand(new InstantCommand(drop::liftTray), 150),
-//                new SelectCommand(
-//                        new HashMap<Object, Command>() {{
-//                            put(PropLocations.LEFT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(parkLeft)));
-//                            put(PropLocations.MIDDLE, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(parkMiddle)));
-//                            put(PropLocations.RIGHT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(parkRight)));
-//                        }},
-//                        () -> location
-//                )
+                new InstantCommand(drop::dropPixel, drop),
+                new DelayedCommand(new RunCommand(intake::pushSlow, intake).raceWith(new WaitCommand(800)), 450).andThen(new InstantCommand(intake::stop, intake)),
+                new DropSlide(drop),
+                new WaitUntilCommand(() -> (drop.getPosition() <= 20 && drop.getPosition() >= -10)),
+                new DelayedCommand(new InstantCommand(drop::liftTray), 150),
+                new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(park))
 //                new InstantCommand(apriltagSubsystem::shutdown) // todo: shutdown in parallel when nearing end of auto
         ));
     }
@@ -213,6 +200,7 @@ public class RightRed2Pixel extends BaseOpMode {
 //            telemetry.addData("April Tag Pose", "Tag not detected");
 //        }
 
+        telemetry.addData("slide pos", drop.getPosition());
         double loop = System.nanoTime();
         telemetry.addData("hz ", 1000000000 / (loop - loopTime));
         loopTime = loop;
