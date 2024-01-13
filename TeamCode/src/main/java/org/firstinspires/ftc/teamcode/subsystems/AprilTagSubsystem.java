@@ -6,12 +6,14 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Quaternion;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
+import org.firstinspires.ftc.vision.apriltag.AprilTagGameDatabase;
 import org.firstinspires.ftc.vision.apriltag.AprilTagLibrary;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
@@ -19,13 +21,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AprilTagSubsystem extends SubsystemBase {
-
     private final AprilTagProcessor aprilTagProcessor;
     private final VisionPortal portal;
-
     private final Vector2d cameraOffset = new Vector2d(0, -5.4);
 
-    public AprilTagSubsystem(HardwareMap hardwareMap, String cameraName) {
+    public AprilTagSubsystem(HardwareMap hardwareMap) {
 
         aprilTagProcessor = new AprilTagProcessor.Builder()
                 .setTagFamily(AprilTagProcessor.TagFamily.TAG_36h11)
@@ -35,7 +35,7 @@ public class AprilTagSubsystem extends SubsystemBase {
                 .build();
 
         portal = new VisionPortal.Builder()
-                .setCameraResolution(new Size(640, 480))
+                .setCamera(hardwareMap.get(WebcamName.class, "Webcam 2"))
                 .addProcessor(aprilTagProcessor)
                 .setAutoStopLiveView(true)
                 .build();

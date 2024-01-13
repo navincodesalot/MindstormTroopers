@@ -30,12 +30,8 @@ public class RRDriveSubsystem extends SubsystemBase {
         drive.setPoseEstimate(pose);
     }
 
-    public void update(boolean noRRDrive) {
-        if (!noRRDrive) {
-            drive.update();
-        } else {
-            return;
-        }
+    public void update() {
+        drive.update();
     }
 
     public void updatePoseEstimate() {

@@ -32,7 +32,7 @@ public class PIDF_Slide extends OpMode {
     private SampleMecanumDrive drive;
     private double loopTime = 0.0;
 //    public static double p = 0.03, i = 0.2, d = 0.00015, f = 0.0048; // tele
-    public static double p = 0.03, i = 0, d = 0.00015, f = 0; // auto
+    public static double p = 0.021, i = 0.129, d = 0.0, f = 0.0135; // auto
 
 //    public static double maxVel = 40000, maxAccel = 50000, maxJerk = 60000;
 //    private final RunMotionProfile profile = new RunMotionProfile(
@@ -52,7 +52,7 @@ public class PIDF_Slide extends OpMode {
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         controller = new PIDController(p, i, d);
-//        controller.setIntegrationBounds(0.1, 0.25);
+        controller.setIntegrationBounds(0.1, 0.25);
         telemetry = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
 
         rightSlide = hardwareMap.get(DcMotorEx.class, "rightSlide");

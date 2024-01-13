@@ -90,15 +90,15 @@ public class DropSubsystem extends SubsystemBase {
 
     // Slide
     public void slideHigh() {
-        this.target = 1000;
+        this.target = 1020;
     }
 
     public void slideMed() {
-        this.target = 830;
+        this.target = 900;
     }
 
     public void slideLow() {
-        this.target = 680;
+        this.target = 750;
     }
 
     public void slidePoint() {

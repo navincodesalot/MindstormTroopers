@@ -17,7 +17,7 @@ public class LeftRed {
                 .setConstraints(Constraints.MAX_VEL, Constraints.MAX_ACCEL, Constraints.MAX_ANG_VEL,
                         Constraints.MAX_ANG_ACCEL, Constraints.TRACK_WIDTH)
                 .followTrajectorySequence(drive ->
-                                drive.trajectorySequenceBuilder(new Pose2d(-36, -65, Math.toRadians(270)))
+                                drive.trajectorySequenceBuilder(new Pose2d(-36, -64, Math.toRadians(270)))
                                         .lineToSplineHeading(new Pose2d(-34, -25.5, Math.toRadians(180)))
                                         .waitSeconds(0.3)
                                         .lineToConstantHeading(new Vector2d(-48, -12))
@@ -34,7 +34,7 @@ public class LeftRed {
                 .setConstraints(Constraints.MAX_VEL, Constraints.MAX_ACCEL, Constraints.MAX_ANG_VEL,
                         Constraints.MAX_ANG_ACCEL, Constraints.TRACK_WIDTH)
                 .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(new Pose2d(-36, -65, Math.toRadians(270)))
+                        drive.trajectorySequenceBuilder(new Pose2d(-36, -64, Math.toRadians(270)))
                                 .lineToSplineHeading(new Pose2d(-43, -25.5, Math.toRadians(0)))
                                 .waitSeconds(0.3)
                                 .lineToSplineHeading(new Pose2d(-48, -12, Math.toRadians(180)))
@@ -51,7 +51,7 @@ public class LeftRed {
                 .setConstraints(Constraints.MAX_VEL, Constraints.MAX_ACCEL, Constraints.MAX_ANG_VEL,
                         Constraints.MAX_ANG_ACCEL, Constraints.TRACK_WIDTH)
                 .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(new Pose2d(-36, -65, Math.toRadians(270)))
+                        drive.trajectorySequenceBuilder(new Pose2d(-36, -64, Math.toRadians(270)))
                                 .strafeRight(2)
                                 .lineToSplineHeading(new Pose2d(-31, -25.5, Math.toRadians(0)))
                                 .waitSeconds(0.3)

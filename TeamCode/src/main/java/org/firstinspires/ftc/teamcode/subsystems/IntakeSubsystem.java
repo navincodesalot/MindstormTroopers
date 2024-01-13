@@ -27,6 +27,11 @@ public class IntakeSubsystem extends SubsystemBase {
         intake.setPower(1);
     }
 
+    public void pushSlow() {
+        intake.setDirection(CRServo.Direction.REVERSE);
+        intake.setPower(0.5);
+    }
+
     public void stop() {
         intake.setPower(0);
     }

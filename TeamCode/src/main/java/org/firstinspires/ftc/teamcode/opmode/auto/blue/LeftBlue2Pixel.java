@@ -186,7 +186,7 @@ public class LeftBlue2Pixel extends BaseOpMode {
     @Override
     public void run() {
         super.run(); // since we are overriding in opmodes, this will actually run it
-        rrDrive.update(noRRDrive);
+        rrDrive.update();
     }
 
     private enum PropLocations {

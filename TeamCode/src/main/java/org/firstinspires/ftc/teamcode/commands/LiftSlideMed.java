@@ -16,11 +16,11 @@ public class LiftSlideMed extends ConditionalCommand {
                                 new DelayedCommand(new InstantCommand(drop::setupTrayForSlide), 75),
                                 new InstantCommand(drop::slidePoint)
                         ),
-                        new WaitUntilCommand(() -> (drop.getPosition() <= 225) && (drop.getPosition() >= 185)),
+                        new WaitUntilCommand(() -> (drop.getPosition() <= 225) && (drop.getPosition() >= 190)),
                         new InstantCommand(drop::slideMed) // 900
                 ),
                 new InstantCommand(drop::slideMed),
-                ()-> drop.getPosition() <= 400
+                ()-> drop.getPosition() <= 350
         );
     }
 }

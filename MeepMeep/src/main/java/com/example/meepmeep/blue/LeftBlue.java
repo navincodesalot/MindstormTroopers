@@ -17,7 +17,7 @@ public class LeftBlue {
                 .setConstraints(Constraints.MAX_VEL, Constraints.MAX_ACCEL, Constraints.MAX_ANG_VEL,
                         Constraints.MAX_ANG_ACCEL, Constraints.TRACK_WIDTH)
                 .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(new Pose2d(12, 65, Math.toRadians(90)))
+                        drive.trajectorySequenceBuilder(new Pose2d(12, 64, Math.toRadians(90)))
                                 .lineToSplineHeading(new Pose2d(31, 25.5, Math.toRadians(180)))
                                 .waitSeconds(0.3)
                                 .lineToConstantHeading(new Vector2d(53, 43))
@@ -31,7 +31,7 @@ public class LeftBlue {
                 .setConstraints(Constraints.MAX_VEL, Constraints.MAX_ACCEL, Constraints.MAX_ANG_VEL,
                         Constraints.MAX_ANG_ACCEL, Constraints.TRACK_WIDTH)
                 .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(new Pose2d(12, 65, Math.toRadians(90)))
+                        drive.trajectorySequenceBuilder(new Pose2d(12, 64, Math.toRadians(90)))
                                 .lineToSplineHeading(new Pose2d(23, 25.5, Math.toRadians(180)))
                                 .waitSeconds(0.3)
                                 .lineToConstantHeading(new Vector2d(53, 37))
@@ -45,7 +45,7 @@ public class LeftBlue {
                 .setConstraints(Constraints.MAX_VEL, Constraints.MAX_ACCEL, Constraints.MAX_ANG_VEL,
                         Constraints.MAX_ANG_ACCEL, Constraints.TRACK_WIDTH)
                 .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(new Pose2d(12, 65, Math.toRadians(90)))
+                        drive.trajectorySequenceBuilder(new Pose2d(12, 64, Math.toRadians(90)))
                                 .strafeRight(2)
                                 .lineToSplineHeading(new Pose2d(10.5, 26.5, Math.toRadians(180)))
                                 .waitSeconds(0.3)
