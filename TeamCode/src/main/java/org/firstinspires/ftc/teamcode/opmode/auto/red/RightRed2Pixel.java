@@ -188,7 +188,7 @@ public class RightRed2Pixel extends BaseOpMode {
 //                double poseVelo = rrDrive.getPoseVelocity().vec().norm();
 //
 //                if (poseVelo <= 0.25) { // and if robot velocity is <= 0.25 inches
-//                    Vector2d localizedAprilTagVector = aprilTagSubsystem.getFCPosition(currentDetection, Math.toDegrees(rrDrive.getPoseEstimate().getHeading()));
+//                    Vector2d localizedAprilTagVector = aprilTagSubsystem.getFCPosition(currentDetection, rrDrive.getPoseEstimate().getHeading());
 //
 //                    rrDrive.setPoseEstimate(localizedAprilTagVector.getX(), localizedAprilTagVector.getY(), rrDrive.getPoseEstimate().getHeading());
 //                    telemetry.addData("April Tag Pose", localizedAprilTagVector + ", " + Math.toDegrees(rrDrive.getPoseEstimate().getHeading()));
