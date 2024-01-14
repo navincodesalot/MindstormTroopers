@@ -6,6 +6,8 @@ import com.arcrobotics.ftclib.command.RunCommand;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.hardware.Servo;
+
 import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.A;
 import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.B;
 import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.DPAD_DOWN;
@@ -24,13 +26,16 @@ import org.firstinspires.ftc.teamcode.commands.LiftSlideMed;
 import org.firstinspires.ftc.teamcode.commands.PushOnePixel;
 import org.firstinspires.ftc.teamcode.opmode.BaseOpMode;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants;
+import org.firstinspires.ftc.teamcode.subsystems.DroneSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.MecanumDriveSubsystem;
 
 //@Photon
 @TeleOp(name = "cooked ahh tray")
 public class CmdOpMode extends BaseOpMode {
     private IMU imu;
+    private Servo drone;
     private MecanumDriveSubsystem drive;
+    private DroneSubsystem droneSubsystem;
     private double loopTime = 0.0;
 
     @Override
@@ -44,8 +49,12 @@ public class CmdOpMode extends BaseOpMode {
                 )
         ));
 
+        drone = hardwareMap.get(Servo.class, "drone");
+        drone.setDirection(Servo.Direction.FORWARD);
+
         super.initialize();
 
+        droneSubsystem = new DroneSubsystem(drone);
         drive = new MecanumDriveSubsystem(fL, fR, bL, bR, imu);
         register(drop, drive);
 
@@ -54,6 +63,7 @@ public class CmdOpMode extends BaseOpMode {
 
         //in init:
         drop.liftTray();
+        droneSubsystem.init();
 
 //        drive.setDefaultCommand(new RunCommand(() -> drive.fieldCentric(driver1::getLeftX, driver1::getLeftY, driver1::getRightX, () -> imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES)), drive));
         drive.setDefaultCommand(new RunCommand(() -> drive.robotCentric(driver1::getLeftX, driver1::getLeftY, driver1::getRightX), drive));
@@ -123,6 +133,11 @@ public class CmdOpMode extends BaseOpMode {
         );
         driver2.getGamepadButton(Y).whenPressed(
                 new InstantCommand(drop::liftTray, drop)
+        );
+
+        //Drone
+        driver2.getGamepadButton(RIGHT_BUMPER).whenPressed(
+                new InstantCommand(droneSubsystem::fly)
         );
     }
 

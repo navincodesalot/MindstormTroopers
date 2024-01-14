@@ -63,15 +63,15 @@ public class RightRed2Pixel extends BaseOpMode {
         // Drop ground pixel
         TrajectorySequence dropLeft = rrDrive.trajectorySequenceBuilder(rightRed)
                 .strafeLeft(3)
-                .lineToSplineHeading(new Pose2d(16, -23.5, Math.toRadians(180)))
+                .lineToSplineHeading(new Pose2d(16, -24.5, Math.toRadians(180)))
                 .lineTo(new Vector2d(8, -23.5))
                 .build();
         TrajectorySequence dropMiddle = rrDrive.trajectorySequenceBuilder(rightRed)
-                .lineToSplineHeading(new Pose2d(22, -21.5, Math.toRadians(180)))
+                .lineToSplineHeading(new Pose2d(22, -22, Math.toRadians(180)))
                 .build();
 
         TrajectorySequence dropRight = rrDrive.trajectorySequenceBuilder(rightRed)
-                .lineToSplineHeading(new Pose2d(32, -23, Math.toRadians(180)))
+                .lineToSplineHeading(new Pose2d(32, -24.5, Math.toRadians(180)))
                 .build();
 
         // Drop to backdrop
@@ -81,7 +81,7 @@ public class RightRed2Pixel extends BaseOpMode {
                         SampleMecanumDrive.getAccelerationConstraint(35))
                 .build();
         TrajectorySequence dropToBackdropMiddle = rrDrive.trajectorySequenceBuilder(dropMiddle.end())
-                .lineToConstantHeading(new Vector2d(56, -34),
+                .lineToConstantHeading(new Vector2d(56, -35.5),
                         SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(35))
                 .build();

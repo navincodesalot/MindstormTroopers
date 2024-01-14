@@ -60,31 +60,30 @@ public class LeftBlue2Pixel extends BaseOpMode {
 
         // Drop ground pixel
         TrajectorySequence dropLeft = rrDrive.trajectorySequenceBuilder(leftBlue)
-                .lineToSplineHeading(new Pose2d(32, 23, Math.toRadians(180)))
+                .lineToSplineHeading(new Pose2d(21, 28, Math.toRadians(180)))
                 .build();
         TrajectorySequence dropMiddle = rrDrive.trajectorySequenceBuilder(leftBlue)
-                .lineToSplineHeading(new Pose2d(22, 21.5, Math.toRadians(180)))
+                .lineToSplineHeading(new Pose2d(16, 26.5, Math.toRadians(180)))
                 .build();
-
         TrajectorySequence dropRight = rrDrive.trajectorySequenceBuilder(leftBlue)
                 .strafeRight(3)
-                .lineToSplineHeading(new Pose2d(16, 26, Math.toRadians(180)))
-                .lineTo(new Vector2d(4, 26))
+                .lineToSplineHeading(new Pose2d(15, 28, Math.toRadians(180)))
+                .lineTo(new Vector2d(5, 28))
                 .build();
 
         // Drop to backdrop
         TrajectorySequence dropToBackdropLeft = rrDrive.trajectorySequenceBuilder(dropLeft.end())
-                .lineToConstantHeading(new Vector2d(56, 43.5),
+                .lineToConstantHeading(new Vector2d(54, 44),
                         SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(35))
                 .build();
         TrajectorySequence dropToBackdropMiddle = rrDrive.trajectorySequenceBuilder(dropMiddle.end())
-                .lineToConstantHeading(new Vector2d(56, 36),
+                .lineToConstantHeading(new Vector2d(54, 37),
         SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(35))
                 .build();
         TrajectorySequence dropToBackdropRight = rrDrive.trajectorySequenceBuilder(dropRight.end())
-                .lineToConstantHeading(new Vector2d(56, 30),
+                .lineToConstantHeading(new Vector2d(54, 31),
                         SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(35))
                 .build();
@@ -127,7 +126,7 @@ public class LeftBlue2Pixel extends BaseOpMode {
                                             new InstantCommand(tensorflow::shutdown, tensorflow),
                                             new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropLeft)),
                                             new DelayedCommand(new InstantCommand(drop::pickupPixel, drop), 1000),
-                                            new DelayedCommand(new RunCommand(intake::push, intake).raceWith(new WaitCommand(750)), 4200).andThen(new InstantCommand(intake::stop, intake))
+                                            new DelayedCommand(new RunCommand(intake::push, intake).raceWith(new WaitCommand(750)), 3675).andThen(new InstantCommand(intake::stop, intake))
                                     )
                             ));
                             put(PropLocations.MIDDLE, new SequentialCommandGroup(
@@ -143,7 +142,7 @@ public class LeftBlue2Pixel extends BaseOpMode {
                                             new InstantCommand(tensorflow::shutdown, tensorflow),
                                             new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropRight)),
                                             new DelayedCommand(new InstantCommand(drop::pickupPixel, drop), 1000),
-                                            new DelayedCommand(new RunCommand(intake::push, intake).raceWith(new WaitCommand(400)), 3675).andThen(new InstantCommand(intake::stop, intake))
+                                            new DelayedCommand(new RunCommand(intake::push, intake).raceWith(new WaitCommand(400)), 4200).andThen(new InstantCommand(intake::stop, intake))
                                     )
                             ));
                         }},
@@ -162,7 +161,7 @@ public class LeftBlue2Pixel extends BaseOpMode {
                 ),
                 new WaitUntilCommand(() -> !rrDrive.isBusy()),
                 new LiftSlideSmall(drop),
-                new WaitUntilCommand(() -> drop.getPosition() <= 670 && drop.getPosition() >= 635),
+                new WaitUntilCommand(() -> drop.getPosition() <= 655 && drop.getPosition() >= 640),
                 new InstantCommand(drop::dropPixel, drop),
                 new DelayedCommand(new RunCommand(intake::pushSlow, intake).raceWith(new WaitCommand(800)), 450).andThen(new InstantCommand(intake::stop, intake)),
                 new DropSlide(drop),
