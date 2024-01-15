@@ -181,7 +181,7 @@ public class RightRed2Pixel extends BaseOpMode {
         rrDrive.update();
         telemetry.addData("Drive Pose", rrDrive.getPoseEstimate().toString());
 
-//        if (aprilTagSubsystem.getDetections().size() > 0) {
+//        if (aprilTagSubsystem.getDetections().size() > 0) { // todo: only turn on when we are near the opmode
 //            AprilTagDetection currentDetection = aprilTagSubsystem.getDetections().get(0);
 //
 //            if (currentDetection.metadata != null) { // if a tag is detected
