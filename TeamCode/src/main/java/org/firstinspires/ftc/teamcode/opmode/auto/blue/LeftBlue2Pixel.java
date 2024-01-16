@@ -64,7 +64,7 @@ public class LeftBlue2Pixel extends BaseOpMode {
                 .lineToSplineHeading(new Pose2d(21, 28, Math.toRadians(180)))
                 .build();
         TrajectorySequence dropMiddle = rrDrive.trajectorySequenceBuilder(leftBlue)
-                .lineToSplineHeading(new Pose2d(16, 26.5, Math.toRadians(180)))
+                .lineToSplineHeading(new Pose2d(16, 23, Math.toRadians(180)))
                 .build();
         TrajectorySequence dropRight = rrDrive.trajectorySequenceBuilder(leftBlue)
                 .strafeRight(3)
@@ -151,18 +151,18 @@ public class LeftBlue2Pixel extends BaseOpMode {
                                 }},
                                 () -> location
                         )
-                ),
-                new ParallelCommandGroup(
-                        new RunCommand(intake::push, intake).raceWith(new WaitCommand(350)).andThen(new InstantCommand(intake::stop, intake)),
-                        new SelectCommand(
-                                new HashMap<Object, Command>() {{
-                                    put(PropLocations.LEFT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropToBackdropLeft)));
-                                    put(PropLocations.MIDDLE, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropToBackdropMiddle)));
-                                    put(PropLocations.RIGHT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropToBackdropRight)));
-                                }},
-                                () -> location
-                        )
                 )
+//                new ParallelCommandGroup(
+//                        new RunCommand(intake::push, intake).raceWith(new WaitCommand(350)).andThen(new InstantCommand(intake::stop, intake)),
+//                        new SelectCommand(
+//                                new HashMap<Object, Command>() {{
+//                                    put(PropLocations.LEFT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropToBackdropLeft)));
+//                                    put(PropLocations.MIDDLE, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropToBackdropMiddle)));
+//                                    put(PropLocations.RIGHT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropToBackdropRight)));
+//                                }},
+//                                () -> location
+//                        )
+//                ),
 //                new WaitUntilCommand(() -> !rrDrive.isBusy()),
 //                new LiftSlideSmall(drop),
 //                new WaitUntilCommand(() -> drop.getPosition() <= 655 && drop.getPosition() >= 640),

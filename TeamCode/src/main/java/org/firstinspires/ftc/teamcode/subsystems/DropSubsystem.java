@@ -64,8 +64,12 @@ public class DropSubsystem extends SubsystemBase {
     }
 
     // Hang
+    public void goToHang() {
+        if (runPID) { this.target = 769; }
+    }
+
     public void hang() {
-        if (runPID == false) {
+        if (!runPID) {
             leftSlide.setPower(-1); // we don't know directions
             rightSlide.setPower(-1);
         }
@@ -124,31 +128,31 @@ public class DropSubsystem extends SubsystemBase {
 
     // Slide
     public void slideHigh() {
-        this.target = 1020;
+        if (runPID) { this.target = 1020; }
     }
 
     public void slideMed() {
-        this.target = 900;
+        if (runPID) { this.target = 900; }
     }
 
     public void slideLow() {
-        this.target = 750;
-    }
-
-    public void slidePoint() {
-        this.target = 200;
+        if (runPID) { this.target = 750; }
     }
 
     public void slideSmall() {
-        this.target = 650;
+        if (runPID) { this.target = 650; }
+    }
+
+    public void slidePoint() {
+        if (runPID) { this.target = 200; }
     }
 
     public void slideIdle() {
-        this.target = 0;
+        if (runPID) { this.target = 0; }
     }
 
     public void slideGoTo(int target) {
-        this.target = target;
+        if (runPID) { this.target = target; }
     }
 
     public int getPosition() {
@@ -156,8 +160,12 @@ public class DropSubsystem extends SubsystemBase {
     }
 
     public double returnPower(int pos, int target) {
-        double pid = controller.calculate(pos, target);
-        return pid + f;
+        if (runPID) {
+            double pid = controller.calculate(pos, target);
+            return pid + f;
+        } else {
+            return 0.0;
+        }
     }
 
 //    public double getError() {

@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.opmode.tele;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.RunCommand;
+import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.IMU;
@@ -22,6 +23,7 @@ import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.Y;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.commands.DropSlide;
+import org.firstinspires.ftc.teamcode.commands.HangSlide;
 import org.firstinspires.ftc.teamcode.commands.LiftSlideHigh;
 import org.firstinspires.ftc.teamcode.commands.LiftSlideLow;
 import org.firstinspires.ftc.teamcode.commands.LiftSlideMed;
@@ -30,6 +32,7 @@ import org.firstinspires.ftc.teamcode.opmode.BaseOpMode;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.subsystems.DroneSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.MecanumDriveSubsystem;
+import org.firstinspires.ftc.teamcode.util.DelayedCommand;
 
 //@Photon
 @TeleOp(name = "cooked ahh tray")
@@ -113,16 +116,16 @@ public class CmdOpMode extends BaseOpMode {
 
         // Backup commands
         driver2.getGamepadButton(DPAD_UP).whenPressed(
-                new LiftSlideHigh(drop)
+                new HangSlide(drop)
         );
         driver2.getGamepadButton(DPAD_RIGHT).whenPressed(
-                new LiftSlideMed(drop)
+                new InstantCommand(drop::hang, drop)
         );
         driver2.getGamepadButton(DPAD_DOWN).whenPressed(
-                new DropSlide(drop)
+                new InstantCommand(drop::turnOffPID, drop)
         );
         driver2.getGamepadButton(DPAD_LEFT).whenPressed(
-                new LiftSlideLow(drop)
+                new InstantCommand(drop::turnOnPID, drop) // don't do unless needed
         );
         driver2.getGamepadButton(X).whenPressed(
                 new InstantCommand(drop::dropPixel, drop)
@@ -148,7 +151,7 @@ public class CmdOpMode extends BaseOpMode {
         super.run(); // since we are overriding in opmodes, this will actually run it
         double loop = System.nanoTime();
         telemetry.addData("hz ", 1000000000 / (loop - loopTime));
-        telemetry.addData("heading", imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
+//        telemetry.addData("heading", imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
         loopTime = loop;
         telemetry.update();
         bulkRead.read();
