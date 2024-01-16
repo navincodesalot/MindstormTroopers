@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.opmode.auto.blue;
 
 import static org.firstinspires.ftc.teamcode.util.StartPoses.leftBlue;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.arcrobotics.ftclib.command.Command;
@@ -33,12 +34,13 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import java.util.HashMap;
 
 //@Photon
+@Config
 @Autonomous
 public class LeftBlue2Pixel extends BaseOpMode {
     private PropLocations location;
     private RRDriveSubsystem rrDrive;
     private double loopTime = 0.0;
-//    private AprilTagSubsystem aprilTagSubsystem;
+    private AprilTagSubsystem aprilTagSubsystem;
 
     @Override
     public void initialize() {
@@ -48,7 +50,6 @@ public class LeftBlue2Pixel extends BaseOpMode {
         rrDrive = new RRDriveSubsystem(new SampleMecanumDrive(hardwareMap));
         rrDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-//        aprilTagSubsystem = new AprilTagSubsystem(hardwareMap);
         TensorflowSubsystem tensorflow = new TensorflowSubsystem(hardwareMap, "Webcam 1",
                 "russianblue.tflite", BLUELABEL);
 
@@ -119,34 +120,37 @@ public class LeftBlue2Pixel extends BaseOpMode {
         }
 
         schedule(new SequentialCommandGroup(
-                new SelectCommand(
-                        new HashMap<Object, Command>() {{
-                            put(PropLocations.LEFT, new SequentialCommandGroup(
-                                    new ParallelCommandGroup(
-                                            new InstantCommand(tensorflow::shutdown, tensorflow),
-                                            new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropLeft)),
-                                            new DelayedCommand(new InstantCommand(drop::pickupPixel, drop), 1000),
-                                            new DelayedCommand(new RunCommand(intake::push, intake).raceWith(new WaitCommand(750)), 3675).andThen(new InstantCommand(intake::stop, intake))
-                                    )
-                            ));
-                            put(PropLocations.MIDDLE, new SequentialCommandGroup(
-                                    new ParallelCommandGroup(
-                                            new InstantCommand(tensorflow::shutdown, tensorflow),
-                                            new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropMiddle)),
-                                            new DelayedCommand(new InstantCommand(drop::pickupPixel, drop), 1000),
-                                            new DelayedCommand(new RunCommand(intake::push, intake).raceWith(new WaitCommand(500)), 3350).andThen(new InstantCommand(intake::stop, intake))
-                                    )
-                            ));
-                            put(PropLocations.RIGHT, new SequentialCommandGroup(
-                                    new ParallelCommandGroup(
-                                            new InstantCommand(tensorflow::shutdown, tensorflow),
-                                            new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropRight)),
-                                            new DelayedCommand(new InstantCommand(drop::pickupPixel, drop), 1000),
-                                            new DelayedCommand(new RunCommand(intake::push, intake).raceWith(new WaitCommand(400)), 4200).andThen(new InstantCommand(intake::stop, intake))
-                                    )
-                            ));
-                        }},
-                        () -> location
+                new ParallelCommandGroup(
+                        new InstantCommand(() -> aprilTagSubsystem = new AprilTagSubsystem(hardwareMap)),
+                        new SelectCommand(
+                                new HashMap<Object, Command>() {{
+                                    put(PropLocations.LEFT, new SequentialCommandGroup(
+                                            new ParallelCommandGroup(
+                                                    new InstantCommand(tensorflow::shutdown, tensorflow),
+                                                    new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropLeft)),
+                                                    new DelayedCommand(new InstantCommand(drop::pickupPixel, drop), 1000),
+                                                    new DelayedCommand(new RunCommand(intake::push, intake).raceWith(new WaitCommand(750)), 3675).andThen(new InstantCommand(intake::stop, intake))
+                                            )
+                                    ));
+                                    put(PropLocations.MIDDLE, new SequentialCommandGroup(
+                                            new ParallelCommandGroup(
+                                                    new InstantCommand(tensorflow::shutdown, tensorflow),
+                                                    new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropMiddle)),
+                                                    new DelayedCommand(new InstantCommand(drop::pickupPixel, drop), 1000),
+                                                    new DelayedCommand(new RunCommand(intake::push, intake).raceWith(new WaitCommand(500)), 3350).andThen(new InstantCommand(intake::stop, intake))
+                                            )
+                                    ));
+                                    put(PropLocations.RIGHT, new SequentialCommandGroup(
+                                            new ParallelCommandGroup(
+                                                    new InstantCommand(tensorflow::shutdown, tensorflow),
+                                                    new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropRight)),
+                                                    new DelayedCommand(new InstantCommand(drop::pickupPixel, drop), 1000),
+                                                    new DelayedCommand(new RunCommand(intake::push, intake).raceWith(new WaitCommand(400)), 4200).andThen(new InstantCommand(intake::stop, intake))
+                                            )
+                                    ));
+                                }},
+                                () -> location
+                        )
                 ),
                 new ParallelCommandGroup(
                         new RunCommand(intake::push, intake).raceWith(new WaitCommand(350)).andThen(new InstantCommand(intake::stop, intake)),
@@ -158,17 +162,17 @@ public class LeftBlue2Pixel extends BaseOpMode {
                                 }},
                                 () -> location
                         )
-                ),
-                new WaitUntilCommand(() -> !rrDrive.isBusy()),
-                new LiftSlideSmall(drop),
-                new WaitUntilCommand(() -> drop.getPosition() <= 655 && drop.getPosition() >= 640),
-                new InstantCommand(drop::dropPixel, drop),
-                new DelayedCommand(new RunCommand(intake::pushSlow, intake).raceWith(new WaitCommand(800)), 450).andThen(new InstantCommand(intake::stop, intake)),
-                new DropSlide(drop),
-                new WaitUntilCommand(() -> (drop.getPosition() <= 20 && drop.getPosition() >= -10)),
-                new DelayedCommand(new InstantCommand(drop::liftTray), 150),
-                new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(park))
-//                new InstantCommand(apriltagSubsystem::shutdown) // todo: shutdown in parallel when nearing end of auto
+                )
+//                new WaitUntilCommand(() -> !rrDrive.isBusy()),
+//                new LiftSlideSmall(drop),
+//                new WaitUntilCommand(() -> drop.getPosition() <= 655 && drop.getPosition() >= 640),
+//                new InstantCommand(drop::dropPixel, drop),
+//                new DelayedCommand(new RunCommand(intake::pushSlow, intake).raceWith(new WaitCommand(800)), 450).andThen(new InstantCommand(intake::stop, intake)),
+//                new DropSlide(drop),
+//                new WaitUntilCommand(() -> (drop.getPosition() <= 20 && drop.getPosition() >= -10)),
+//                new DelayedCommand(new InstantCommand(drop::liftTray), 150),
+//                new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(park)),
+//                new InstantCommand(aprilTagSubsystem::shutdown) // todo: shutdown in parallel when nearing end of auto
         ));
     }
 
@@ -178,24 +182,27 @@ public class LeftBlue2Pixel extends BaseOpMode {
         rrDrive.update();
         telemetry.addData("Drive Pose", rrDrive.getPoseEstimate().toString());
 
-//        if (aprilTagSubsystem.getDetections().size() > 0) {
-//            AprilTagDetection currentDetection = aprilTagSubsystem.getDetections().get(0);
-//
-//            if (currentDetection.metadata != null) { // if a tag is detected
-//                double poseVelo = rrDrive.getPoseVelocity().vec().norm();
-//
-//                if (poseVelo <= 0.25) { // and if robot velocity is <= 0.25 inches
-//                    Vector2d localizedAprilTagVector = aprilTagSubsystem.getFCPosition(currentDetection, Math.toDegrees(rrDrive.getPoseEstimate().getHeading()));
-//
-//                    rrDrive.setPoseEstimate(localizedAprilTagVector.getX(), localizedAprilTagVector.getY(), rrDrive.getPoseEstimate().getHeading());
-//                    telemetry.addData("April Tag Pose", localizedAprilTagVector + ", " + Math.toDegrees(rrDrive.getPoseEstimate().getHeading()));
-//                } else {
-//                    telemetry.addData("April Tag Pose", "Robot velocity too high");
-//                }
-//            }
-//        } else {
-//            telemetry.addData("April Tag Pose", "Tag not detected");
-//        }
+        if (opModeIsActive()) {
+            if (aprilTagSubsystem.getDetections().size() > 0) { // todo: only turn on when we are near the opmode
+                AprilTagDetection currentDetection = aprilTagSubsystem.getDetections().get(0);
+
+                if (currentDetection.metadata != null) { // if a tag is detected
+                    double poseVelo = rrDrive.getPoseVelocity().vec().norm();
+                    Pose2d currentPose = rrDrive.getPoseEstimate();
+
+                    if (poseVelo <= 0.25) { // and if robot velocity is <= 0.25 inches
+                        Vector2d localizedAprilTagVector = aprilTagSubsystem.getFCPosition(currentDetection, currentPose.getHeading());
+
+                        rrDrive.setPoseEstimate(localizedAprilTagVector.getX(), localizedAprilTagVector.getY(), currentPose.getHeading());
+                        telemetry.addData("April Tag Pose", localizedAprilTagVector + ", " + Math.toDegrees(currentPose.getHeading()));
+                    } else {
+                        telemetry.addData("April Tag Pose", "Robot velocity too high");
+                    }
+                }
+            } else {
+                telemetry.addData("April Tag Pose", "Tag not detected");
+            }
+        }
 
         telemetry.addData("slide pos", drop.getPosition());
         double loop = System.nanoTime();

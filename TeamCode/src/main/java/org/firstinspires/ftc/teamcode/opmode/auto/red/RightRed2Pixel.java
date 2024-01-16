@@ -171,7 +171,7 @@ public class RightRed2Pixel extends BaseOpMode {
                 new WaitUntilCommand(() -> (drop.getPosition() <= 20 && drop.getPosition() >= -10)),
                 new DelayedCommand(new InstantCommand(drop::liftTray), 150),
                 new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(park))
-//                new InstantCommand(apriltagSubsystem::shutdown) // todo: shutdown in parallel when nearing end of auto
+//                new InstantCommand(aprilTagSubsystem::shutdown) // todo: shutdown in parallel when nearing end of auto
         ));
     }
 
@@ -192,7 +192,8 @@ public class RightRed2Pixel extends BaseOpMode {
 //                    Vector2d localizedAprilTagVector = aprilTagSubsystem.getFCPosition(currentDetection, currentPose.getHeading());
 //
 //                    rrDrive.setPoseEstimate(localizedAprilTagVector.getX(), localizedAprilTagVector.getY(), currentPose.getHeading());
-//                    telemetry.addData("April Tag Pose", localizedAprilTagVector + ", " + Math.toDegrees(rrDrive.getPoseEstimate().getHeading()));
+//                    telemetry.addData("April Tag Pose", localizedAprilTagVector + ", " + Math.toDegrees(currentPose.getHeading()));
+//                    telemetry.update(); // todo
 //                } else {
 //                    telemetry.addData("April Tag Pose", "Robot velocity too high");
 //                }
