@@ -9,7 +9,7 @@ import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.util.ServoLocation;
+//import org.firstinspires.ftc.teamcode.util.ServoLocation;
 
 public class DropSubsystem extends SubsystemBase {
     private final DcMotorEx leftSlide;
@@ -20,7 +20,8 @@ public class DropSubsystem extends SubsystemBase {
     private final double liftedTrayPos = 0.301, leftParallel = 0.333, rightParallel = 0;
     private double slidePower = 0;
     private int target = 0;
-    static PIDController controller;
+    private PIDController controller;
+    private boolean runPID = true;
 
 //    private final RunMotionProfile profile = new RunMotionProfile(
 //            60000, 70000, 80000,
@@ -28,6 +29,7 @@ public class DropSubsystem extends SubsystemBase {
 //    ); // todo
 
     public DropSubsystem(DcMotorEx leftSlide, DcMotorEx rightSlide, Servo leftServo, Servo rightServo, Servo tray) {
+        runPID = true;
         controller = new PIDController(p, i, d);
         controller.setIntegrationBounds(0.1, 0.25);
         this.leftSlide = leftSlide;
@@ -41,11 +43,32 @@ public class DropSubsystem extends SubsystemBase {
     // PIDF Loop
     @Override
     public void periodic() { // Runs in a loop while op mode is active (in the run method of scheduler class)
-        slidePower = returnPower(leftSlide.getCurrentPosition(), target);
+        if (runPID) {
+            slidePower = returnPower(leftSlide.getCurrentPosition(), target);
 
-        leftSlide.setPower(slidePower);
-        rightSlide.setPower(slidePower);
-        super.periodic();
+            leftSlide.setPower(slidePower);
+            rightSlide.setPower(slidePower);
+            super.periodic();
+        } else {
+            super.periodic();
+        }
+    }
+
+    // PID
+    public void turnOffPID() {
+        runPID = false;
+    }
+
+    public void turnOnPID() {
+        runPID = true;
+    }
+
+    // Hang
+    public void hang() {
+        if (runPID == false) {
+            leftSlide.setPower(-1); // we don't know directions
+            rightSlide.setPower(-1);
+        }
     }
 
     // Servos
@@ -58,7 +81,7 @@ public class DropSubsystem extends SubsystemBase {
         leftServo.setPosition(leftParallel);
         rightServo.setPosition(rightParallel);
         tray.setPosition(liftedTrayPos);
-        ServoLocation.setServoLocation(ServoLocation.ServoLocationState.LIFTED);
+//        ServoLocation.setServoLocation(ServoLocation.ServoLocationState.LIFTED);
     }
 
     public void semiLiftTrayForDrop() {
@@ -71,15 +94,14 @@ public class DropSubsystem extends SubsystemBase {
         leftServo.setPosition(0.7);
         rightServo.setPosition(0.321);
         tray.setPosition(liftedTrayPos);
-
-        ServoLocation.setServoLocation(ServoLocation.ServoLocationState.DROP);
+//        ServoLocation.setServoLocation(ServoLocation.ServoLocationState.DROP);
     }
 
     public void pickupPixel() {
         leftServo.setPosition(0.5);
         rightServo.setPosition(0.2);
         tray.setPosition(0.205);
-        ServoLocation.setServoLocation(ServoLocation.ServoLocationState.PICKUP);
+//        ServoLocation.setServoLocation(ServoLocation.ServoLocationState.PICKUP);
     }
 
     public void setupTrayForSlide() {
@@ -133,7 +155,7 @@ public class DropSubsystem extends SubsystemBase {
         return leftSlide.getCurrentPosition();
     }
 
-    public static double returnPower(int pos, int target) {
+    public double returnPower(int pos, int target) {
         double pid = controller.calculate(pos, target);
         return pid + f;
     }
