@@ -9,6 +9,10 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.subsystems.BulkReadSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.DropSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
+import org.firstinspires.ftc.teamcode.util.CachingCRServo;
+import org.firstinspires.ftc.teamcode.util.CachingDcMotorEX;
+import org.firstinspires.ftc.teamcode.util.CachingMotor;
+import org.firstinspires.ftc.teamcode.util.CachingServo;
 import org.firstinspires.ftc.teamcode.util.TriggerGamepadEx;
 
 public class BaseOpMode extends CommandOpMode {
@@ -30,6 +34,7 @@ public class BaseOpMode extends CommandOpMode {
     public void initialize() {
         telemetry.update();
         initHardware();
+        cacheHardware();
         setupHardware();
 
         driver1 = new GamepadEx(gamepad1);
@@ -47,11 +52,6 @@ public class BaseOpMode extends CommandOpMode {
         telemetry.update();
     }
 
-//    @Override
-//    public void run() {
-//        super.run(); // since we are overriding in opmodes, this will actually run it
-//    }
-
     protected void initHardware() {
         leftSlideMotor = hardwareMap.get(DcMotorEx.class, "leftSlide");
         rightSlideMotor = hardwareMap.get(DcMotorEx.class, "rightSlide");
@@ -61,11 +61,23 @@ public class BaseOpMode extends CommandOpMode {
         t = hardwareMap.get(Servo.class, "tray");
 
         axon = hardwareMap.get(CRServo.class, "axon");
+    }
 
-        fL = new Motor(hardwareMap, "leftFront");
-        fR = new Motor(hardwareMap, "rightFront");
-        bL = new Motor(hardwareMap, "leftRear");
-        bR = new Motor(hardwareMap, "rightRear");
+    protected void cacheHardware() {
+        leftSlideMotor = new CachingDcMotorEX(leftSlideMotor);
+        rightSlideMotor = new CachingDcMotorEX(rightSlideMotor);
+
+        lS = new CachingServo(lS);
+        rS = new CachingServo(rS);
+        t = new CachingServo(t);
+
+        axon = new CachingCRServo(axon);
+
+        fL = new CachingMotor(hardwareMap, "leftFront", Motor.GoBILDA.RPM_312);
+        fR = new CachingMotor(hardwareMap, "rightFront", Motor.GoBILDA.RPM_312);
+        bL = new CachingMotor(hardwareMap, "leftRear", Motor.GoBILDA.RPM_312);
+        bR = new CachingMotor(hardwareMap, "rightRear", Motor.GoBILDA.RPM_312);
+
     }
 
     protected void setupHardware() {

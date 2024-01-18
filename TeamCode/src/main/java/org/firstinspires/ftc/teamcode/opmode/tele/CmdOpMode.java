@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.opmode.tele;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.RunCommand;
-import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.IMU;
@@ -32,7 +31,7 @@ import org.firstinspires.ftc.teamcode.opmode.BaseOpMode;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.subsystems.DroneSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.MecanumDriveSubsystem;
-import org.firstinspires.ftc.teamcode.util.DelayedCommand;
+import org.firstinspires.ftc.teamcode.util.CachingServo;
 
 //@Photon
 @TeleOp(name = "cooked ahh tray")
@@ -55,7 +54,8 @@ public class CmdOpMode extends BaseOpMode {
         ));
 
         drone = hardwareMap.get(Servo.class, "drone");
-        drone.setDirection(Servo.Direction.FORWARD);
+        drone = new CachingServo(drone);
+        drone.setDirection(CachingServo.Direction.FORWARD);
 
         super.initialize();
 
@@ -125,7 +125,7 @@ public class CmdOpMode extends BaseOpMode {
                 new InstantCommand(drop::turnOffPID, drop)
         );
         driver2.getGamepadButton(DPAD_LEFT).whenPressed(
-                new InstantCommand(drop::turnOnPID, drop) // don't do unless needed
+                new InstantCommand(drop::turnOnPID, drop) // don't use unless needed
         );
         driver2.getGamepadButton(X).whenPressed(
                 new InstantCommand(drop::dropPixel, drop)
