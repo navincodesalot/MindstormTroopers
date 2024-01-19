@@ -190,7 +190,7 @@ public class RightRed2Pixel extends BaseOpMode {
                 AprilTagDetection currentDetection = aprilTagSubsystem.getDetections().get(0);
 
                 if (currentDetection.metadata != null) { // if a tag is detected
-                    double poseVelo = rrDrive.getPoseVelocity().vec().norm();
+                    double poseVelo = Math.abs(rrDrive.getPoseVelocity().vec().norm());
                     Pose2d currentPose = rrDrive.getPoseEstimate();
 
                     if (poseVelo <= 0.25) { // and if robot velocity is <= 0.25 inches
