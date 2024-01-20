@@ -33,7 +33,6 @@ public class LeftRed {
                                         .lineToConstantHeading(new Vector2d(56, -28.50)) // drop white
 
                                         .strafeRight(4.25) // drop yellow
-//                                        .lineToLinearHeading(new Pose2d(47, -15, Math.toRadians(180))) // park
                                         .build()
                 );
 
@@ -43,14 +42,22 @@ public class LeftRed {
                         Constraints.MAX_ANG_ACCEL, Constraints.TRACK_WIDTH)
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(new Pose2d(-36, -64, Math.toRadians(270)))
-                                .lineToSplineHeading(new Pose2d(-43, -21.5, Math.toRadians(0)))
+                                .back(4)
+                                .lineToSplineHeading(new Pose2d(-56, -42, Math.toRadians(0)))
+                                .lineToConstantHeading(new Vector2d(-47, -24))
                                 .waitSeconds(0.3)
-                                .lineToSplineHeading(new Pose2d(-48, -12, Math.toRadians(180)))
+
+                                .back(8)
+                                .lineToSplineHeading(new Pose2d(-47, -10, Math.toRadians(180)))
+                                .lineToConstantHeading(new Vector2d(-63, -11))
+
+                                .lineToSplineHeading(new Pose2d(35, -4, Math.toRadians(180)))
+                                .lineToConstantHeading(new Vector2d(49.5, -24))
                                 .waitSeconds(2)
-                                .lineToSplineHeading(new Pose2d(35, -12, Math.toRadians(180)))
-                                .lineToConstantHeading(new Vector2d(56, -34))
-                                .waitSeconds(2)
-                                .lineToLinearHeading(new Pose2d(49.5, -15, Math.toRadians(180)))
+
+                                .strafeLeft(4.25)
+//                                .waitSeconds(2)
+//                                .lineToLinearHeading(new Pose2d(49.5, -15, Math.toRadians(180)))
                                 .build()
                 );
 
@@ -76,8 +83,8 @@ public class LeftRed {
         meepMeep.setBackground(MeepMeep.Background.FIELD_CENTERSTAGE_JUICE_DARK)
                 .setDarkMode(true)
                 .setBackgroundAlpha(0.95f)
-                .addEntity(leftBot)
-//                .addEntity(middleBot)
+//                .addEntity(leftBot)
+                .addEntity(middleBot)
 //               .addEntity(rightBot)
                 .start();
     }
