@@ -19,7 +19,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.teamcode.commands.DropSlide;
 import org.firstinspires.ftc.teamcode.commands.LiftSlideSmall;
-import org.firstinspires.ftc.teamcode.commands.PushOnePixel;
+import org.firstinspires.ftc.teamcode.commands.PushOnePixelSlow;
 import org.firstinspires.ftc.teamcode.opmode.BaseOpMode;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
@@ -38,7 +38,7 @@ public class LeftRed3Pixel extends BaseOpMode {
     private PropLocations location;
     private RRDriveSubsystem rrDrive;
     private double loopTime = 0.0;
-    private AprilTagSubsystem aprilTagSubsystem;
+//    private AprilTagSubsystem aprilTagSubsystem;
 
     @Override
     public void initialize() {
@@ -60,8 +60,10 @@ public class LeftRed3Pixel extends BaseOpMode {
 
         // Drop ground pixel
         TrajectorySequence dropLeft = rrDrive.trajectorySequenceBuilder(leftRed)
-                .lineToSplineHeading(new Pose2d(-46, -39, Math.toRadians(90)))
-                .back(4)
+                .lineToSplineHeading(new Pose2d(-47, -39, Math.toRadians(90)),
+                        SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(30))
+                .back(5)
                 .build();
         TrajectorySequence dropMiddle = rrDrive.trajectorySequenceBuilder(leftRed)
                 .lineToSplineHeading(new Pose2d(-43, -26, Math.toRadians(0)))
@@ -76,8 +78,12 @@ public class LeftRed3Pixel extends BaseOpMode {
         // Go to stacks
         TrajectorySequence goToStacksLeft = rrDrive.trajectorySequenceBuilder(dropLeft.end())
                 .strafeRight(14)
-                .lineToConstantHeading(new Vector2d(-36, -10))
-                .lineToSplineHeading(new Pose2d(-63, -12, Math.toRadians(180)))
+                .lineToConstantHeading(new Vector2d(-36, -10),
+                        SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(25))
+                .lineToSplineHeading(new Pose2d(-63, -12, Math.toRadians(180)),
+                        SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(25))
                 .build();
 
         TrajectorySequence goToStacksMiddle = rrDrive.trajectorySequenceBuilder(dropMiddle.end())
@@ -114,47 +120,53 @@ public class LeftRed3Pixel extends BaseOpMode {
                         SampleMecanumDrive.getAccelerationConstraint(25))
                 .build();
 
-        // Drop to backdrop
-        TrajectorySequence dropToBackdropLeft = rrDrive.trajectorySequenceBuilder(crossTrussLeft.end())
-                .lineToConstantHeading(new Vector2d(54, -28),
-                        SampleMecanumDrive.getVelocityConstraint(23, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(23))
+        // Drop white
+        TrajectorySequence dropWhiteLeft = rrDrive.trajectorySequenceBuilder(crossTrussLeft.end())
+                .lineToConstantHeading(new Vector2d(56, -28.50),
+                        SampleMecanumDrive.getVelocityConstraint(25, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(20))
                 .build();
-        TrajectorySequence dropToBackdropMiddle = rrDrive.trajectorySequenceBuilder(crossTrussMiddle.end())
+        TrajectorySequence dropWhiteMiddle = rrDrive.trajectorySequenceBuilder(crossTrussMiddle.end())
                 .lineToConstantHeading(new Vector2d(54, -34),
                         SampleMecanumDrive.getVelocityConstraint(23, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(23))
                 .build();
-        TrajectorySequence dropToBackdropRight = rrDrive.trajectorySequenceBuilder(crossTrustRight.end())
+        TrajectorySequence dropWhiteRight = rrDrive.trajectorySequenceBuilder(crossTrustRight.end())
                 .lineToConstantHeading(new Vector2d(54, -39.5),
                         SampleMecanumDrive.getVelocityConstraint(23, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(23))
                 .build();
         // Slows
-        TrajectorySequence dropToBackdropLeftSlow = rrDrive.trajectorySequenceBuilder(dropToBackdropRight.end())
-                .strafeRight(4)
-                .lineToConstantHeading(new Vector2d(54, -28),
-                        SampleMecanumDrive.getVelocityConstraint(14, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(14))
+        TrajectorySequence dropYellowLeft = rrDrive.trajectorySequenceBuilder(dropWhiteLeft.end())
+                .strafeRight(4.25)
+//                .lineToConstantHeading(new Vector2d(54, -24),
+//                        SampleMecanumDrive.getVelocityConstraint(14, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+//                        SampleMecanumDrive.getAccelerationConstraint(14))
                 .build();
-        TrajectorySequence dropToBackdropMiddleSlow = rrDrive.trajectorySequenceBuilder(dropToBackdropLeft.end())
+        TrajectorySequence dropYellowMiddle = rrDrive.trajectorySequenceBuilder(dropWhiteMiddle.end())
                 .strafeRight(4)
                 .lineToConstantHeading(new Vector2d(54, -34),
                         SampleMecanumDrive.getVelocityConstraint(14, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(14))
                 .build();
-        TrajectorySequence dropToBackdropRightSlow = rrDrive.trajectorySequenceBuilder(dropToBackdropLeft.end())
+        TrajectorySequence dropToYellowRight = rrDrive.trajectorySequenceBuilder(dropWhiteRight.end())
                 .strafeRight(4)
                 .lineToConstantHeading(new Vector2d(54, -39.5),
                         SampleMecanumDrive.getVelocityConstraint(14, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(14))
                 .build();
-
-
-        // Park
-        TrajectorySequence park = rrDrive.trajectorySequenceBuilder(dropToBackdropLeft.end())
-                .lineToLinearHeading(new Pose2d(47, -15, Math.toRadians(180)))
-                .build();
+//
+//
+//        // Park
+//        TrajectorySequence parkLeft = rrDrive.trajectorySequenceBuilder(dropYellowLeft.end())
+//                .lineToLinearHeading(new Pose2d(47, -15, Math.toRadians(180)))
+//                .build();
+//        TrajectorySequence parkMiddle = rrDrive.trajectorySequenceBuilder(dropYellowMiddle.end())
+//                .lineToLinearHeading(new Pose2d(47, -15, Math.toRadians(180)))
+//                .build();
+//        TrajectorySequence parkRight = rrDrive.trajectorySequenceBuilder(dropToYellowRight.end())
+//                .lineToLinearHeading(new Pose2d(47, -15, Math.toRadians(180)))
+//                .build();
 
         rrDrive.setPoseEstimate(leftRed);
 
@@ -181,7 +193,7 @@ public class LeftRed3Pixel extends BaseOpMode {
 
         schedule(new SequentialCommandGroup(
                 new ParallelCommandGroup(
-                        new InstantCommand(() -> aprilTagSubsystem = new AprilTagSubsystem(hardwareMap)),
+//                        new InstantCommand(() -> aprilTagSubsystem = new AprilTagSubsystem(hardwareMap)),
                         new SelectCommand(
                                 new HashMap<Object, Command>() {{
                                     put(PropLocations.LEFT, new SequentialCommandGroup(
@@ -189,7 +201,7 @@ public class LeftRed3Pixel extends BaseOpMode {
                                                     new InstantCommand(tensorflow::shutdown, tensorflow),
                                                     new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropLeft)),
                                                     new DelayedCommand(new InstantCommand(drop::pickupPixel, drop), 1000),
-                                                    new DelayedCommand(new RunCommand(intake::push, intake).raceWith(new WaitCommand(500)), 3000).andThen(new InstantCommand(intake::stop, intake))
+                                                    new DelayedCommand(new RunCommand(intake::push, intake).raceWith(new WaitCommand(500)), 3200).andThen(new InstantCommand(intake::stop, intake))
                                             )
                                     ));
                                     put(PropLocations.MIDDLE, new SequentialCommandGroup(
@@ -240,38 +252,39 @@ public class LeftRed3Pixel extends BaseOpMode {
                         ),
                         new DelayedCommand(new InstantCommand(drop::liftTray), 1000)
                 ),
-                new WaitCommand(200)
-//                new WaitUntilCommand(() -> !rrDrive.isBusy()),
-//                new SelectCommand(
-//                        new HashMap<Object, Command>() {{
-//                            put(PropLocations.LEFT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropToBackdropRight)));
-//                            put(PropLocations.MIDDLE, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropToBackdropMiddle)));
-//                            put(PropLocations.RIGHT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropToBackdropRight)));
-//                        }},
-//                        () -> location
-//                ),
-//                new WaitUntilCommand(() -> !rrDrive.isBusy()),
-//                new LiftSlideSmall(drop),
-//                new WaitUntilCommand(() -> drop.getPosition() <= 670 && drop.getPosition() >= 635),
-//                new InstantCommand(drop::dropPixel, drop),
-//                new DelayedCommand(new PushOnePixel(intake), 450), // drop first pixel
-//                new ParallelCommandGroup(
-//                        new SelectCommand(
-//                                new HashMap<Object, Command>() {{
-//                                    put(PropLocations.LEFT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropToBackdropLeftSlow)));
-//                                    put(PropLocations.MIDDLE, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropToBackdropMiddle)));
-//                                    put(PropLocations.RIGHT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropToBackdropRight)));
-//                                }},
-//                                () -> location
-//                        ),
-//                        new RunCommand(intake::grab, intake).raceWith(new WaitCommand(1350)).andThen(new InstantCommand(intake::stop, intake))
-//                ),
-//                new WaitUntilCommand(() -> !rrDrive.isBusy()),
-//                new InstantCommand(drop::dropPixel, drop),
-//                new DelayedCommand(new PushOnePixel(intake), 450),
-//                new DropSlide(drop),
-//                new WaitUntilCommand(() -> (drop.getPosition() <= 20 && drop.getPosition() >= -10)),
-//                new DelayedCommand(new InstantCommand(drop::liftTray), 150),
+                new WaitCommand(250), // localize
+                new WaitUntilCommand(() -> !rrDrive.isBusy()),
+                new SelectCommand(
+                        new HashMap<Object, Command>() {{
+                            put(PropLocations.LEFT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropWhiteLeft)));
+                            put(PropLocations.MIDDLE, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropWhiteMiddle)));
+                            put(PropLocations.RIGHT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropWhiteRight)));
+                        }},
+                        () -> location
+                ),
+                new WaitUntilCommand(() -> !rrDrive.isBusy()),
+                new LiftSlideSmall(drop),
+                new WaitUntilCommand(() -> drop.getPosition() <= 665 && drop.getPosition() >= 635),
+                new InstantCommand(drop::dropPixel, drop),
+                new DelayedCommand(new PushOnePixelSlow(intake), 450), // drop first pixel
+                new ParallelCommandGroup(
+                        new DelayedCommand(
+                                new SelectCommand(
+                                    new HashMap<Object, Command>() {{
+                                        put(PropLocations.LEFT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropYellowLeft)));
+                                        put(PropLocations.MIDDLE, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropYellowMiddle)));
+                                        put(PropLocations.RIGHT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropToYellowRight)));
+                                    }},
+                                    () -> location
+                            ), 200),
+                        new RunCommand(intake::grab, intake).raceWith(new WaitCommand(800)).andThen(new InstantCommand(intake::stop, intake))
+                ),
+                new WaitUntilCommand(() -> !rrDrive.isBusy()),
+                new InstantCommand(drop::dropPixel, drop),
+                new DelayedCommand(new PushOnePixelSlow(intake), 450),
+                new DropSlide(drop),
+                new WaitUntilCommand(() -> (drop.getPosition() <= 15 && drop.getPosition() >= -10)),
+                new DelayedCommand(new InstantCommand(drop::liftTray), 150)
 //                new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(park))
         ));
     }
@@ -282,28 +295,28 @@ public class LeftRed3Pixel extends BaseOpMode {
         rrDrive.update();
         telemetry.addData("Drive Pose", rrDrive.getPoseEstimate().toString());
 
-        if (opModeIsActive()) {
-            if (aprilTagSubsystem.getDetections().size() > 0) { // todo: only turn on when we are near the opmode
-                AprilTagDetection currentDetection = aprilTagSubsystem.getDetections().get(0);
-
-                if (currentDetection.metadata != null) { // if a tag is detected
-                    double poseVelo = Math.abs(rrDrive.getPoseVelocity().vec().norm());
-                    Pose2d currentPose = rrDrive.getPoseEstimate();
-
-                    if (poseVelo <= 0.25) { // and if robot velocity is <= 0.25 inches
-                        Vector2d localizedAprilTagVector = aprilTagSubsystem.getFCPosition(currentDetection, currentPose.getHeading());
-
-                        rrDrive.setPoseEstimate(localizedAprilTagVector.getX(), localizedAprilTagVector.getY(), currentPose.getHeading());
-                        telemetry.addData("updated drive pose", rrDrive.getPoseEstimate().toString());
-                        telemetry.addData("April Tag Pose", localizedAprilTagVector + ", " + Math.toDegrees(currentPose.getHeading()));
-                    } else {
-                        telemetry.addData("April Tag Pose", "Robot velocity too high");
-                    }
-                }
-            } else {
-                telemetry.addData("April Tag Pose", "Tag not detected");
-            }
-        }
+//        if (opModeIsActive()) {
+//            if (aprilTagSubsystem.getDetections().size() > 0) { // todo: only turn on when we are near the opmode
+//                AprilTagDetection currentDetection = aprilTagSubsystem.getDetections().get(0);
+//
+//                if (currentDetection.metadata != null) { // if a tag is detected
+//                    double poseVelo = Math.abs(rrDrive.getPoseVelocity().vec().norm());
+//                    Pose2d currentPose = rrDrive.getPoseEstimate();
+//
+//                    if (poseVelo <= 0.25) { // and if robot velocity is <= 0.25 inches
+//                        Vector2d localizedAprilTagVector = aprilTagSubsystem.getFCPosition(currentDetection, currentPose.getHeading());
+//
+//                        rrDrive.setPoseEstimate(localizedAprilTagVector.getX(), (localizedAprilTagVector.getY() - 2.1), currentPose.getHeading());
+//                        telemetry.addData("updated drive pose", rrDrive.getPoseEstimate().toString());
+//                        telemetry.addData("April Tag Pose", localizedAprilTagVector + ", " + Math.toDegrees(currentPose.getHeading()));
+//                    } else {
+//                        telemetry.addData("April Tag Pose", "Robot velocity too high");
+//                    }
+//                }
+//            } else {
+//                telemetry.addData("April Tag Pose", "Tag not detected");
+//            }
+//        }
 
         telemetry.addData("slide pos", drop.getPosition());
         double loop = System.nanoTime();

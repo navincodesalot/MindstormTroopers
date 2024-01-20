@@ -18,16 +18,22 @@ public class LeftRed {
                         Constraints.MAX_ANG_ACCEL, Constraints.TRACK_WIDTH)
                 .followTrajectorySequence(drive ->
                                 drive.trajectorySequenceBuilder(new Pose2d(-36, -64, Math.toRadians(270)))
-                                        .lineToSplineHeading(new Pose2d(-46, -39, Math.toRadians(90)))
-                                        .back(4)
+                                        .lineToSplineHeading(new Pose2d(-47, -39, Math.toRadians(90)))
+                                        .back(5)
+
                                         .strafeRight(14)
                                         .lineToConstantHeading(new Vector2d(-36, -10))
                                         .lineToSplineHeading(new Pose2d(-63, -12, Math.toRadians(180)))
                                         .waitSeconds(2)
+
                                         .lineToSplineHeading(new Pose2d(35, -5, Math.toRadians(180)))
                                         .lineToConstantHeading(new Vector2d(49.5, -24))
                                         .waitSeconds(2)
-                                        .lineToLinearHeading(new Pose2d(49.5, -15, Math.toRadians(180)))
+
+                                        .lineToConstantHeading(new Vector2d(56, -28.50)) // drop white
+
+                                        .strafeRight(4.25) // drop yellow
+//                                        .lineToLinearHeading(new Pose2d(47, -15, Math.toRadians(180))) // park
                                         .build()
                 );
 

@@ -31,7 +31,7 @@ public class DropSubsystem extends SubsystemBase {
     public DropSubsystem(DcMotorEx leftSlide, DcMotorEx rightSlide, Servo leftServo, Servo rightServo, Servo tray) {
         runPID = true;
         controller = new PIDController(p, i, d);
-        controller.setIntegrationBounds(0.1, 0.25);
+        controller.setIntegrationBounds(0.05, 0.25);
         this.leftSlide = leftSlide;
         this.rightSlide = rightSlide;
         this.tray = tray;
@@ -70,8 +70,8 @@ public class DropSubsystem extends SubsystemBase {
 
     public void hang() {
         if (!runPID) {
-            leftSlide.setPower(-1); // we don't know directions
-            rightSlide.setPower(-1);
+            leftSlide.setPower(-0.569); // we don't know directions
+            rightSlide.setPower(-0.569);
         }
     }
 
@@ -128,7 +128,7 @@ public class DropSubsystem extends SubsystemBase {
 
     // Slide
     public void slideHigh() {
-        if (runPID) { this.target = 1020; }
+        if (runPID) { this.target = 1050; }
     }
 
     public void slideMed() {

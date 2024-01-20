@@ -20,13 +20,12 @@ import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Trigger.LEFT_TRIGGER;
 import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.X;
 import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.Y;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.commands.DropSlide;
 import org.firstinspires.ftc.teamcode.commands.HangSlide;
 import org.firstinspires.ftc.teamcode.commands.LiftSlideHigh;
 import org.firstinspires.ftc.teamcode.commands.LiftSlideLow;
 import org.firstinspires.ftc.teamcode.commands.LiftSlideMed;
-import org.firstinspires.ftc.teamcode.commands.PushOnePixel;
+import org.firstinspires.ftc.teamcode.commands.PushOnePixelSlow;
 import org.firstinspires.ftc.teamcode.opmode.BaseOpMode;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.subsystems.DroneSubsystem;
@@ -105,7 +104,7 @@ public class CmdOpMode extends BaseOpMode {
                 new InstantCommand(drop::dropPixel, drop)
         );
         driver1.getGamepadButton(B).whenPressed(
-                new PushOnePixel(intake)
+                new PushOnePixelSlow(intake)
         );
         driver1.getGamepadButton(Y).whenPressed(
                 new InstantCommand(drop::liftTray, drop)
