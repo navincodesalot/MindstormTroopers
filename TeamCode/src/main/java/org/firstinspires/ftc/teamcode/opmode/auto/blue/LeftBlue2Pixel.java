@@ -240,7 +240,7 @@ public class LeftBlue2Pixel extends BaseOpMode {
 //            }
 //        }
 
-        telemetry.addData("slide pos", drop.getPosition());
+//        telemetry.addData("slide pos", drop.getPosition());
         double loop = System.nanoTime();
         telemetry.addData("hz ", 1000000000 / (loop - loopTime));
         loopTime = loop;

@@ -18,12 +18,14 @@ public class RightRed {
                         Constraints.MAX_ANG_ACCEL, Constraints.TRACK_WIDTH)
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(new Pose2d(12, -64, Math.toRadians(270)))
-                                .strafeLeft(3)
-                                .lineToSplineHeading(new Pose2d(16, -23.5, Math.toRadians(180)))
-                                .waitSeconds(0.3)
-                                .lineTo(new Vector2d(8, -23.5))
-                                .lineToConstantHeading(new Vector2d(56, -28))
-                                .waitSeconds(2)
+                                .strafeRight(3)
+                                .lineToSplineHeading(new Pose2d(9.5, -32, Math.toRadians(180)))
+                                .lineTo(new Vector2d(6, -32))
+
+                                .lineToConstantHeading(new Vector2d(54, -31))
+
+                                .forward(5)
+
                                 .lineToLinearHeading(new Pose2d(49.5, -59, Math.toRadians(180)))
                                 .build()
                 );
@@ -34,11 +36,13 @@ public class RightRed {
                         Constraints.MAX_ANG_ACCEL, Constraints.TRACK_WIDTH)
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(new Pose2d(12, -64, Math.toRadians(270)))
-                                .lineToSplineHeading(new Pose2d(22, -21.5, Math.toRadians(180)))
-                                .waitSeconds(0.3)
-                                .lineToConstantHeading(new Vector2d(56, -34))
-                                .waitSeconds(2)
-                                .lineToLinearHeading(new Pose2d(49, -61, Math.toRadians(180)))
+                                .lineToSplineHeading(new Pose2d(16, -23, Math.toRadians(180)))
+
+                                .lineToConstantHeading(new Vector2d(54, -37))
+
+                                .forward(5)
+
+                                .lineToLinearHeading(new Pose2d(49.5, -59, Math.toRadians(180)))
                                 .build()
                 );
 
@@ -48,11 +52,13 @@ public class RightRed {
                         Constraints.MAX_ANG_ACCEL, Constraints.TRACK_WIDTH)
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(new Pose2d(12, -64, Math.toRadians(270)))
-                                .lineToSplineHeading(new Pose2d(32, -23, Math.toRadians(180)))
-                                .waitSeconds(0.3)
-                                .lineToConstantHeading(new Vector2d(56, -41.5))
-                                .waitSeconds(2)
-                                .lineToLinearHeading(new Pose2d(49, -61, Math.toRadians(180)))
+                                .lineToSplineHeading(new Pose2d(28.5, -28, Math.toRadians(180)))
+
+                                .lineToConstantHeading(new Vector2d(54, -44))
+
+                                .forward(5)
+
+                                .lineToLinearHeading(new Pose2d(49.5, -59, Math.toRadians(180)))
                                 .build()
                 );
 
@@ -60,8 +66,8 @@ public class RightRed {
                 .setDarkMode(true)
                 .setBackgroundAlpha(0.95f)
 //                .addEntity(leftBot)
-//                .addEntity(middleBot)
-               .addEntity(rightBot)
+                .addEntity(middleBot)
+//               .addEntity(rightBot)
                 .start();
     }
 }
