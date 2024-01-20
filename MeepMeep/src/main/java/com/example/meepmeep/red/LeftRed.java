@@ -67,16 +67,17 @@ public class LeftRed {
                         Constraints.MAX_ANG_ACCEL, Constraints.TRACK_WIDTH)
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(new Pose2d(-36, -64, Math.toRadians(270)))
-                                .strafeRight(3)
-                                .lineToSplineHeading(new Pose2d(-32, -23.5, Math.toRadians(0)))
-                                .lineTo(new Vector2d(-46, -23.5))
-                                .waitSeconds(0.3)
-                                .lineToLinearHeading(new Pose2d(-48, -12, Math.toRadians(180)))
-                                .waitSeconds(2)
-                                .lineToSplineHeading(new Pose2d(35, -12, Math.toRadians(180)))
-                                .lineToConstantHeading(new Vector2d(56, -41.5))
-                                .waitSeconds(2)
-                                .lineToLinearHeading(new Pose2d(49.5, -15, Math.toRadians(180)))
+                                .lineToSplineHeading(new Pose2d(-45, -50, Math.toRadians(0)))
+                                .lineToConstantHeading(new Vector2d(-29.6, -34))
+
+//                                .back(7)
+//                                .lineToSplineHeading(new Pose2d(-36, -10, Math.toRadians(180)))
+//                                .lineToConstantHeading(new Vector2d(-63, -11))
+
+//                                .lineToSplineHeading(new Pose2d(35, -12, Math.toRadians(180)))
+//                                .lineToConstantHeading(new Vector2d(56, -31.5))
+//                                .waitSeconds(2)
+//                                .lineToLinearHeading(new Pose2d(49.5, -15, Math.toRadians(180)))
                                 .build()
                 );
 
@@ -84,8 +85,8 @@ public class LeftRed {
                 .setDarkMode(true)
                 .setBackgroundAlpha(0.95f)
 //                .addEntity(leftBot)
-                .addEntity(middleBot)
-//               .addEntity(rightBot)
+//                .addEntity(middleBot)
+               .addEntity(rightBot)
                 .start();
     }
 }
