@@ -93,7 +93,4 @@ public class RRDriveSubsystem extends SubsystemBase {
     public Localizer getLocalizer() {
         return drive.getLocalizer();
     }
-
-    public void setPoseEstimate(double x, double y, double heading) {
-    }
 }

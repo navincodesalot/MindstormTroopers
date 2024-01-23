@@ -27,6 +27,7 @@ import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySe
 import org.firstinspires.ftc.teamcode.subsystems.RRDriveSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.TensorflowSubsystem;
 import org.firstinspires.ftc.teamcode.util.DelayedCommand;
+import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
 import java.util.HashMap;
 
@@ -319,6 +320,8 @@ public class RightBlue3Pixel extends BaseOpMode {
 //                new WaitUntilCommand(() -> (drop.getPosition() <= 15 && drop.getPosition() >= -10)),
 //                new DelayedCommand(new InstantCommand(drop::liftTray), 150)
 //                new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(park))
+
+//                new InstantCommand(aprilTagSubsystem::shutdown) // todo: shutdown in parallel when nearing end of auto
         ));
     }
 
@@ -339,7 +342,8 @@ public class RightBlue3Pixel extends BaseOpMode {
 //                    if (poseVelo <= 0.25) { // and if robot velocity is <= 0.25 inches
 //                        Vector2d localizedAprilTagVector = aprilTagSubsystem.getFCPosition(currentDetection, currentPose.getHeading());
 //
-//                        rrDrive.setPoseEstimate(localizedAprilTagVector.getX(), (localizedAprilTagVector.getY() - 2.1), currentPose.getHeading());
+//                        rrDrive.setPoseEstimate(new Pose2d(localizedAprilTagVector.getX(), localizedAprilTagVector.getY(), currentPose.getHeading()));
+//
 //                        telemetry.addData("updated drive pose", rrDrive.getPoseEstimate().toString());
 //                        telemetry.addData("April Tag Pose", localizedAprilTagVector + ", " + Math.toDegrees(currentPose.getHeading()));
 //                    } else {

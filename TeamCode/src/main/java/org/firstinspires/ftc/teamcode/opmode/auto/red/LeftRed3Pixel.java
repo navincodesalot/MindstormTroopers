@@ -24,9 +24,12 @@ import org.firstinspires.ftc.teamcode.opmode.BaseOpMode;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
+import org.firstinspires.ftc.teamcode.subsystems.AprilTagSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.RRDriveSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.TensorflowSubsystem;
 import org.firstinspires.ftc.teamcode.util.DelayedCommand;
+
+import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
 import java.util.HashMap;
 
@@ -36,7 +39,7 @@ public class LeftRed3Pixel extends BaseOpMode {
     private PropLocations location;
     private RRDriveSubsystem rrDrive;
     private double loopTime = 0.0;
-//    private AprilTagSubsystem aprilTagSubsystem;
+    private AprilTagSubsystem aprilTagSubsystem;
 
     @Override
     public void initialize() {
@@ -46,7 +49,7 @@ public class LeftRed3Pixel extends BaseOpMode {
         rrDrive = new RRDriveSubsystem(new SampleMecanumDrive(hardwareMap));
         rrDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-//        aprilTagSubsystem = new AprilTagSubsystem(hardwareMap);
+        aprilTagSubsystem = new AprilTagSubsystem(hardwareMap);
         TensorflowSubsystem tensorflow = new TensorflowSubsystem(hardwareMap, "Webcam 1",
                 "oldred.tflite", REDLABEL);
 
@@ -215,7 +218,7 @@ public class LeftRed3Pixel extends BaseOpMode {
 
         schedule(new SequentialCommandGroup(
                 new ParallelCommandGroup(
-//                        new InstantCommand(() -> aprilTagSubsystem = new AprilTagSubsystem(hardwareMap)),
+                        new InstantCommand(() -> aprilTagSubsystem = new AprilTagSubsystem(hardwareMap)),
                         new SelectCommand(
                                 new HashMap<Object, Command>() {{
                                     put(PropLocations.LEFT, new SequentialCommandGroup(
@@ -318,6 +321,8 @@ public class LeftRed3Pixel extends BaseOpMode {
                 new WaitUntilCommand(() -> (drop.getPosition() <= 15 && drop.getPosition() >= -10)),
                 new DelayedCommand(new InstantCommand(drop::liftTray), 150)
 //                new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(park))
+
+//                new InstantCommand(aprilTagSubsystem::shutdown) // todo: shutdown in parallel when nearing end of auto
         ));
     }
 
@@ -327,28 +332,29 @@ public class LeftRed3Pixel extends BaseOpMode {
         rrDrive.update();
         telemetry.addData("Drive Pose", rrDrive.getPoseEstimate().toString());
 
-//        if (opModeIsActive()) {
-//            if (aprilTagSubsystem.getDetections().size() > 0) { // todo: only turn on when we are near the opmode
-//                AprilTagDetection currentDetection = aprilTagSubsystem.getDetections().get(0);
-//
-//                if (currentDetection.metadata != null) { // if a tag is detected
-//                    double poseVelo = Math.abs(rrDrive.getPoseVelocity().vec().norm());
-//                    Pose2d currentPose = rrDrive.getPoseEstimate();
-//
-//                    if (poseVelo <= 0.25) { // and if robot velocity is <= 0.25 inches
-//                        Vector2d localizedAprilTagVector = aprilTagSubsystem.getFCPosition(currentDetection, currentPose.getHeading());
-//
-//                        rrDrive.setPoseEstimate(localizedAprilTagVector.getX(), (localizedAprilTagVector.getY() - 2.1), currentPose.getHeading());
-//                        telemetry.addData("updated drive pose", rrDrive.getPoseEstimate().toString());
-//                        telemetry.addData("April Tag Pose", localizedAprilTagVector + ", " + Math.toDegrees(currentPose.getHeading()));
-//                    } else {
-//                        telemetry.addData("April Tag Pose", "Robot velocity too high");
-//                    }
-//                }
-//            } else {
-//                telemetry.addData("April Tag Pose", "Tag not detected");
-//            }
-//        }
+        if (opModeIsActive()) {
+            if (aprilTagSubsystem.getDetections().size() > 0) { // todo: only turn on when we are near the opmode
+                AprilTagDetection currentDetection = aprilTagSubsystem.getDetections().get(0);
+
+                if (currentDetection.metadata != null) { // if a tag is detected
+                    double poseVelo = Math.abs(rrDrive.getPoseVelocity().vec().norm());
+                    Pose2d currentPose = rrDrive.getPoseEstimate();
+
+                    if (poseVelo <= 0.25) { // and if robot velocity is <= 0.25 inches
+                        Vector2d localizedAprilTagVector = aprilTagSubsystem.getFCPosition(currentDetection, currentPose.getHeading());
+
+                        rrDrive.setPoseEstimate(new Pose2d(localizedAprilTagVector.getX(), localizedAprilTagVector.getY(), currentPose.getHeading()));
+
+                        telemetry.addData("updated drive pose", rrDrive.getPoseEstimate().toString());
+                        telemetry.addData("April Tag Pose", localizedAprilTagVector + ", " + Math.toDegrees(currentPose.getHeading()));
+                    } else {
+                        telemetry.addData("April Tag Pose", "Robot velocity too high");
+                    }
+                }
+            } else {
+                telemetry.addData("April Tag Pose", "Tag not detected");
+            }
+        }
 
 //        telemetry.addData("slide pos", drop.getPosition());
         double loop = System.nanoTime();
