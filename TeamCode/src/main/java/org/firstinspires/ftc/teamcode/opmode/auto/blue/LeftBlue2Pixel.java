@@ -61,15 +61,15 @@ public class LeftBlue2Pixel extends BaseOpMode {
 
         // Drop ground pixel
         TrajectorySequence dropLeft = rrDrive.trajectorySequenceBuilder(leftBlue)
-                .lineToSplineHeading(new Pose2d(28.5, 28, Math.toRadians(180)))
+                .lineToSplineHeading(new Pose2d(29.5, 28, Math.toRadians(180)))
                 .build();
         TrajectorySequence dropMiddle = rrDrive.trajectorySequenceBuilder(leftBlue)
-                .lineToSplineHeading(new Pose2d(16, 23, Math.toRadians(180)))
+                .lineToSplineHeading(new Pose2d(17, 23, Math.toRadians(180)))
                 .build();
         TrajectorySequence dropRight = rrDrive.trajectorySequenceBuilder(leftBlue)
                 .strafeRight(3)
-                .lineToSplineHeading(new Pose2d(9.5, 32, Math.toRadians(180)))
-                .lineTo(new Vector2d(6, 32))
+                .lineToSplineHeading(new Pose2d(10.25, 32, Math.toRadians(180)))
+                .lineTo(new Vector2d(6.5, 32))
                 .build();
 
         // Drop to backdrop
@@ -173,33 +173,33 @@ public class LeftBlue2Pixel extends BaseOpMode {
                                 () -> location
                         )
                 ),
-                new ParallelCommandGroup(
-                        new RunCommand(intake::push, intake).raceWith(new WaitCommand(350)).andThen(new InstantCommand(intake::stop, intake)),
-                        new SelectCommand(
-                                new HashMap<Object, Command>() {{
-                                    put(PropLocations.LEFT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropToBackdropLeft)));
-                                    put(PropLocations.MIDDLE, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropToBackdropMiddle)));
-                                    put(PropLocations.RIGHT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropToBackdropRight)));
-                                }},
-                                () -> location
-                        )
-                ),
-                new WaitUntilCommand(() -> !rrDrive.isBusy()),
-                new LiftSlideSmall(drop),
-                new WaitUntilCommand(() -> drop.getPosition() <= 655 && drop.getPosition() >= 640),
-                new InstantCommand(drop::dropPixel, drop),
-                new DelayedCommand(new RunCommand(intake::pushSlow, intake).raceWith(new WaitCommand(800)), 450).andThen(new InstantCommand(intake::stop, intake)),
-                new SelectCommand(
-                        new HashMap<Object, Command>() {{
-                            put(PropLocations.LEFT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(goBackLeft)));
-                            put(PropLocations.MIDDLE, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(goBackMiddle)));
-                            put(PropLocations.RIGHT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(goBackRight)));
-                        }},
-                        () -> location
-                ),
-                new DropSlide(drop),
-                new WaitUntilCommand(() -> (drop.getPosition() <= 20 && drop.getPosition() >= -10)),
-                new DelayedCommand(new InstantCommand(drop::liftTray), 150),
+//                new ParallelCommandGroup(
+//                        new RunCommand(intake::push, intake).raceWith(new WaitCommand(350)).andThen(new InstantCommand(intake::stop, intake)),
+//                        new SelectCommand(
+//                                new HashMap<Object, Command>() {{
+//                                    put(PropLocations.LEFT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropToBackdropLeft)));
+//                                    put(PropLocations.MIDDLE, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropToBackdropMiddle)));
+//                                    put(PropLocations.RIGHT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropToBackdropRight)));
+//                                }},
+//                                () -> location
+//                        )
+//                ),
+//                new WaitUntilCommand(() -> !rrDrive.isBusy()),
+//                new LiftSlideSmall(drop),
+//                new WaitUntilCommand(() -> drop.getPosition() <= 655 && drop.getPosition() >= 640),
+//                new InstantCommand(drop::dropPixel, drop),
+//                new DelayedCommand(new RunCommand(intake::pushSlow, intake).raceWith(new WaitCommand(800)), 450).andThen(new InstantCommand(intake::stop, intake)),
+//                new SelectCommand(
+//                        new HashMap<Object, Command>() {{
+//                            put(PropLocations.LEFT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(goBackLeft)));
+//                            put(PropLocations.MIDDLE, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(goBackMiddle)));
+//                            put(PropLocations.RIGHT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(goBackRight)));
+//                        }},
+//                        () -> location
+//                ),
+//                new DropSlide(drop),
+//                new WaitUntilCommand(() -> (drop.getPosition() <= 20 && drop.getPosition() >= -10)),
+//                new DelayedCommand(new InstantCommand(drop::liftTray), 150),
                 new SelectCommand(
                         new HashMap<Object, Command>() {{
                             put(PropLocations.LEFT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(parkLeft)));

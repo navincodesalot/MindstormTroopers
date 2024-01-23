@@ -45,19 +45,20 @@ public class LeftRed {
                                 .back(4)
                                 .lineToSplineHeading(new Pose2d(-56, -42, Math.toRadians(0)))
                                 .lineToConstantHeading(new Vector2d(-47, -24))
-                                .waitSeconds(0.3)
 
                                 .back(8)
                                 .lineToSplineHeading(new Pose2d(-47, -10, Math.toRadians(180)))
-                                .lineToConstantHeading(new Vector2d(-63, -11))
+                                .lineToConstantHeading(new Vector2d(-63, -9))
 
                                 .lineToSplineHeading(new Pose2d(35, -4, Math.toRadians(180)))
                                 .lineToConstantHeading(new Vector2d(49.5, -24))
-                                .waitSeconds(2)
+
+                                .lineToConstantHeading(new Vector2d(56, -24.80))
 
                                 .strafeLeft(4.25)
-//                                .waitSeconds(2)
-//                                .lineToLinearHeading(new Pose2d(49.5, -15, Math.toRadians(180)))
+
+                                .forward(5)
+
                                 .build()
                 );
 
@@ -84,9 +85,9 @@ public class LeftRed {
         meepMeep.setBackground(MeepMeep.Background.FIELD_CENTERSTAGE_JUICE_DARK)
                 .setDarkMode(true)
                 .setBackgroundAlpha(0.95f)
-//                .addEntity(leftBot)
+                .addEntity(leftBot)
 //                .addEntity(middleBot)
-               .addEntity(rightBot)
+//               .addEntity(rightBot)
                 .start();
     }
 }

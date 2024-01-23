@@ -25,7 +25,7 @@ import org.firstinspires.ftc.teamcode.commands.HangSlide;
 import org.firstinspires.ftc.teamcode.commands.LiftSlideHigh;
 import org.firstinspires.ftc.teamcode.commands.LiftSlideLow;
 import org.firstinspires.ftc.teamcode.commands.LiftSlideMed;
-import org.firstinspires.ftc.teamcode.commands.PushOnePixelSlow;
+import org.firstinspires.ftc.teamcode.commands.PushOnePixelTele;
 import org.firstinspires.ftc.teamcode.opmode.BaseOpMode;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.subsystems.DroneSubsystem;
@@ -104,7 +104,7 @@ public class CmdOpMode extends BaseOpMode {
                 new InstantCommand(drop::dropPixel, drop)
         );
         driver1.getGamepadButton(B).whenPressed(
-                new PushOnePixelSlow(intake)
+                new PushOnePixelTele(intake)
         );
         driver1.getGamepadButton(Y).whenPressed(
                 new InstantCommand(drop::liftTray, drop)
