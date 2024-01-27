@@ -139,7 +139,7 @@ public class ConceptAprilTag extends LinearOpMode {
     private static final boolean USE_WEBCAM = true;  // true for webcam, false for phone camera
     private IMU imu;
     private final Vector2d camera1Offset = new Vector2d(0, 0); // todo: find in inches
-    public static double x = 0, y = -5.4;
+    public static double x = 0.3, y = -4.1; //-1
     public Vector2d camera2Offset = new Vector2d(x, y);
 
     /**
@@ -308,25 +308,25 @@ public class ConceptAprilTag extends LinearOpMode {
         return new Vector2d(absX, absY);
     }
 
-    public static AprilTagLibrary getCenterStageTagLibrary() {
+    public static AprilTagLibrary getCenterStageTagLibrary() { // updated custom field coords from michael
         return new AprilTagLibrary.Builder()
                 .addTag(1, "BlueAllianceLeft",
-                        2, new VectorF(61.5f, 41.41f, 4f), DistanceUnit.INCH,
+                        2, new VectorF(61.75f, 41.41f, 4f), DistanceUnit.INCH,
                         new Quaternion(0.3536f, -0.6124f, 0.6124f, -0.3536f, 0))
                 .addTag(2, "BlueAllianceCenter",
-                        2, new VectorF(61.5f, 35.41f, 4f), DistanceUnit.INCH,
+                        2, new VectorF(61.75f, 35.41f, 4f), DistanceUnit.INCH,
                         new Quaternion(0.3536f, -0.6124f, 0.6124f, -0.3536f, 0))
                 .addTag(3, "BlueAllianceRight",
-                        2, new VectorF(61.5f, 29.41f, 4f), DistanceUnit.INCH,
+                        2, new VectorF(61.75f, 29.41f, 4f), DistanceUnit.INCH,
                         new Quaternion(0.3536f, -0.6124f, 0.6124f, -0.3536f, 0))
                 .addTag(4, "RedAllianceLeft",
-                        2, new VectorF(61.5f, -29.41f, 4f), DistanceUnit.INCH,
+                        2, new VectorF(61.75f, -29.41f, 4f), DistanceUnit.INCH,
                         new Quaternion(0.3536f, -0.6124f, 0.6124f, -0.3536f, 0))
                 .addTag(5, "RedAllianceCenter",
-                        2, new VectorF(61.5f, -35.41f, 4f), DistanceUnit.INCH,
+                        2, new VectorF(61.75f, -35.41f, 4f), DistanceUnit.INCH,
                         new Quaternion(0.3536f, -0.6124f, 0.6124f, -0.3536f, 0))
                 .addTag(6, "RedAllianceRight",
-                        2, new VectorF(61.5f, -41.41f, 4f), DistanceUnit.INCH,
+                        2, new VectorF(61.75f, -41.41f, 4f), DistanceUnit.INCH,
                         new Quaternion(0.3536f, -0.6124f, 0.6124f, -0.3536f, 0))
                 .addTag(7, "RedAudienceWallLarge",
                         5, new VectorF(-70.25f, -40.625f, 5.5f), DistanceUnit.INCH,

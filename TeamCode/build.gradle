@@ -10,10 +10,25 @@
 
 
 // Custom definitions may go here
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            url = 'https://www.matthewo.tech/maven/'
+        }
+    }
+    dependencies {
+        classpath 'org.team11260:fast-load-plugin:0.1.2'
+
+    }
+
+}
 
 // Include common definitions from above.
 apply from: '../build.common.gradle'
 apply from: '../build.dependencies.gradle'
+
+apply plugin: 'org.team11260.fast-load-plugin'
 
 android {
     namespace = 'org.firstinspires.ftc.teamcode'
@@ -25,6 +40,9 @@ android {
 
 repositories {
     mavenCentral()
+//    maven {
+//        url = 'https://www.matthewo.tech/maven/'
+//    }
 }
 
 dependencies {
@@ -34,6 +52,6 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.7'
     implementation 'com.acmerobotics.roadrunner:core:0.5.6'
 
-
+//    implementation 'org.team11260:fast-load:0.1.2' // fastload
     implementation 'org.ftclib.ftclib:core:2.1.1' //FTC Lib core
 }
