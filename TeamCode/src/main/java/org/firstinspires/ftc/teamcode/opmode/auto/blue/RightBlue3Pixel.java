@@ -42,10 +42,10 @@ public class RightBlue3Pixel extends BaseOpMode {
     @Override
     public void initialize() {
         CommandScheduler.getInstance().reset();
-        super.initialize();
-
         rrDrive = new RRDriveSubsystem(new SampleMecanumDrive(hardwareMap));
         rrDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        super.initialize();
 
 //        aprilTagSubsystem = new AprilTagSubsystem(hardwareMap);
         TensorflowSubsystem tensorflow = new TensorflowSubsystem(hardwareMap, "Webcam 1",

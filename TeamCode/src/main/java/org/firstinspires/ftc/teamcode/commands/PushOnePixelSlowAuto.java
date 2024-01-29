@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 public class PushOnePixelSlowAuto extends SequentialCommandGroup {
     public PushOnePixelSlowAuto(IntakeSubsystem intake) {
         super(
-                new RunCommand(intake::pushSlow, intake).raceWith(new WaitCommand(300))
+                new RunCommand(intake::pushSlowAuto, intake).raceWith(new WaitCommand(230))
         );
     }
 }

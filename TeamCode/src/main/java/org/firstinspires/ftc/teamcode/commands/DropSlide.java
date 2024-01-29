@@ -19,7 +19,8 @@ public class DropSlide extends SequentialCommandGroup {
                 new ParallelCommandGroup(
                         new DelayedCommand(new InstantCommand(drop::semiLiftTrayForDrop), 100),
                         new DelayedCommand(new InstantCommand(drop::slideIdle, drop), 300)
-                )
+                ),
+                new InstantCommand(drop::liftTray, drop)
         );
     }
 }

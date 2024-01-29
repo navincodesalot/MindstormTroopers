@@ -44,10 +44,10 @@ public class LeftRed3Pixel extends BaseOpMode {
     @Override
     public void initialize() {
         CommandScheduler.getInstance().reset();
-        super.initialize();
-
         rrDrive = new RRDriveSubsystem(new SampleMecanumDrive(hardwareMap));
         rrDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        super.initialize();
 
         aprilTagSubsystem = new AprilTagSubsystem(hardwareMap);
         TensorflowSubsystem tensorflow = new TensorflowSubsystem(hardwareMap, "Webcam 1",
@@ -260,8 +260,8 @@ public class LeftRed3Pixel extends BaseOpMode {
                                 () -> location
                         ),
                         new SequentialCommandGroup(
-                                new DelayedCommand(new InstantCommand(drop::liftForFirstPixel, drop),650),
-                                new DelayedCommand(new InstantCommand(drop::dropForFirstPixel, drop), 1300)
+                                new DelayedCommand(new InstantCommand(drop::setForFirstPixel, drop),650),
+                                new DelayedCommand(new InstantCommand(drop::setForSecondPixel, drop), 1300)
                         )
                 ),
                 new WaitUntilCommand(() -> !rrDrive.isBusy()),
@@ -288,7 +288,7 @@ public class LeftRed3Pixel extends BaseOpMode {
                         () -> location
                 ),
                 new WaitUntilCommand(() -> !rrDrive.isBusy()),
-                new LiftSlideSmall(drop),
+                new LiftSlideSmall(drop, intake),
                 new WaitUntilCommand(() -> drop.getPosition() <= 665 && drop.getPosition() >= 635),
                 new InstantCommand(drop::dropPixel, drop),
                 new DelayedCommand(new PushOnePixelSlowAuto(intake), 450), // drop first pixel
@@ -341,7 +341,7 @@ public class LeftRed3Pixel extends BaseOpMode {
                     Pose2d currentPose = rrDrive.getPoseEstimate();
 
                     if (poseVelo <= 0.25) { // and if robot velocity is <= 0.25 inches
-                        Vector2d localizedAprilTagVector = aprilTagSubsystem.getFCPosition(currentDetection, currentPose.getHeading());
+                        Vector2d localizedAprilTagVector = aprilTagSubsystem.getFCPosition(currentDetection, currentPose.getHeading(), "RED");
 
                         rrDrive.setPoseEstimate(new Pose2d(localizedAprilTagVector.getX(), localizedAprilTagVector.getY(), currentPose.getHeading()));
 

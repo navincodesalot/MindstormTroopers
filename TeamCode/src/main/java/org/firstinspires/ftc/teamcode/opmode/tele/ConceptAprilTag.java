@@ -139,7 +139,8 @@ public class ConceptAprilTag extends LinearOpMode {
     private static final boolean USE_WEBCAM = true;  // true for webcam, false for phone camera
     private IMU imu;
     private final Vector2d camera1Offset = new Vector2d(0, 0); // todo: find in inches
-    public static double x = 0.3, y = -4.1; //-1
+    public static double x = -1, y = -4.1; // blue
+//    public static double x = -0.55, y = -4.4 // red
     public Vector2d camera2Offset = new Vector2d(x, y);
 
     /**
@@ -158,7 +159,7 @@ public class ConceptAprilTag extends LinearOpMode {
 
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        drive.setPoseEstimate(new Pose2d(23,-23, Math.toRadians(180)));
+        drive.setPoseEstimate(new Pose2d(46,36, Math.toRadians(180)));
 
         telemetry = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
         initAprilTag();

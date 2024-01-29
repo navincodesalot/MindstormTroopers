@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import android.util.Size;
-
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -13,7 +11,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Quaternion;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
-import org.firstinspires.ftc.vision.apriltag.AprilTagGameDatabase;
 import org.firstinspires.ftc.vision.apriltag.AprilTagLibrary;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
@@ -23,7 +20,8 @@ import java.util.List;
 public class AprilTagSubsystem extends SubsystemBase {
     private final AprilTagProcessor aprilTagProcessor;
     private final VisionPortal portal;
-    private final Vector2d cameraOffset = new Vector2d(0, -5.4);
+    private final Vector2d blueCameraOffset = new Vector2d(-1, -4.1);
+    private final Vector2d redCameraOffset = new Vector2d(-0.55, -4.4);
 
     public AprilTagSubsystem(HardwareMap hardwareMap) {
 
@@ -52,11 +50,21 @@ public class AprilTagSubsystem extends SubsystemBase {
      * @param botheading In Radians.
      * @return FC Pose of bot.
      */
-    public Vector2d getFCPosition(AprilTagDetection detection, double botheading) {
+    public Vector2d getFCPosition(AprilTagDetection detection, double botheading, String side) {
+        Vector2d camOffset;
+
+        if (side.equals("BLUE")) {
+            camOffset = blueCameraOffset;
+        } else if (side.equals("RED")) {
+            camOffset = redCameraOffset;
+        } else {
+            camOffset = blueCameraOffset;
+        }
+
         // get coordinates of the robot in RC coordinates
         // ensure offsets are RC
-        double x = detection.ftcPose.x - cameraOffset.getX();
-        double y = detection.ftcPose.y - cameraOffset.getY();
+        double x = detection.ftcPose.x - camOffset.getX();
+        double y = detection.ftcPose.y - camOffset.getY();
 
         // invert heading to correct properly
         botheading = -botheading;

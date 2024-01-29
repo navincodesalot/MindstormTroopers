@@ -8,7 +8,7 @@ import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder;
 import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
 import com.example.meepmeep.Constraints;
 
-public class LeftBlue {
+public class LeftBlue4Pixel {
     public static void main(String[] args) {
         MeepMeep meepMeep = new MeepMeep(650);
 
@@ -17,7 +17,7 @@ public class LeftBlue {
                 .setConstraints(Constraints.MAX_VEL, Constraints.MAX_ACCEL, Constraints.MAX_ANG_VEL,
                         Constraints.MAX_ANG_ACCEL, Constraints.TRACK_WIDTH)
                 .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(new Pose2d(12, 64, Math.toRadians(90)))
+                        drive.trajectorySequenceBuilder(new Pose2d(12.625, 64.4, Math.toRadians(90)))
                                 .lineToSplineHeading(new Pose2d(33.5, 23, Math.toRadians(180)))
                                 .waitSeconds(0.3)
                                 .lineToConstantHeading(new Vector2d(54, 43.5))
@@ -31,12 +31,24 @@ public class LeftBlue {
                 .setConstraints(Constraints.MAX_VEL, Constraints.MAX_ACCEL, Constraints.MAX_ANG_VEL,
                         Constraints.MAX_ANG_ACCEL, Constraints.TRACK_WIDTH)
                 .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(new Pose2d(12, 64, Math.toRadians(90)))
-                                .lineToSplineHeading(new Pose2d(16, 24, Math.toRadians(180)))
-                                .waitSeconds(0.3)
-                                .lineToConstantHeading(new Vector2d(54, 36))
-                                .waitSeconds(2)
-                                .lineToLinearHeading(new Pose2d(49.5, 59, Math.toRadians(180)))
+                        drive.trajectorySequenceBuilder(new Pose2d(12.625, 64.4, Math.toRadians(90)))
+                                .lineToSplineHeading(new Pose2d(22, 27.5, Math.toRadians(200))) // ground pixel
+
+                                .lineToSplineHeading(new Pose2d(54, 36, Math.toRadians(180))) // go to backdrop
+
+//                                .forward(5) // back up only if i park
+
+                                .lineToConstantHeading(new Vector2d(45,35)) // localize
+
+                                .splineToConstantHeading(new Vector2d(18,35), Math.toRadians(180)) // cross truss
+                                .splineToConstantHeading(new Vector2d(-38,36), Math.toRadians(180))
+//                                .strafeLeft(2)
+                                .lineToConstantHeading(new Vector2d(-63,35.65))
+
+                                .back(1.5)
+
+                                .splineToConstantHeading(new Vector2d(18,35), Math.toRadians(180))
+
                                 .build()
                 );
 
@@ -45,7 +57,7 @@ public class LeftBlue {
                 .setConstraints(Constraints.MAX_VEL, Constraints.MAX_ACCEL, Constraints.MAX_ANG_VEL,
                         Constraints.MAX_ANG_ACCEL, Constraints.TRACK_WIDTH)
                 .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(new Pose2d(12, 64, Math.toRadians(90)))
+                        drive.trajectorySequenceBuilder(new Pose2d(12.625, 64.4, Math.toRadians(90)))
                                 .strafeRight(3)
                                 .lineToSplineHeading(new Pose2d(16, 26, Math.toRadians(180)))
                                 .waitSeconds(0.3)

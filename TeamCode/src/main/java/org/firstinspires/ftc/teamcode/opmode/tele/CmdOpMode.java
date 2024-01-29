@@ -89,16 +89,16 @@ public class CmdOpMode extends BaseOpMode {
                 new RunCommand(intake::grab, intake)
         );
         driver1.getGamepadButton(DPAD_UP).whenPressed(
-                new LiftSlideHigh(drop)
+                new LiftSlideHigh(drop, intake)
         );
         driver1.getGamepadButton(DPAD_RIGHT).whenPressed(
-                new LiftSlideMed(drop)
+                new LiftSlideMed(drop, intake)
         );
         driver1.getGamepadButton(DPAD_DOWN).whenPressed(
                 new DropSlide(drop)
         );
         driver1.getGamepadButton(DPAD_LEFT).whenPressed(
-                new LiftSlideLow(drop)
+                new LiftSlideLow(drop, intake)
         );
         driver1.getGamepadButton(X).whenPressed(
                 new InstantCommand(drop::dropPixel, drop)
