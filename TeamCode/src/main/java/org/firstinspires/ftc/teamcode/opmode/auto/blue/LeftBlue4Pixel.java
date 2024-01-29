@@ -343,7 +343,7 @@ public class LeftBlue4Pixel extends BaseOpMode {
                         new InstantCommand(drop::setForSecondPixel, drop)
                 ),
                 new WaitUntilCommand(() -> !rrDrive.isBusy()),
-                new RunCommand(intake::grab, intake).raceWith(new WaitCommand(400)).andThen(new InstantCommand(intake::stop, intake))
+                new RunCommand(intake::grab, intake).raceWith(new WaitCommand(400)).andThen(new InstantCommand(intake::stop, intake)),
 //                new ParallelCommandGroup(
 //                        new DelayedCommand(new SelectCommand(
 //                                new HashMap<Object, Command>() {{
@@ -355,7 +355,7 @@ public class LeftBlue4Pixel extends BaseOpMode {
 //                        ), 100),
 //                        new InstantCommand(drop::liftTray, drop)
 //                )
-//                new InstantCommand(aprilTagSubsystem::shutdown) // todo: shutdown in parallel when nearing end of auto
+                new InstantCommand(() -> aprilTagSubsystem.portal.stopStreaming()).andThen(new InstantCommand(aprilTagSubsystem::shutdown)) // todo: shutdown in parallel when nearing end of auto
         ));
     }
 

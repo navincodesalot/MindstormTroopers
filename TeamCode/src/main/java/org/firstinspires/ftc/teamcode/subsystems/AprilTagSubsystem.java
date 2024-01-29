@@ -19,7 +19,8 @@ import java.util.List;
 
 public class AprilTagSubsystem extends SubsystemBase {
     private final AprilTagProcessor aprilTagProcessor;
-    private final VisionPortal portal;
+    public VisionPortal portal;
+
     private final Vector2d blueCameraOffset = new Vector2d(-1, -4.1);
     private final Vector2d redCameraOffset = new Vector2d(-0.55, -4.4);
 
@@ -90,7 +91,7 @@ public class AprilTagSubsystem extends SubsystemBase {
     }
 
     public void shutdown() {
-        if (portal.getCameraState() == VisionPortal.CameraState.CAMERA_DEVICE_CLOSED)
+        if (portal.getCameraState() == VisionPortal.CameraState.CAMERA_DEVICE_CLOSED) // portal needs to be shut down first
             return;
 
         portal.close();
