@@ -21,6 +21,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.util.CachingDcMotorEX;
 import org.firstinspires.ftc.teamcode.util.RunMotionProfile;
 
 @Config
@@ -60,6 +61,9 @@ public class PIDF_Slide extends OpMode {
         leftServo = hardwareMap.get(Servo.class, "leftServo");
         rightServo = hardwareMap.get(Servo.class, "rightServo");
 
+        rightSlide = new CachingDcMotorEX(rightSlide);
+        leftSlide = new CachingDcMotorEX(leftSlide);
+
         leftSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -93,7 +97,6 @@ public class PIDF_Slide extends OpMode {
         double loop = System.nanoTime();
         telemetry.addData("hz ", 1000000000 / (loop - loopTime));
         loopTime = loop;
-        telemetry.update();
         telemetry.update();
     }
 

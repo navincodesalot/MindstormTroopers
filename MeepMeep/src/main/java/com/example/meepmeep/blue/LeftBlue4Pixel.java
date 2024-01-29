@@ -42,12 +42,12 @@ public class LeftBlue4Pixel {
 
                                 .splineToConstantHeading(new Vector2d(18,35), Math.toRadians(180)) // cross truss
                                 .splineToConstantHeading(new Vector2d(-38,36), Math.toRadians(180))
-//                                .strafeLeft(2)
-                                .lineToConstantHeading(new Vector2d(-63,35.65))
 
-                                .back(1.5)
+                                .lineToConstantHeading(new Vector2d(-63,35.65)) // go to stack
 
-                                .splineToConstantHeading(new Vector2d(18,35), Math.toRadians(180))
+                                .back(1.5) // move back
+
+                                .splineToConstantHeading(new Vector2d(45,35), Math.toRadians(180)) // cross truss again for whites
 
                                 .build()
                 );
