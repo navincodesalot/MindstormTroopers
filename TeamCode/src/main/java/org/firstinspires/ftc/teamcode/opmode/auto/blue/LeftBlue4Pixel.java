@@ -61,32 +61,33 @@ public class LeftBlue4Pixel extends BaseOpMode {
 
         // Drop ground pixel
         TrajectorySequence dropLeft = rrDrive.trajectorySequenceBuilder(leftBlue)
-                .lineToSplineHeading(new Pose2d(29.5, 28, Math.toRadians(180)))
+                .lineToSplineHeading(new Pose2d(25.5, 17.5, Math.toRadians(112)))
                 .build();
         TrajectorySequence dropMiddle = rrDrive.trajectorySequenceBuilder(leftBlue)
                 .lineToSplineHeading(new Pose2d(22, 27.5, Math.toRadians(200)))
                 .build();
         TrajectorySequence dropRight = rrDrive.trajectorySequenceBuilder(leftBlue)
                 .strafeRight(3)
-                .lineToSplineHeading(new Pose2d(10.25, 32, Math.toRadians(180)))
-                .lineTo(new Vector2d(6.5, 32))
+                .lineToSplineHeading(new Pose2d(7.5, 27, Math.toRadians(180)))
+//                .lineTo(new Vector2d(8, 28))
                 .build();
 
         // Drop to backdrop
         TrajectorySequence dropToBackdropLeft = rrDrive.trajectorySequenceBuilder(dropLeft.end())
-                .lineToConstantHeading(new Vector2d(54, 41),
+                .back(3)
+                .lineToSplineHeading(new Pose2d(54, 45, Math.toRadians(180)),
                         SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(35))
+                        SampleMecanumDrive.getAccelerationConstraint(20))
                 .build();
         TrajectorySequence dropToBackdropMiddle = rrDrive.trajectorySequenceBuilder(dropMiddle.end())
                 .lineToSplineHeading(new Pose2d(54, 36, Math.toRadians(180)),
                         SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(18))
+                        SampleMecanumDrive.getAccelerationConstraint(20))
                 .build();
         TrajectorySequence dropToBackdropRight = rrDrive.trajectorySequenceBuilder(dropRight.end())
-                .lineToConstantHeading(new Vector2d(54, 31),
+                .lineToConstantHeading(new Vector2d(54, 31.5),
                         SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(35))
+                        SampleMecanumDrive.getAccelerationConstraint(20))
                 .build();
 
 //        // Go Back
@@ -108,96 +109,113 @@ public class LeftBlue4Pixel extends BaseOpMode {
 
         // Localize
         TrajectorySequence localizeLeft = rrDrive.trajectorySequenceBuilder(dropToBackdropLeft.end())
-                .lineToConstantHeading(new Vector2d(45,35),
+                .lineToConstantHeading(new Vector2d(45,36.65),
                         SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(18))
+                        SampleMecanumDrive.getAccelerationConstraint(20))
                 .build();
         TrajectorySequence localizeMiddle = rrDrive.trajectorySequenceBuilder(dropToBackdropMiddle.end())
-                .lineToConstantHeading(new Vector2d(45,35),
+                .lineToConstantHeading(new Vector2d(45,36.65),
                         SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(18))
+                        SampleMecanumDrive.getAccelerationConstraint(20))
                 .build();
         TrajectorySequence localizeRight = rrDrive.trajectorySequenceBuilder(dropToBackdropRight.end())
-                .lineToConstantHeading(new Vector2d(45,35),
+                .lineToConstantHeading(new Vector2d(45,36.65),
                         SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(18))
+                        SampleMecanumDrive.getAccelerationConstraint(20))
                 .build();
 
         // Cross Truss
         TrajectorySequence crossTrussLeft = rrDrive.trajectorySequenceBuilder(localizeLeft.end())
-                .splineToConstantHeading(new Vector2d(18,35), Math.toRadians(180),
+                .splineToConstantHeading(new Vector2d(18,36.65), Math.toRadians(180),
                         SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(23))
-                .splineToConstantHeading(new Vector2d(-38,35), Math.toRadians(180),
+                        SampleMecanumDrive.getAccelerationConstraint(25))
+                .splineToConstantHeading(new Vector2d(-38,36.65), Math.toRadians(180),
                         SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(23))
+                        SampleMecanumDrive.getAccelerationConstraint(25))
                 .build();
         TrajectorySequence crossTrussMiddle = rrDrive.trajectorySequenceBuilder(localizeMiddle.end())
-                .splineToConstantHeading(new Vector2d(18,35), Math.toRadians(180),
+                .splineToConstantHeading(new Vector2d(18,36.65), Math.toRadians(180),
                         SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(23))
+                        SampleMecanumDrive.getAccelerationConstraint(25))
                 .splineToConstantHeading(new Vector2d(-38,35), Math.toRadians(180),
                         SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(23))
+                        SampleMecanumDrive.getAccelerationConstraint(25))
                 .build();
         TrajectorySequence crossTrussRight = rrDrive.trajectorySequenceBuilder(localizeRight.end())
-                .splineToConstantHeading(new Vector2d(18,35), Math.toRadians(180),
+                .splineToConstantHeading(new Vector2d(18,36.65), Math.toRadians(180),
                         SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(23))
+                        SampleMecanumDrive.getAccelerationConstraint(25))
                 .splineToConstantHeading(new Vector2d(-38,35), Math.toRadians(180),
                         SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(23))
+                        SampleMecanumDrive.getAccelerationConstraint(25))
                 .build();
 
         // Go to Stack
         TrajectorySequence goToStackLeft = rrDrive.trajectorySequenceBuilder(crossTrussLeft.end())
-                .lineToConstantHeading(new Vector2d(-63,36),
+                .lineToConstantHeading(new Vector2d(-63,35.65),
                         SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(23))
+                        SampleMecanumDrive.getAccelerationConstraint(25))
                 .build();
         TrajectorySequence goToStackMiddle = rrDrive.trajectorySequenceBuilder(crossTrussMiddle.end())
                 .lineToConstantHeading(new Vector2d(-63,35.65),
                         SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(23))
+                        SampleMecanumDrive.getAccelerationConstraint(25))
                 .build();
         TrajectorySequence goToStackRight = rrDrive.trajectorySequenceBuilder(crossTrussRight.end())
-                .lineToConstantHeading(new Vector2d(-63,36),
+                .lineToConstantHeading(new Vector2d(-63,35.65),
                         SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(23))
+                        SampleMecanumDrive.getAccelerationConstraint(25))
                 .build();
 
         // Move back
         TrajectorySequence moveBackLeft = rrDrive.trajectorySequenceBuilder(goToStackLeft.end())
                 .back(1.5,
                         SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(15))
+                        SampleMecanumDrive.getAccelerationConstraint(20))
                 .build();
         TrajectorySequence moveBackMiddle = rrDrive.trajectorySequenceBuilder(goToStackMiddle.end())
                 .back(1.5,
                         SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(15))
+                        SampleMecanumDrive.getAccelerationConstraint(20))
                 .build();
         TrajectorySequence moveBackRight = rrDrive.trajectorySequenceBuilder(goToStackRight.end())
                 .back(1.5,
                         SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(15))
+                        SampleMecanumDrive.getAccelerationConstraint(20))
                 .build();
 
         // Come to backdrop for whites
         TrajectorySequence crossForWhitesLeft = rrDrive.trajectorySequenceBuilder(moveBackLeft.end())
-                .splineToConstantHeading(new Vector2d(45,35), Math.toRadians(180),
+                .lineToConstantHeading(new Vector2d(45,38),
                         SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(23))
+                        SampleMecanumDrive.getAccelerationConstraint(25))
                 .build();
         TrajectorySequence crossForWhitesMiddle = rrDrive.trajectorySequenceBuilder(moveBackMiddle.end())
-                .splineToConstantHeading(new Vector2d(45,35), Math.toRadians(180),
+                .lineToConstantHeading(new Vector2d(45,38),
                         SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(23))
+                        SampleMecanumDrive.getAccelerationConstraint(25))
                 .build();
         TrajectorySequence crossForWhitesRight = rrDrive.trajectorySequenceBuilder(moveBackRight.end())
-                .splineToConstantHeading(new Vector2d(45,35), Math.toRadians(180),
+                .lineToConstantHeading(new Vector2d(45,38),
                         SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(23))
+                        SampleMecanumDrive.getAccelerationConstraint(25))
+                .build();
+
+        // Drop whites
+        TrajectorySequence dropWhitesLeft = rrDrive.trajectorySequenceBuilder(crossForWhitesLeft.end())
+                .lineToConstantHeading(new Vector2d(54,34),
+                        SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(25))
+                .build();
+        TrajectorySequence dropWhitesMiddle = rrDrive.trajectorySequenceBuilder(crossForWhitesMiddle.end())
+                .lineToConstantHeading(new Vector2d(54,44),
+                        SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(25))
+                .build();
+        TrajectorySequence dropWhitesRight = rrDrive.trajectorySequenceBuilder(crossForWhitesRight.end())
+                .lineToConstantHeading(new Vector2d(54,34),
+                        SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(25))
                 .build();
 
         // Park
@@ -253,7 +271,7 @@ public class LeftBlue4Pixel extends BaseOpMode {
                                                     new InstantCommand(tensorflow::shutdown, tensorflow),
                                                     new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropLeft)),
                                                     new DelayedCommand(new InstantCommand(drop::pickupPixel, drop), 1000),
-                                                    new DelayedCommand(new RunCommand(intake::push, intake).raceWith(new WaitCommand(750)), 3800).andThen(new InstantCommand(intake::stop, intake))
+                                                    new DelayedCommand(new RunCommand(intake::push, intake).raceWith(new WaitCommand(750)), 3400).andThen(new InstantCommand(intake::stop, intake))
                                             )
                                     ));
                                     put(PropLocations.MIDDLE, new SequentialCommandGroup(
@@ -269,13 +287,14 @@ public class LeftBlue4Pixel extends BaseOpMode {
                                                     new InstantCommand(tensorflow::shutdown, tensorflow),
                                                     new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropRight)),
                                                     new DelayedCommand(new InstantCommand(drop::pickupPixel, drop), 1000),
-                                                    new DelayedCommand(new RunCommand(intake::push, intake).raceWith(new WaitCommand(400)), 4400).andThen(new InstantCommand(intake::stop, intake))
+                                                    new DelayedCommand(new RunCommand(intake::push, intake).raceWith(new WaitCommand(400)), 5100).andThen(new InstantCommand(intake::stop, intake))
                                             )
                                     ));
                                 }},
                                 () -> location
                         )
                 ),
+                new InstantCommand(drop::liftTray),
                 new ParallelCommandGroup(
 //                        new RunCommand(intake::push, intake).raceWith(new WaitCommand(350)).andThen(new InstantCommand(intake::stop, intake)),
                         new SelectCommand(
@@ -290,7 +309,7 @@ public class LeftBlue4Pixel extends BaseOpMode {
                 ),
                 new WaitUntilCommand(() -> !rrDrive.isBusy()),
 //                new WaitUntilCommand(() -> drop.getPosition() <= 655 && drop.getPosition() >= 640),
-                new InstantCommand(drop::dropPixel, drop),
+//                new InstantCommand(drop::dropPixel, drop),
                 new DelayedCommand(new RunCommand(intake::pushSlowAuto, intake).raceWith(new WaitCommand(800)), 450).andThen(new InstantCommand(intake::stop, intake)),
                 new ParallelCommandGroup(
 //                        new DelayedCommand(new DropSlide(drop), 100),
@@ -304,7 +323,7 @@ public class LeftBlue4Pixel extends BaseOpMode {
                         )
                 ),
                 new WaitUntilCommand(() -> !rrDrive.isBusy()),
-//                new InstantCommand(() -> localize = true), // start localizing
+                new InstantCommand(drop::setForFirstPixel, drop), // todo: take off later
                 new DelayedCommand(
                         new ParallelCommandGroup(
                                 new SelectCommand(
@@ -314,8 +333,9 @@ public class LeftBlue4Pixel extends BaseOpMode {
                                             put(PropLocations.RIGHT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(crossTrussRight)));
                                         }},
                                         () -> location
-                                )
-                        ),550
+                                ),
+                        new InstantCommand(drop::setForFirstPixel, drop)
+                        ),600
                 ),
                 new WaitUntilCommand(() -> !rrDrive.isBusy()),
                 new ParallelCommandGroup(
@@ -330,7 +350,7 @@ public class LeftBlue4Pixel extends BaseOpMode {
                         )
                 ),
                 new WaitUntilCommand(() -> !rrDrive.isBusy()),
-                new RunCommand(intake::grab, intake).raceWith(new WaitCommand(750)).andThen(new InstantCommand(intake::stop, intake)),
+                new RunCommand(intake::grab, intake).raceWith(new WaitCommand(650)).andThen(new InstantCommand(intake::stop, intake)),
                 new ParallelCommandGroup(
                         new SelectCommand(
                                 new HashMap<Object, Command>() {{
@@ -343,19 +363,33 @@ public class LeftBlue4Pixel extends BaseOpMode {
                         new InstantCommand(drop::setForSecondPixel, drop)
                 ),
                 new WaitUntilCommand(() -> !rrDrive.isBusy()),
-                new RunCommand(intake::grab, intake).raceWith(new WaitCommand(400)).andThen(new InstantCommand(intake::stop, intake)),
-//                new ParallelCommandGroup(
-//                        new DelayedCommand(new SelectCommand(
-//                                new HashMap<Object, Command>() {{
-//                                    put(PropLocations.LEFT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(crossForWhitesLeft)));
-//                                    put(PropLocations.MIDDLE, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(crossForWhitesMiddle)));
-//                                    put(PropLocations.RIGHT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(crossForWhitesRight)));
-//                                }},
-//                                () -> location
-//                        ), 100),
-//                        new InstantCommand(drop::liftTray, drop)
-//                )
-                new InstantCommand(() -> aprilTagSubsystem.portal.stopStreaming()).andThen(new InstantCommand(aprilTagSubsystem::shutdown)) // todo: shutdown in parallel when nearing end of auto
+                new RunCommand(intake::grab, intake).raceWith(new WaitCommand(500)).andThen(new InstantCommand(intake::stop, intake)),
+                new RunCommand(intake::push, intake).raceWith(new WaitCommand(200)).andThen(new InstantCommand(intake::stop, intake)),
+
+                new ParallelCommandGroup(
+                        new DelayedCommand(new SelectCommand(
+                                new HashMap<Object, Command>() {{
+                                    put(PropLocations.LEFT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(crossForWhitesLeft)));
+                                    put(PropLocations.MIDDLE, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(crossForWhitesMiddle)));
+                                    put(PropLocations.RIGHT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(crossForWhitesRight)));
+                                }},
+                                () -> location
+                        ), 100),
+                        new DelayedCommand(new RunCommand(intake::grab, intake).raceWith(new WaitCommand(600)).andThen(new InstantCommand(intake::stop, intake))
+                        , 1000),
+                        new InstantCommand(drop::liftTray, drop)
+                ),
+                new WaitUntilCommand(() -> !rrDrive.isBusy()),
+                new SelectCommand(
+                        new HashMap<Object, Command>() {{
+                            put(PropLocations.LEFT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropWhitesLeft)));
+                            put(PropLocations.MIDDLE, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropWhitesMiddle)));
+                            put(PropLocations.RIGHT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropWhitesRight)));
+                        }},
+                        () -> location
+                )
+//                new InstantCommand(() -> aprilTagSubsystem.portal.stopStreaming()),
+//                new InstantCommand(aprilTagSubsystem::shutdown)) // todo: shutdown in parallel when nearing end of auto
         ));
     }
 

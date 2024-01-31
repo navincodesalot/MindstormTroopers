@@ -18,10 +18,11 @@ public class LeftBlue4Pixel {
                         Constraints.MAX_ANG_ACCEL, Constraints.TRACK_WIDTH)
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(new Pose2d(12.625, 64.4, Math.toRadians(90)))
-                                .lineToSplineHeading(new Pose2d(33.5, 23, Math.toRadians(180)))
-                                .waitSeconds(0.3)
-                                .lineToConstantHeading(new Vector2d(54, 43.5))
-                                .waitSeconds(2)
+                                .lineToSplineHeading(new Pose2d(25.5, 17.5, Math.toRadians(112))) // drop first
+
+                                .back(3)
+                                .lineToSplineHeading(new Pose2d(54, 45, Math.toRadians(180))) // go to backdrop
+
                                 .lineToLinearHeading(new Pose2d(49.5, 59, Math.toRadians(180)))
                                 .build()
                 );
@@ -59,11 +60,10 @@ public class LeftBlue4Pixel {
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(new Pose2d(12.625, 64.4, Math.toRadians(90)))
                                 .strafeRight(3)
-                                .lineToSplineHeading(new Pose2d(16, 26, Math.toRadians(180)))
-                                .waitSeconds(0.3)
-                                .lineTo(new Vector2d(1, 26))
-                                .lineToConstantHeading(new Vector2d(54, 30))
-                                .waitSeconds(2)
+                                .lineToSplineHeading(new Pose2d(7.5, 27, Math.toRadians(180)))
+
+                                .lineToConstantHeading(new Vector2d(54, 31.5))
+
                                 .lineToLinearHeading(new Pose2d(49.5, 59, Math.toRadians(180)))
                                 .build()
                 );
@@ -72,8 +72,8 @@ public class LeftBlue4Pixel {
                 .setDarkMode(true)
                 .setBackgroundAlpha(0.95f)
 //                .addEntity(leftBot)
-                .addEntity(middleBot)
-//               .addEntity(rightBot)
+//                .addEntity(middleBot)
+               .addEntity(rightBot)
                 .start();
     }
 }

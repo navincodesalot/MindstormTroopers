@@ -123,7 +123,7 @@ public class DropSubsystem extends SubsystemBase {
     public void setForSecondPixel() {
         leftServo.setPosition(0);
         rightServo.setPosition(0);
-        tray.setPosition(0.215);
+        tray.setPosition(0.218);
     }
 
     // Slide
