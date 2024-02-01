@@ -20,6 +20,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.teamcode.commands.DropSlide;
+import org.firstinspires.ftc.teamcode.commands.LiftSlideLow;
 import org.firstinspires.ftc.teamcode.commands.LiftSlideSmall;
 import org.firstinspires.ftc.teamcode.opmode.BaseOpMode;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants;
@@ -218,6 +219,17 @@ public class LeftBlue4Pixel extends BaseOpMode {
                         SampleMecanumDrive.getAccelerationConstraint(25))
                 .build();
 
+        // Go Back
+        TrajectorySequence goBackLeft = rrDrive.trajectorySequenceBuilder(dropWhitesLeft.end())
+                .forward(5)
+                .build();
+        TrajectorySequence goBackMiddle = rrDrive.trajectorySequenceBuilder(dropWhitesMiddle.end())
+                .forward(5)
+                .build();
+        TrajectorySequence goBackRight = rrDrive.trajectorySequenceBuilder(dropWhitesRight.end())
+                .forward(5)
+                .build();
+
         // Park
 //        TrajectorySequence parkLeft = rrDrive.trajectorySequenceBuilder(goBackLeft.end())
 //                .forward(5)
@@ -294,9 +306,7 @@ public class LeftBlue4Pixel extends BaseOpMode {
                                 () -> location
                         )
                 ),
-                new InstantCommand(drop::liftTray),
                 new ParallelCommandGroup(
-//                        new RunCommand(intake::push, intake).raceWith(new WaitCommand(350)).andThen(new InstantCommand(intake::stop, intake)),
                         new SelectCommand(
                                 new HashMap<Object, Command>() {{
                                     put(PropLocations.LEFT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropToBackdropLeft)));
@@ -304,15 +314,15 @@ public class LeftBlue4Pixel extends BaseOpMode {
                                     put(PropLocations.RIGHT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropToBackdropRight)));
                                 }},
                                 () -> location
-                        )
-//                        new DelayedCommand(new LiftSlideSmall(drop, intake),300)
+                        ),
+                        new DelayedCommand(new LiftSlideSmall(drop, intake),300)
                 ),
                 new WaitUntilCommand(() -> !rrDrive.isBusy()),
-//                new WaitUntilCommand(() -> drop.getPosition() <= 655 && drop.getPosition() >= 640),
-//                new InstantCommand(drop::dropPixel, drop),
+                new WaitUntilCommand(() -> drop.getPosition() <= 655 && drop.getPosition() >= 640),
+                new InstantCommand(drop::dropPixel, drop),
                 new DelayedCommand(new RunCommand(intake::pushSlowAuto, intake).raceWith(new WaitCommand(800)), 450).andThen(new InstantCommand(intake::stop, intake)),
                 new ParallelCommandGroup(
-//                        new DelayedCommand(new DropSlide(drop), 100),
+                        new DelayedCommand(new DropSlide(drop), 100),
                         new SelectCommand(
                                 new HashMap<Object, Command>() {{
                                     put(PropLocations.LEFT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(localizeLeft)));
@@ -323,23 +333,22 @@ public class LeftBlue4Pixel extends BaseOpMode {
                         )
                 ),
                 new WaitUntilCommand(() -> !rrDrive.isBusy()),
-                new InstantCommand(drop::setForFirstPixel, drop), // todo: take off later
+                new WaitUntilCommand(() -> (drop.getPosition() <= 20 && drop.getPosition() >= -10)),
                 new DelayedCommand(
                         new ParallelCommandGroup(
-                                new SelectCommand(
-                                        new HashMap<Object, Command>() {{
-                                            put(PropLocations.LEFT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(crossTrussLeft)));
-                                            put(PropLocations.MIDDLE, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(crossTrussMiddle)));
-                                            put(PropLocations.RIGHT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(crossTrussRight)));
-                                        }},
-                                        () -> location
-                                ),
-                        new InstantCommand(drop::setForFirstPixel, drop)
-                        ),600
+                            new SelectCommand(
+                                    new HashMap<Object, Command>() {{
+                                        put(PropLocations.LEFT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(crossTrussLeft)));
+                                        put(PropLocations.MIDDLE, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(crossTrussMiddle)));
+                                        put(PropLocations.RIGHT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(crossTrussRight)));
+                                    }},
+                                    () -> location
+                            ),
+                            new InstantCommand(drop::setForFirstPixel, drop)
+                        ),600 // localize
                 ),
                 new WaitUntilCommand(() -> !rrDrive.isBusy()),
                 new ParallelCommandGroup(
-                        new InstantCommand(drop::setForFirstPixel, drop),
                         new SelectCommand(
                                 new HashMap<Object, Command>() {{
                                     put(PropLocations.LEFT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(goToStackLeft)));
@@ -367,19 +376,27 @@ public class LeftBlue4Pixel extends BaseOpMode {
                 new RunCommand(intake::push, intake).raceWith(new WaitCommand(200)).andThen(new InstantCommand(intake::stop, intake)),
 
                 new ParallelCommandGroup(
-                        new DelayedCommand(new SelectCommand(
-                                new HashMap<Object, Command>() {{
-                                    put(PropLocations.LEFT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(crossForWhitesLeft)));
-                                    put(PropLocations.MIDDLE, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(crossForWhitesMiddle)));
-                                    put(PropLocations.RIGHT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(crossForWhitesRight)));
-                                }},
-                                () -> location
-                        ), 100),
-                        new DelayedCommand(new RunCommand(intake::grab, intake).raceWith(new WaitCommand(600)).andThen(new InstantCommand(intake::stop, intake))
-                        , 1000),
+                        new DelayedCommand(
+                                new SelectCommand(
+                                    new HashMap<Object, Command>() {{
+                                        put(PropLocations.LEFT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(crossForWhitesLeft)));
+                                        put(PropLocations.MIDDLE, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(crossForWhitesMiddle)));
+                                        put(PropLocations.RIGHT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(crossForWhitesRight)));
+                                    }},
+                                    () -> location
+                                )
+                        , 100),
+                        new DelayedCommand(
+                                new SequentialCommandGroup(
+                                        new RunCommand(intake::grab, intake).raceWith(new WaitCommand(600)).andThen(new InstantCommand(intake::stop, intake)),
+                                        new WaitUntilCommand(() -> rrDrive.getPoseEstimate().getX() <= 42 && rrDrive.getPoseEstimate().getX() >= 39),
+                                        new LiftSlideLow(drop, intake)
+                                )
+                                , 800),
                         new InstantCommand(drop::liftTray, drop)
                 ),
                 new WaitUntilCommand(() -> !rrDrive.isBusy()),
+                new WaitUntilCommand(() -> drop.getPosition() <= 765 && drop.getPosition() >= 735),
                 new SelectCommand(
                         new HashMap<Object, Command>() {{
                             put(PropLocations.LEFT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropWhitesLeft)));
@@ -387,7 +404,20 @@ public class LeftBlue4Pixel extends BaseOpMode {
                             put(PropLocations.RIGHT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropWhitesRight)));
                         }},
                         () -> location
-                )
+                ),
+                new WaitUntilCommand(() -> !rrDrive.isBusy()),
+                new InstantCommand(drop::dropPixel, drop),
+                new DelayedCommand(new RunCommand(intake::pushSlowAuto, intake).raceWith(new WaitCommand(1000)), 450).andThen(new InstantCommand(intake::stop, intake)),
+                new SelectCommand(
+                        new HashMap<Object, Command>() {{
+                            put(PropLocations.LEFT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(goBackLeft)));
+                            put(PropLocations.MIDDLE, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(goBackMiddle)));
+                            put(PropLocations.RIGHT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(goBackRight)));
+                        }},
+                        () -> location
+                ),
+                new WaitUntilCommand(() -> !rrDrive.isBusy()),
+                new DropSlide(drop)
 //                new InstantCommand(() -> aprilTagSubsystem.portal.stopStreaming()),
 //                new InstantCommand(aprilTagSubsystem::shutdown)) // todo: shutdown in parallel when nearing end of auto
         ));
@@ -401,7 +431,7 @@ public class LeftBlue4Pixel extends BaseOpMode {
 
         if (opModeIsActive() && !aprilTagSubsystem.getDetections().isEmpty()) {
             if (aprilTagSubsystem.getDetections().size() > 0) {
-                AprilTagDetection currentDetection = aprilTagSubsystem.getDetections().get(0);
+                AprilTagDetection currentDetection = aprilTagSubsystem.getDetections().get(0); // todo: fix later
 
                 if (currentDetection.metadata != null) { // if a tag is detected
                     double poseVelo = Math.abs(rrDrive.getPoseVelocity().vec().norm());
