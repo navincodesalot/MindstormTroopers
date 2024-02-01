@@ -128,7 +128,7 @@ public class DropSubsystem extends SubsystemBase {
 
     // Slide
     public void slideHigh() {
-        if (runPID) { this.target = 1050; }
+        if (runPID) { this.target = 980; }
     }
 
     public void slideMed() {

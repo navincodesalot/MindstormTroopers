@@ -21,7 +21,7 @@ public class LiftSlideHigh extends ConditionalCommand {
                                 new InstantCommand(drop::slidePoint)
                         ),
                         new WaitUntilCommand(() -> (drop.getPosition() <= 225) && (drop.getPosition() >= 180)),
-                        new InstantCommand(drop::slideHigh) // 1020
+                        new InstantCommand(drop::slideHigh) // 980
                 ),
                 new InstantCommand(drop::slideHigh),
                 ()-> drop.getPosition() <= 350
