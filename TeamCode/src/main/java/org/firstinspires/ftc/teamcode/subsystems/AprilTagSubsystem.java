@@ -36,6 +36,7 @@ public class AprilTagSubsystem extends SubsystemBase {
         portal = new VisionPortal.Builder()
                 .setCamera(hardwareMap.get(WebcamName.class, "Webcam 2"))
                 .addProcessor(aprilTagProcessor)
+                .enableLiveView(false)
                 .setAutoStopLiveView(true)
                 .build();
     }
@@ -91,7 +92,7 @@ public class AprilTagSubsystem extends SubsystemBase {
     }
 
     public void shutdown() {
-        if (portal.getCameraState() == VisionPortal.CameraState.CAMERA_DEVICE_CLOSED) // portal needs to be shut down first
+        if (portal.getCameraState() == VisionPortal.CameraState.CAMERA_DEVICE_CLOSED)
             return;
 
         portal.close();

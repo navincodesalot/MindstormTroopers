@@ -138,7 +138,7 @@ public class ConceptAprilTag extends LinearOpMode {
 
     private static final boolean USE_WEBCAM = true;  // true for webcam, false for phone camera
     private IMU imu;
-    private final Vector2d camera1Offset = new Vector2d(0, 0); // todo: find in inches
+    private final Vector2d camera1Offset = new Vector2d(0, 0);
     public static double x = -1, y = -4.1; // blue
 //    public static double x = -0.55, y = -4.4 // red
     public Vector2d camera2Offset = new Vector2d(x, y);

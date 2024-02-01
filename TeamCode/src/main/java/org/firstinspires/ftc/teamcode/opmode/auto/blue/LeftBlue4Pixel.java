@@ -230,7 +230,7 @@ public class LeftBlue4Pixel extends BaseOpMode {
                 .forward(5)
                 .build();
 
-        // Park todo: move more into wall
+        // Park
 //        TrajectorySequence parkLeft = rrDrive.trajectorySequenceBuilder(goBackLeft.end())
 //                .forward(5)
 //                .lineToLinearHeading(new Pose2d(49.5, 63, Math.toRadians(180)),
@@ -408,18 +408,19 @@ public class LeftBlue4Pixel extends BaseOpMode {
                 new WaitUntilCommand(() -> !rrDrive.isBusy()),
                 new InstantCommand(drop::dropPixel, drop),
                 new DelayedCommand(new RunCommand(intake::pushSlowAuto, intake).raceWith(new WaitCommand(1000)), 450).andThen(new InstantCommand(intake::stop, intake)),
-                new SelectCommand(
-                        new HashMap<Object, Command>() {{
-                            put(PropLocations.LEFT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(goBackLeft)));
-                            put(PropLocations.MIDDLE, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(goBackMiddle)));
-                            put(PropLocations.RIGHT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(goBackRight)));
-                        }},
-                        () -> location
+                new ParallelCommandGroup(
+                        new SelectCommand(
+                                new HashMap<Object, Command>() {{
+                                    put(PropLocations.LEFT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(goBackLeft)));
+                                    put(PropLocations.MIDDLE, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(goBackMiddle)));
+                                    put(PropLocations.RIGHT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(goBackRight)));
+                                }},
+                                () -> location
+                        ),
+                        new InstantCommand(aprilTagSubsystem::shutdown) // shutdown in parallel when nearing end of auto
                 ),
                 new WaitUntilCommand(() -> !rrDrive.isBusy()),
                 new DropSlide(drop)
-//                new InstantCommand(() -> aprilTagSubsystem.portal.stopStreaming()),
-//                new InstantCommand(aprilTagSubsystem::shutdown)) // todo: shutdown in parallel when nearing end of auto
         ));
     }
 

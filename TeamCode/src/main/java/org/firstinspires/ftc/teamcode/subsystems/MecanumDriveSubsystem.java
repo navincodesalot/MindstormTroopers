@@ -37,19 +37,19 @@ public class MecanumDriveSubsystem extends SubsystemBase {
     }
 
     // desmos: https://www.desmos.com/calculator/j2e6yaorld
-    public double joystickTransform(double input) { // todo
-        return (1.0 / (joystickTransformFactor - 1)) * Math.signum(input) * (Math.pow(joystickTransformFactor, Math.abs(input)) - 1);
-    }
+//    public double joystickTransform(double input) {
+//        return (1.0 / (joystickTransformFactor - 1)) * Math.signum(input) * (Math.pow(joystickTransformFactor, Math.abs(input)) - 1);
+//    }
 
-    public double getPowerLimit() {
-        return powerLimit;
-    }
-
-    public void setPowerLimit(double limit) {
-        if (MathUtils.clamp(Math.abs(limit), 0, 1) == powerLimit)
-            return;
-
-        powerLimit = MathUtils.clamp(Math.abs(limit), 0, 1);
-        drive.setMaxSpeed(powerLimit);
-    }
+//    public double getPowerLimit() {
+//        return powerLimit;
+//    }
+//
+//    public void setPowerLimit(double limit) {
+//        if (MathUtils.clamp(Math.abs(limit), 0, 1) == powerLimit)
+//            return;
+//
+//        powerLimit = MathUtils.clamp(Math.abs(limit), 0, 1);
+//        drive.setMaxSpeed(powerLimit);
+//    }
 }
