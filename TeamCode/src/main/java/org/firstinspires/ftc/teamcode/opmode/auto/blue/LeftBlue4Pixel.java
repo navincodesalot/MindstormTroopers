@@ -78,17 +78,17 @@ public class LeftBlue4Pixel extends BaseOpMode {
                 .back(3)
                 .lineToSplineHeading(new Pose2d(54, 45, Math.toRadians(180)),
                         SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(20))
+                        SampleMecanumDrive.getAccelerationConstraint(25))
                 .build();
         TrajectorySequence dropToBackdropMiddle = rrDrive.trajectorySequenceBuilder(dropMiddle.end())
                 .lineToSplineHeading(new Pose2d(54, 36, Math.toRadians(180)),
                         SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(20))
+                        SampleMecanumDrive.getAccelerationConstraint(25))
                 .build();
         TrajectorySequence dropToBackdropRight = rrDrive.trajectorySequenceBuilder(dropRight.end())
                 .lineToConstantHeading(new Vector2d(54, 31.5),
                         SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(20))
+                        SampleMecanumDrive.getAccelerationConstraint(25))
                 .build();
 
 //        // Go Back
@@ -112,17 +112,17 @@ public class LeftBlue4Pixel extends BaseOpMode {
         TrajectorySequence localizeLeft = rrDrive.trajectorySequenceBuilder(dropToBackdropLeft.end())
                 .lineToConstantHeading(new Vector2d(45,36.65),
                         SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(20))
+                        SampleMecanumDrive.getAccelerationConstraint(25))
                 .build();
         TrajectorySequence localizeMiddle = rrDrive.trajectorySequenceBuilder(dropToBackdropMiddle.end())
                 .lineToConstantHeading(new Vector2d(45,36.65),
                         SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(20))
+                        SampleMecanumDrive.getAccelerationConstraint(25))
                 .build();
         TrajectorySequence localizeRight = rrDrive.trajectorySequenceBuilder(dropToBackdropRight.end())
                 .lineToConstantHeading(new Vector2d(45,36.65),
                         SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(20))
+                        SampleMecanumDrive.getAccelerationConstraint(25))
                 .build();
 
         // Cross Truss
@@ -230,22 +230,22 @@ public class LeftBlue4Pixel extends BaseOpMode {
                 .forward(5)
                 .build();
 
-        // Park
+        // Park todo: move more into wall
 //        TrajectorySequence parkLeft = rrDrive.trajectorySequenceBuilder(goBackLeft.end())
 //                .forward(5)
-//                .lineToLinearHeading(new Pose2d(49.5, 59, Math.toRadians(180)),
+//                .lineToLinearHeading(new Pose2d(49.5, 63, Math.toRadians(180)),
 //                        SampleMecanumDrive.getVelocityConstraint(25, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
 //                        SampleMecanumDrive.getAccelerationConstraint(25))
 //                .build();
 //        TrajectorySequence parkMiddle = rrDrive.trajectorySequenceBuilder(goBackMiddle.end())
 //                .forward(5)
-//                .lineToLinearHeading(new Pose2d(49.5, 59, Math.toRadians(180)),
+//                .lineToLinearHeading(new Pose2d(49.5, 63, Math.toRadians(180)),
 //                        SampleMecanumDrive.getVelocityConstraint(25, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
 //                        SampleMecanumDrive.getAccelerationConstraint(25))
 //                .build();
 //        TrajectorySequence parkRight = rrDrive.trajectorySequenceBuilder(goBackRight.end())
 //                .forward(5)
-//                .lineToLinearHeading(new Pose2d(49.5, 59, Math.toRadians(180)),
+//                .lineToLinearHeading(new Pose2d(49.5, 63, Math.toRadians(180)),
 //                        SampleMecanumDrive.getVelocityConstraint(25, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
 //                        SampleMecanumDrive.getAccelerationConstraint(25))
 //                .build();
