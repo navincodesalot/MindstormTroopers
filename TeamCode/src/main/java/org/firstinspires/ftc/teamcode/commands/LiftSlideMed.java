@@ -17,7 +17,7 @@ public class LiftSlideMed extends ConditionalCommand {
                 new SequentialCommandGroup(
                         new ParallelCommandGroup(
                                 new DelayedCommand(new InstantCommand(drop::setupTrayForSlide), 75),
-                                new RunCommand(intake::grab, intake).raceWith(new WaitCommand(369)).andThen(new InstantCommand(intake::stop, intake)),
+                                new RunCommand(intake::grab, intake).raceWith(new WaitCommand(500)).andThen(new InstantCommand(intake::stop, intake)),
                                 new InstantCommand(drop::slidePoint)
                         ),
                         new WaitUntilCommand(() -> (drop.getPosition() <= 225) && (drop.getPosition() >= 180)),

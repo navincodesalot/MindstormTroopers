@@ -56,6 +56,9 @@ public class LeftBlue4Pixel extends BaseOpMode {
 
         tensorflow.setMinConfidence(0.70);
 
+        aprilTagSubsystem = new AprilTagSubsystem(hardwareMap);
+//        aprilTagSubsystem.getDetections();
+
         register(drop); // register so it runs the periodics in a loop while opmode is active
 
         intake.setDefaultCommand(new RunCommand(intake::stop, intake));
@@ -78,17 +81,17 @@ public class LeftBlue4Pixel extends BaseOpMode {
                 .back(3)
                 .lineToSplineHeading(new Pose2d(54, 45, Math.toRadians(180)),
                         SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(25))
+                        SampleMecanumDrive.getAccelerationConstraint(23))
                 .build();
         TrajectorySequence dropToBackdropMiddle = rrDrive.trajectorySequenceBuilder(dropMiddle.end())
                 .lineToSplineHeading(new Pose2d(54, 36, Math.toRadians(180)),
                         SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(25))
+                        SampleMecanumDrive.getAccelerationConstraint(23))
                 .build();
         TrajectorySequence dropToBackdropRight = rrDrive.trajectorySequenceBuilder(dropRight.end())
                 .lineToConstantHeading(new Vector2d(54, 31.5),
                         SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(25))
+                        SampleMecanumDrive.getAccelerationConstraint(23))
                 .build();
 
 //        // Go Back
@@ -112,58 +115,58 @@ public class LeftBlue4Pixel extends BaseOpMode {
         TrajectorySequence localizeLeft = rrDrive.trajectorySequenceBuilder(dropToBackdropLeft.end())
                 .lineToConstantHeading(new Vector2d(45,36.65),
                         SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(25))
+                        SampleMecanumDrive.getAccelerationConstraint(30))
                 .build();
         TrajectorySequence localizeMiddle = rrDrive.trajectorySequenceBuilder(dropToBackdropMiddle.end())
                 .lineToConstantHeading(new Vector2d(45,36.65),
                         SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(25))
+                        SampleMecanumDrive.getAccelerationConstraint(30))
                 .build();
         TrajectorySequence localizeRight = rrDrive.trajectorySequenceBuilder(dropToBackdropRight.end())
                 .lineToConstantHeading(new Vector2d(45,36.65),
                         SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(25))
+                        SampleMecanumDrive.getAccelerationConstraint(30))
                 .build();
 
         // Cross Truss
         TrajectorySequence crossTrussLeft = rrDrive.trajectorySequenceBuilder(localizeLeft.end())
-                .splineToConstantHeading(new Vector2d(18,36.65), Math.toRadians(180),
+                .splineToConstantHeading(new Vector2d(18,36.25), Math.toRadians(180),
                         SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(25))
-                .splineToConstantHeading(new Vector2d(-38,36.65), Math.toRadians(180),
+                        SampleMecanumDrive.getAccelerationConstraint(30))
+                .splineToConstantHeading(new Vector2d(-38,35), Math.toRadians(180),
                         SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(25))
+                        SampleMecanumDrive.getAccelerationConstraint(30))
                 .build();
         TrajectorySequence crossTrussMiddle = rrDrive.trajectorySequenceBuilder(localizeMiddle.end())
                 .splineToConstantHeading(new Vector2d(18,36.65), Math.toRadians(180),
                         SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(25))
+                        SampleMecanumDrive.getAccelerationConstraint(30))
                 .splineToConstantHeading(new Vector2d(-38,35), Math.toRadians(180),
                         SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(25))
+                        SampleMecanumDrive.getAccelerationConstraint(30))
                 .build();
         TrajectorySequence crossTrussRight = rrDrive.trajectorySequenceBuilder(localizeRight.end())
                 .splineToConstantHeading(new Vector2d(18,36.65), Math.toRadians(180),
                         SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(25))
+                        SampleMecanumDrive.getAccelerationConstraint(30))
                 .splineToConstantHeading(new Vector2d(-38,35), Math.toRadians(180),
                         SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(25))
+                        SampleMecanumDrive.getAccelerationConstraint(30))
                 .build();
 
         // Go to Stack
         TrajectorySequence goToStackLeft = rrDrive.trajectorySequenceBuilder(crossTrussLeft.end())
-                .lineToConstantHeading(new Vector2d(-63,35.65),
+                .lineToConstantHeading(new Vector2d(-63,35.75),
                         SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(25))
                 .build();
         TrajectorySequence goToStackMiddle = rrDrive.trajectorySequenceBuilder(crossTrussMiddle.end())
-                .lineToConstantHeading(new Vector2d(-63,35.65),
+                .lineToConstantHeading(new Vector2d(-63,35.75),
                         SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(25))
                 .build();
         TrajectorySequence goToStackRight = rrDrive.trajectorySequenceBuilder(crossTrussRight.end())
-                .lineToConstantHeading(new Vector2d(-63,35.65),
+                .lineToConstantHeading(new Vector2d(-63,35.75),
                         SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(25))
                 .build();
@@ -189,17 +192,17 @@ public class LeftBlue4Pixel extends BaseOpMode {
         TrajectorySequence crossForWhitesLeft = rrDrive.trajectorySequenceBuilder(moveBackLeft.end())
                 .lineToConstantHeading(new Vector2d(45,38),
                         SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(25))
+                        SampleMecanumDrive.getAccelerationConstraint(30))
                 .build();
         TrajectorySequence crossForWhitesMiddle = rrDrive.trajectorySequenceBuilder(moveBackMiddle.end())
                 .lineToConstantHeading(new Vector2d(45,38),
                         SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(25))
+                        SampleMecanumDrive.getAccelerationConstraint(30))
                 .build();
         TrajectorySequence crossForWhitesRight = rrDrive.trajectorySequenceBuilder(moveBackRight.end())
                 .lineToConstantHeading(new Vector2d(45,38),
                         SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(25))
+                        SampleMecanumDrive.getAccelerationConstraint(30))
                 .build();
 
         // Drop whites
@@ -209,7 +212,7 @@ public class LeftBlue4Pixel extends BaseOpMode {
                         SampleMecanumDrive.getAccelerationConstraint(25))
                 .build();
         TrajectorySequence dropWhitesMiddle = rrDrive.trajectorySequenceBuilder(crossForWhitesMiddle.end())
-                .lineToConstantHeading(new Vector2d(54,44),
+                .lineToConstantHeading(new Vector2d(54,43),
                         SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(25))
                 .build();
@@ -274,8 +277,8 @@ public class LeftBlue4Pixel extends BaseOpMode {
         }
 
         schedule(new SequentialCommandGroup(
-                new ParallelCommandGroup(
-                        new InstantCommand(() -> aprilTagSubsystem = new AprilTagSubsystem(hardwareMap)),
+//                new ParallelCommandGroup(
+//                        new InstantCommand(() -> aprilTagSubsystem = new AprilTagSubsystem(hardwareMap)),
                         new SelectCommand(
                                 new HashMap<Object, Command>() {{
                                     put(PropLocations.LEFT, new SequentialCommandGroup(
@@ -304,8 +307,8 @@ public class LeftBlue4Pixel extends BaseOpMode {
                                     ));
                                 }},
                                 () -> location
-                        )
-                ),
+                        ),
+//                ),
                 new ParallelCommandGroup(
                         new SelectCommand(
                                 new HashMap<Object, Command>() {{
@@ -315,12 +318,12 @@ public class LeftBlue4Pixel extends BaseOpMode {
                                 }},
                                 () -> location
                         ),
-                        new DelayedCommand(new LiftSlideSmall(drop, intake),300)
+                        new DelayedCommand(new LiftSlideSmall(drop, intake),600)
                 ),
                 new WaitUntilCommand(() -> !rrDrive.isBusy()),
                 new WaitUntilCommand(() -> drop.getPosition() <= 655 && drop.getPosition() >= 640),
                 new InstantCommand(drop::dropPixel, drop),
-                new DelayedCommand(new RunCommand(intake::pushSlowAuto, intake).raceWith(new WaitCommand(800)), 450).andThen(new InstantCommand(intake::stop, intake)),
+                new DelayedCommand(new RunCommand(intake::pushSlowAuto, intake).raceWith(new WaitCommand(700)), 450).andThen(new InstantCommand(intake::stop, intake)),
                 new ParallelCommandGroup(
                         new DelayedCommand(new DropSlide(drop), 100),
                         new SelectCommand(
@@ -345,7 +348,7 @@ public class LeftBlue4Pixel extends BaseOpMode {
                                     () -> location
                             ),
                             new InstantCommand(drop::setForFirstPixel, drop)
-                        ),600 // localize
+                        ), 700 // localize
                 ),
                 new WaitUntilCommand(() -> !rrDrive.isBusy()),
                 new ParallelCommandGroup(
@@ -405,9 +408,9 @@ public class LeftBlue4Pixel extends BaseOpMode {
                         }},
                         () -> location
                 ),
-                new WaitUntilCommand(() -> !rrDrive.isBusy()),
                 new InstantCommand(drop::dropPixel, drop),
-                new DelayedCommand(new RunCommand(intake::pushSlowAuto, intake).raceWith(new WaitCommand(1000)), 450).andThen(new InstantCommand(intake::stop, intake)),
+                new WaitUntilCommand(() -> !rrDrive.isBusy()),
+                new DelayedCommand(new RunCommand(intake::pushSlowAuto, intake).raceWith(new WaitCommand(1250)), 250).andThen(new InstantCommand(intake::stop, intake)),
                 new ParallelCommandGroup(
                         new SelectCommand(
                                 new HashMap<Object, Command>() {{

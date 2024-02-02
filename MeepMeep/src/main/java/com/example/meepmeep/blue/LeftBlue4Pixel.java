@@ -72,8 +72,8 @@ public class LeftBlue4Pixel {
                 .setDarkMode(true)
                 .setBackgroundAlpha(0.95f)
 //                .addEntity(leftBot)
-//                .addEntity(middleBot)
-               .addEntity(rightBot)
+                .addEntity(middleBot)
+//               .addEntity(rightBot)
                 .start();
     }
 }

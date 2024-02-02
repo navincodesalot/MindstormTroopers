@@ -23,12 +23,12 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public void pushSlowAuto() {
         intake.setDirection(CRServo.Direction.REVERSE);
-        intake.setPower(0.32);
+        intake.setPower(0.2);
     }
 
     public void pushSlowTele() {
         intake.setDirection(CRServo.Direction.REVERSE);
-        intake.setPower(0.5);
+        intake.setPower(0.3);
     }
 
     public void stop() {
