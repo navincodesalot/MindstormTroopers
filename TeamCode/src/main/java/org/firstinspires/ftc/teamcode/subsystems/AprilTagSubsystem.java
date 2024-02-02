@@ -22,7 +22,7 @@ public class AprilTagSubsystem extends SubsystemBase {
     public VisionPortal portal;
 
     private final Vector2d blueCameraOffset = new Vector2d(-1, -4.1);
-    private final Vector2d redCameraOffset = new Vector2d(-0.55, -4.4);
+//    private final Vector2d redCameraOffset = new Vector2d(-0.55, -4.4);
 
     public AprilTagSubsystem(HardwareMap hardwareMap) {
 
@@ -55,13 +55,7 @@ public class AprilTagSubsystem extends SubsystemBase {
     public Vector2d getFCPosition(AprilTagDetection detection, double botheading, String side) {
         Vector2d camOffset;
 
-        if (side.equals("BLUE")) {
-            camOffset = blueCameraOffset;
-        } else if (side.equals("RED")) {
-            camOffset = redCameraOffset;
-        } else {
-            camOffset = blueCameraOffset;
-        }
+        camOffset = blueCameraOffset;
 
         // get coordinates of the robot in RC coordinates
         // ensure offsets are RC
@@ -92,9 +86,6 @@ public class AprilTagSubsystem extends SubsystemBase {
     }
 
     public void shutdown() {
-        if (portal.getCameraState() == VisionPortal.CameraState.CAMERA_DEVICE_CLOSED)
-            return;
-
         portal.close();
     }
 
