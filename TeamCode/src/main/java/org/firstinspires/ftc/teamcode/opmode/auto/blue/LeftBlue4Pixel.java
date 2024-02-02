@@ -434,7 +434,7 @@ public class LeftBlue4Pixel extends BaseOpMode {
             if (aprilTagSubsystem.getDetections().size() > 0) {
                 AprilTagDetection currentDetection = aprilTagSubsystem.getDetections().get(0); // todo: fix later
 
-                if (currentDetection.metadata != null) { // if a tag is detected
+                if (currentDetection != null && currentDetection.metadata != null) { // if a tag is detected
                     double poseVelo = Math.abs(rrDrive.getPoseVelocity().vec().norm());
                     Pose2d currentPose = rrDrive.getPoseEstimate();
 
