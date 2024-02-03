@@ -324,7 +324,7 @@ public class RightBlue3Pixel extends BaseOpMode {
     public void run() {
         super.run(); // since we are overriding in opmodes, this will actually run it
         rrDrive.update();
-        telemetry.addData("Drive Pose", rrDrive.getPoseEstimate().toString());
+//        telemetry.addData("Drive Pose", rrDrive.getPoseEstimate().toString());
 
 //        List<AprilTagDetection> detected = aprilTagSubsystem.getDetections();
 
