@@ -71,18 +71,19 @@ public class RightBlue {
                                 .lineToSplineHeading(new Pose2d(-47, 39, Math.toRadians(270)))
                                 .back(5)
 
-                                .strafeRight(14)
+                                .strafeLeft(14)
                                 .lineToConstantHeading(new Vector2d(-36, 10))
-                                .lineToSplineHeading(new Pose2d(-63, 12, Math.toRadians(180)))
+                                .lineToSplineHeading(new Pose2d(-49, 12, Math.toRadians(180)))
+                                .lineToConstantHeading(new Vector2d(-63, 12))
 
-                                .lineToSplineHeading(new Pose2d(35, 5, Math.toRadians(180)))
-                                .lineToConstantHeading(new Vector2d(49.5, 24))
-
-                                .lineToConstantHeading(new Vector2d(56, 28.50))
-
-                                .strafeRight(4.25)
-
-                                .forward(5)
+//                                .lineToSplineHeading(new Pose2d(35, 5, Math.toRadians(180)))
+//                                .lineToConstantHeading(new Vector2d(49.5, 24))
+//
+//                                .lineToConstantHeading(new Vector2d(56, 28.50))
+//
+//                                .strafeLeft(4.25)
+//
+//                                .forward(5)
 
                                 .build()
                 );
@@ -91,8 +92,8 @@ public class RightBlue {
                 .setDarkMode(true)
                 .setBackgroundAlpha(0.95f)
 //                .addEntity(leftBot)
-                .addEntity(middleBot)
-//               .addEntity(rightBot)
+//                .addEntity(middleBot)
+               .addEntity(rightBot)
                 .start();
     }
 }

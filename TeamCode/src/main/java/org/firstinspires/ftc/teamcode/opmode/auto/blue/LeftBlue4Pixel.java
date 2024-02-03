@@ -131,26 +131,26 @@ public class LeftBlue4Pixel extends BaseOpMode {
         TrajectorySequence crossTrussLeft = rrDrive.trajectorySequenceBuilder(localizeLeft.end())
                 .splineToConstantHeading(new Vector2d(18,37), Math.toRadians(180),
                         SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(30))
+                        SampleMecanumDrive.getAccelerationConstraint(32))
                 .splineToConstantHeading(new Vector2d(-38,37), Math.toRadians(180),
                         SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(30))
+                        SampleMecanumDrive.getAccelerationConstraint(32))
                 .build();
         TrajectorySequence crossTrussMiddle = rrDrive.trajectorySequenceBuilder(localizeMiddle.end())
                 .splineToConstantHeading(new Vector2d(18,37), Math.toRadians(180),
                         SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(30))
+                        SampleMecanumDrive.getAccelerationConstraint(32))
                 .splineToConstantHeading(new Vector2d(-38,37), Math.toRadians(180),
                         SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(30))
+                        SampleMecanumDrive.getAccelerationConstraint(32))
                 .build();
         TrajectorySequence crossTrussRight = rrDrive.trajectorySequenceBuilder(localizeRight.end())
                 .splineToConstantHeading(new Vector2d(18,37), Math.toRadians(180),
                         SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(30))
+                        SampleMecanumDrive.getAccelerationConstraint(32))
                 .splineToConstantHeading(new Vector2d(-38,37), Math.toRadians(180),
                         SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(30))
+                        SampleMecanumDrive.getAccelerationConstraint(32))
                 .build();
 
         // Go to Stack
@@ -314,6 +314,7 @@ public class LeftBlue4Pixel extends BaseOpMode {
                                                 }},
                                                 () -> location
                                         )
+//                                 new InstantCommand(aprilTagSubsystem::shutdown) // shutdown in parallel when nearing end of auto
                                 )
                         ),
                         new SequentialCommandGroup( // if it is not right

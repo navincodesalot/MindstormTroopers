@@ -51,7 +51,7 @@ public class LeftRed3Pixel extends BaseOpMode {
 
         aprilTagSubsystem = new AprilTagSubsystem(hardwareMap);
         TensorflowSubsystem tensorflow = new TensorflowSubsystem(hardwareMap, "Webcam 1",
-                "oldred.tflite", REDLABEL);
+                "romanianred.tflite", REDLABEL);
 
         tensorflow.setMinConfidence(0.69);
 
