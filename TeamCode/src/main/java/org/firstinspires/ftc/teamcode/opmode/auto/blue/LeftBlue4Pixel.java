@@ -190,17 +190,17 @@ public class LeftBlue4Pixel extends BaseOpMode {
         // Come to backdrop for whites
         TrajectorySequence crossForWhitesLeft = rrDrive.trajectorySequenceBuilder(moveBackLeft.end())
                 .lineToConstantHeading(new Vector2d(45,38),
-                        SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(30))
                 .build();
         TrajectorySequence crossForWhitesMiddle = rrDrive.trajectorySequenceBuilder(moveBackMiddle.end())
                 .lineToConstantHeading(new Vector2d(45,38),
-                        SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(30))
                 .build();
         TrajectorySequence crossForWhitesRight = rrDrive.trajectorySequenceBuilder(moveBackRight.end())
                 .lineToConstantHeading(new Vector2d(45,38),
-                        SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(30))
                 .build();
 
