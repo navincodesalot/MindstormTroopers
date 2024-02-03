@@ -51,7 +51,7 @@ public class RightRed2Pixel extends BaseOpMode {
         super.initialize();
 
         TensorflowSubsystem tensorflow = new TensorflowSubsystem(hardwareMap, "Webcam 1",
-                "romanianred.tflite", BLUELABEL);
+                "romanianred.tflite", REDLABEL);
 
         tensorflow.setMinConfidence(0.69);
 

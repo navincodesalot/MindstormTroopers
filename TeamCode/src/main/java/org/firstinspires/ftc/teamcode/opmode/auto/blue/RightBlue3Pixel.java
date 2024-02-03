@@ -51,7 +51,7 @@ public class RightBlue3Pixel extends BaseOpMode {
 
 //        aprilTagSubsystem = new AprilTagSubsystem(hardwareMap);
         TensorflowSubsystem tensorflow = new TensorflowSubsystem(hardwareMap, "Webcam 1",
-                "russianblue.tflite", REDLABEL);
+                "russianblue.tflite", BLUELABEL);
 
         tensorflow.setMinConfidence(0.70);
 
