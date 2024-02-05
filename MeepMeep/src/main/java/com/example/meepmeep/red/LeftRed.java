@@ -68,15 +68,15 @@ public class LeftRed {
                         Constraints.MAX_ANG_ACCEL, Constraints.TRACK_WIDTH)
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(new Pose2d(-36, -64.4, Math.toRadians(270)))
-                                .lineToSplineHeading(new Pose2d(-45, -50, Math.toRadians(0)))
-                                .lineToConstantHeading(new Vector2d(-29.6, -34))
+                                .lineToSplineHeading(new Pose2d(-38, -48, Math.toRadians(-345)))
+                                .lineToConstantHeading(new Vector2d(-34, -37))
 
-//                                .back(7)
-//                                .lineToSplineHeading(new Pose2d(-36, -10, Math.toRadians(180)))
-//                                .lineToConstantHeading(new Vector2d(-63, -11))
+                                .back(12)
+                                .lineToSplineHeading(new Pose2d(-36, -11, Math.toRadians(-180)))
+                                .lineToConstantHeading(new Vector2d(-62, -11))
 
-//                                .lineToSplineHeading(new Pose2d(35, -12, Math.toRadians(180)))
-//                                .lineToConstantHeading(new Vector2d(56, -31.5))
+                                .lineToSplineHeading(new Pose2d(35, -12, Math.toRadians(180)))
+                                .lineToConstantHeading(new Vector2d(56, -31.5))
 //                                .waitSeconds(2)
 //                                .lineToLinearHeading(new Pose2d(49.5, -15, Math.toRadians(180)))
                                 .build()
@@ -85,9 +85,9 @@ public class LeftRed {
         meepMeep.setBackground(MeepMeep.Background.FIELD_CENTERSTAGE_JUICE_DARK)
                 .setDarkMode(true)
                 .setBackgroundAlpha(0.95f)
-                .addEntity(leftBot)
+//                .addEntity(leftBot)
 //                .addEntity(middleBot)
-//               .addEntity(rightBot)
+               .addEntity(rightBot)
                 .start();
     }
 }

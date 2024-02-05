@@ -53,8 +53,8 @@ public class CmdOpMode extends BaseOpMode {
         ));
 
         drone = hardwareMap.get(Servo.class, "drone");
-        drone = new CachingServo(drone);
-        drone.setDirection(CachingServo.Direction.FORWARD);
+//        drone = new CachingServo(drone);
+        drone.setDirection(Servo.Direction.FORWARD);
 
         super.initialize();
 

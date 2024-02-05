@@ -281,6 +281,14 @@ public class LeftBlue4Pixel extends BaseOpMode {
                                         new InstantCommand(() -> aprilTagSubsystem = new AprilTagSubsystem(hardwareMap)),
                                         new SelectCommand(
                                                 new HashMap<Object, Command>() {{
+                                                    put(PropLocations.LEFT, new SequentialCommandGroup(
+                                                            new ParallelCommandGroup(
+                                                                    new InstantCommand(tensorflow::shutdown, tensorflow),
+                                                                    new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropLeft)),
+                                                                    new DelayedCommand(new InstantCommand(drop::pickupPixel, drop), 1000),
+                                                                    new DelayedCommand(new RunCommand(intake::push, intake).raceWith(new WaitCommand(750)), 3400).andThen(new InstantCommand(intake::stop, intake))
+                                                            )
+                                                    ));
                                                     put(PropLocations.RIGHT, new SequentialCommandGroup(
                                                             new ParallelCommandGroup(
                                                                     new InstantCommand(tensorflow::shutdown, tensorflow),
@@ -296,6 +304,7 @@ public class LeftBlue4Pixel extends BaseOpMode {
                                 new ParallelCommandGroup(
                                         new SelectCommand(
                                                 new HashMap<Object, Command>() {{
+                                                    put(PropLocations.LEFT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropToBackdropLeft)));
                                                     put(PropLocations.RIGHT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropToBackdropRight)));
                                                 }},
                                                 () -> location
@@ -310,6 +319,7 @@ public class LeftBlue4Pixel extends BaseOpMode {
                                         new DelayedCommand(new DropSlide(drop), 500),
                                         new SelectCommand(
                                                 new HashMap<Object, Command>() {{
+                                                    put(PropLocations.LEFT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(localizeLeft)));
                                                     put(PropLocations.RIGHT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(localizeRight)));
                                                 }},
                                                 () -> location
@@ -322,14 +332,6 @@ public class LeftBlue4Pixel extends BaseOpMode {
                                         new InstantCommand(() -> aprilTagSubsystem = new AprilTagSubsystem(hardwareMap)),
                                         new SelectCommand(
                                                 new HashMap<Object, Command>() {{
-                                                    put(PropLocations.LEFT, new SequentialCommandGroup(
-                                                            new ParallelCommandGroup(
-                                                                    new InstantCommand(tensorflow::shutdown, tensorflow),
-                                                                    new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropLeft)),
-                                                                    new DelayedCommand(new InstantCommand(drop::pickupPixel, drop), 1000),
-                                                                    new DelayedCommand(new RunCommand(intake::push, intake).raceWith(new WaitCommand(750)), 3400).andThen(new InstantCommand(intake::stop, intake))
-                                                            )
-                                                    ));
                                                     put(PropLocations.MIDDLE, new SequentialCommandGroup(
                                                             new ParallelCommandGroup(
                                                                     new InstantCommand(tensorflow::shutdown, tensorflow),
@@ -345,7 +347,6 @@ public class LeftBlue4Pixel extends BaseOpMode {
                                 new ParallelCommandGroup(
                                         new SelectCommand(
                                                 new HashMap<Object, Command>() {{
-                                                    put(PropLocations.LEFT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropToBackdropLeft)));
                                                     put(PropLocations.MIDDLE, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropToBackdropMiddle)));
                                                 }},
                                                 () -> location
@@ -360,7 +361,6 @@ public class LeftBlue4Pixel extends BaseOpMode {
                                         new DelayedCommand(new DropSlide(drop), 300),
                                         new SelectCommand(
                                                 new HashMap<Object, Command>() {{
-                                                    put(PropLocations.LEFT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(localizeLeft)));
                                                     put(PropLocations.MIDDLE, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(localizeMiddle)));
                                                 }},
                                                 () -> location
@@ -372,7 +372,7 @@ public class LeftBlue4Pixel extends BaseOpMode {
                                         new ParallelCommandGroup(
                                                 new SelectCommand(
                                                         new HashMap<Object, Command>() {{
-                                                            put(PropLocations.LEFT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(crossTrussLeft)));
+//                                                            put(PropLocations.LEFT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(crossTrussLeft)));
                                                             put(PropLocations.MIDDLE, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(crossTrussMiddle)));
                                                         }},
                                                         () -> location
@@ -384,7 +384,7 @@ public class LeftBlue4Pixel extends BaseOpMode {
                                 new ParallelCommandGroup(
                                         new SelectCommand(
                                                 new HashMap<Object, Command>() {{
-                                                    put(PropLocations.LEFT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(goToStackLeft)));
+//                                                    put(PropLocations.LEFT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(goToStackLeft)));
                                                     put(PropLocations.MIDDLE, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(goToStackMiddle)));
                                                 }},
                                                 () -> location
@@ -395,7 +395,7 @@ public class LeftBlue4Pixel extends BaseOpMode {
                                 new ParallelCommandGroup(
                                         new SelectCommand(
                                                 new HashMap<Object, Command>() {{
-                                                    put(PropLocations.LEFT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(moveBackLeft)));
+//                                                    put(PropLocations.LEFT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(moveBackLeft)));
                                                     put(PropLocations.MIDDLE, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(moveBackMiddle)));
                                                 }},
                                                 () -> location
@@ -410,7 +410,7 @@ public class LeftBlue4Pixel extends BaseOpMode {
                                         new DelayedCommand(
                                                 new SelectCommand(
                                                         new HashMap<Object, Command>() {{
-                                                            put(PropLocations.LEFT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(crossForWhitesLeft)));
+//                                                            put(PropLocations.LEFT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(crossForWhitesLeft)));
                                                             put(PropLocations.MIDDLE, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(crossForWhitesMiddle)));
                                                         }},
                                                         () -> location
@@ -429,7 +429,7 @@ public class LeftBlue4Pixel extends BaseOpMode {
                                 new WaitUntilCommand(() -> drop.getPosition() <= 765 && drop.getPosition() >= 735),
                                 new SelectCommand(
                                         new HashMap<Object, Command>() {{
-                                            put(PropLocations.LEFT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropWhitesLeft)));
+//                                            put(PropLocations.LEFT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropWhitesLeft)));
                                             put(PropLocations.MIDDLE, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropWhitesMiddle)));
                                         }},
                                         () -> location
@@ -440,7 +440,7 @@ public class LeftBlue4Pixel extends BaseOpMode {
                                 new ParallelCommandGroup(
                                         new SelectCommand(
                                                 new HashMap<Object, Command>() {{
-                                                    put(PropLocations.LEFT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(goBackLeft)));
+//                                                    put(PropLocations.LEFT, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(goBackLeft)));
                                                     put(PropLocations.MIDDLE, new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(goBackMiddle)));
                                                 }},
                                                 () -> location
@@ -449,8 +449,8 @@ public class LeftBlue4Pixel extends BaseOpMode {
                                 ),
                                 new WaitUntilCommand(() -> !rrDrive.isBusy()),
                                 new DropSlide(drop)
-                        ), // it is left / middle
-                        () -> location == PropLocations.RIGHT
+                        ),
+                        () -> location == PropLocations.RIGHT || location == PropLocations.LEFT
         ));
     }
 

@@ -65,7 +65,7 @@ public class RightRed2Pixel extends BaseOpMode {
                 .lineToConstantHeading(new Vector2d(8.5, -34))
                 .build();
         TrajectorySequence dropMiddle = rrDrive.trajectorySequenceBuilder(rightRed)
-                .lineToSplineHeading(new Pose2d(22, -27.5, Math.toRadians(-200)))
+                .lineToSplineHeading(new Pose2d(22, -24.5, Math.toRadians(-200)))
                 .build();
         TrajectorySequence dropRight = rrDrive.trajectorySequenceBuilder(rightRed)
                 .lineToSplineHeading(new Pose2d(25.5, -18.5, Math.toRadians(-112)))
@@ -73,18 +73,18 @@ public class RightRed2Pixel extends BaseOpMode {
 
         // Drop to backdrop
         TrajectorySequence dropToBackdropLeft = rrDrive.trajectorySequenceBuilder(dropLeft.end())
-                .lineToConstantHeading(new Vector2d(54, -30),
+                .lineToConstantHeading(new Vector2d(56, -30),
                         SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(23))
                 .build();
         TrajectorySequence dropToBackdropMiddle = rrDrive.trajectorySequenceBuilder(dropMiddle.end())
-                .lineToSplineHeading(new Pose2d(54, -36, Math.toRadians(-180)),
+                .lineToSplineHeading(new Pose2d(56, -36, Math.toRadians(-180)),
                         SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(23))
                 .build();
         TrajectorySequence dropToBackdropRight = rrDrive.trajectorySequenceBuilder(dropRight.end())
                 .back(3)
-                .lineToSplineHeading(new Pose2d(54, -45, Math.toRadians(-180)),
+                .lineToSplineHeading(new Pose2d(56, -45, Math.toRadians(-180)),
                         SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(23))
                 .build();
@@ -174,7 +174,7 @@ public class RightRed2Pixel extends BaseOpMode {
                                                     new InstantCommand(tensorflow::shutdown, tensorflow),
                                                     new InstantCommand(() -> rrDrive.followTrajectorySequenceAsync(dropRight)),
                                                     new DelayedCommand(new InstantCommand(drop::pickupPixel, drop), 1000),
-                                                    new DelayedCommand(new RunCommand(intake::push, intake).raceWith(new WaitCommand(600)), 7500).andThen(new InstantCommand(intake::stop, intake))
+                                                    new DelayedCommand(new RunCommand(intake::push, intake).raceWith(new WaitCommand(600)), 5000).andThen(new InstantCommand(intake::stop, intake))
                                             )
                                     ));
                                 }},
